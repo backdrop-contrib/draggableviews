@@ -1,0 +1,56 @@
+<?php
+// $Id$
+/**
+ * @file
+ * Draggableviews - Makes views draggable
+ *
+ * Copyright 2008 by sevi
+ */
+
+/**
+ * Implementation of hook_schema().
+ */
+function draggableviews_schema() {
+  $schema['draggableviews_collapsed'] = array(
+    'description' => t('The table that knows whether sub-lists are collapsed or expanded.'),
+    'fields' => array(
+      'uid' => array(
+        'description' => t('The user.'),
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'parent_nid' => array(
+        'description' => t('The parent node.'),
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+      'collapsed' => array(
+        'description' => t('The state.'),
+        'type' => 'int',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
+    ),
+    'primary key' => array('uid', 'parent_nid'),
+  );
+  return $schema;
+}
+
+/**
+ * Implementation of hook_install().
+ */
+function draggableviews_install() {
+  drupal_install_schema('draggableviews');
+}
+
+/**
+ * Implementation of hook_uninstall().
+ */
+function draggableviews_uninstall() {
+  drupal_uninstall_schema('draggableviews');
+}

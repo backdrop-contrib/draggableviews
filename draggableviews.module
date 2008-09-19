@@ -1,0 +1,101 @@
+<?php
+	include_once('draggableviews.inc');
+	
+	/**
+	* Display help and module information
+	* @param path which path of the site we're displaying help
+	* @param arg array that holds the current path as would be returned from arg() function
+	* @return help text for the path
+	*/
+	function draggableviews_help($path, $arg) {
+	  $output = '';
+	  switch ($path) {
+	    case "admin/help#draggableviews":
+	      $output = '<p>'.  t("Makes views draggable") .'</p>';
+	      break;
+	  }
+	  return $output;
+	}
+	
+	/**
+	 * Implementing hook_admin
+	 */
+	function draggableviews_admin() {
+	  $form['draggableviews_some_settings'] = array(
+	    '#type' => 'textfield',
+	    '#title' => t('Coming soon'),
+	    '#default_value' => variable_get('draggableviews_some_settings', 10),
+	    '#size' => 8,
+	    '#maxlength' => 8,
+	    '#description' => t("Some settings."),
+	    '#required' => TRUE,
+	  );
+	
+	  return system_settings_form($form);
+	}
+	
+	/**
+	 * Implementing hook_menu
+	 */
+	function draggableviews_menu() {
+	
+	  $items = array();
+	
+	  /* ADMIN AREA
+	  ***************/
+	  $items['admin/settings/draggableviews'] = array(
+	    'title' => 'Draggable views settings',
+	    'description' => 'Configure settings',
+	    'page callback' => 'drupal_get_form',
+	    'page arguments' => array('draggableviews_admin'),
+	    'access arguments' => array('access administration pages'),
+	    'type' => MENU_NORMAL_ITEM,
+	   );
+	
+	  return $items;
+	}
+
+	/**
+	 * Implementing hook_validate
+	 */
+	function draggableviews_admin_validate($form, &$form_state) {
+	  $some_settings = $form_state['values']['draggableviews_some_settings'];
+	  if (!is_numeric($some_settings)) {
+	    form_set_error('draggleviews_some_settings', t('You must select a number for the maximum number of links.'));
+	  }
+	  else if ($some_settings <= 0) {
+	    form_set_error('draggableviews_some_settings', t('Maximum number must be positive.'));
+	  }
+	}
+	
+	/**
+	* Implementing hook_perm
+	*/
+	function draggableviews_perm() {
+	  return array('Allow Reordering');
+	}
+	
+	/**
+	* Implement hook_theme
+	*/
+	function draggableviews_theme(){
+	  return array(
+	    'draggableviews_ui_style_plugin_draggabletable' => array(
+	      'arguments' => array('form' => NULL),
+	    ),
+	    'draggableviews_view_draggabletable_form' => array(
+	      'template' => 'draggableviews-view-draggabletable-form',
+	      'arguments' => array('form' => NULL),
+	    ),
+	  );
+	}
+	
+	/**
+	 * Impleneting hook_views_api
+	 */
+	function draggableviews_views_api() {
+	  return array(
+	    'api' => 2.0,
+	  );
+	}
+?>
