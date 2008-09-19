@@ -1,10 +1,10 @@
 <?php
 // $Id$
+
 /**
  * @file
- * Draggableviews - Makes views draggable
- *
- * Copyright 2008 by sevi
+ * Draggableviews defines a new database schema
+ * for saving the collapsed/expand state of views.
  */
 
 /**

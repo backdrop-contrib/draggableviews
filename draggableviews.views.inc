@@ -5,7 +5,11 @@
  * @file
  * Derives the view style plugin
  */
-function draggableviews_views_plugins(){
+
+/**
+ * Implemening hook_views_plugins
+ */
+function draggableviews_views_plugins() {
   return array(
     'module' => 'draggableviews', // This just tells our themes are elsewhere.
 
@@ -25,5 +29,3 @@ function draggableviews_views_plugins(){
     ),
   );
 }
-
-?>

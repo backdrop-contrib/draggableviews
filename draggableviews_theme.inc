@@ -1,6 +1,9 @@
 <?php
+// $Id$
+
 /**
- * Display a view as a draggable table style.
+ * @file
+ * Theme functions.
  */
 
 function template_preprocess_draggableviews_view_draggabletable(&$vars) {
@@ -24,7 +27,7 @@ function template_preprocess_draggableviews_view_draggabletable(&$vars) {
 
   $query    = tablesort_get_querystring();
   if ($query) {
-    $query = '&' . $query;
+    $query = '&'. $query;
   }
 
   foreach ($columns as $field => $column) {
@@ -45,9 +48,9 @@ function template_preprocess_draggableviews_view_draggabletable(&$vars) {
         $image = theme('tablesort_indicator', $initial);
         $title = t('sort by @s', array('@s' => $label));
         $link_options = array(
-          'html' => true,
+          'html' => TRUE,
           'attributes' => array('title' => $title),
-          'query' => 'order=' . urlencode($field) . '&sort=' . $initial . $query,
+          'query' => 'order='. urlencode($field) .'&sort='. $initial . $query,
         );
         $vars['header'][$field] = l($label . $image, $_GET['q'], $link_options);
       }
@@ -137,7 +140,7 @@ function template_preprocess_draggableviews_view_draggabletable(&$vars) {
     
     if (isset($info['types'][$node->type])) {
       // set node type specification, if available (e.g. tabledrag-root)
-      $vars['tabledrag_type'][$i] = 'tabledrag-' . $info['types'][$node->type];
+      $vars['tabledrag_type'][$i] = 'tabledrag-'. $info['types'][$node->type];
     }
     
     // Detect ordering errors
@@ -201,7 +204,7 @@ function template_preprocess_draggableviews_view_draggabletable(&$vars) {
         }
         
         // get the form element
-        $form_element = _draggableviews_get_form_element($value, $field, $info, array('field_name' => $field_name . '_' . $node->nid, 'class' => $field_name));
+        $form_element = _draggableviews_get_form_element($value, $field, $info, array('field_name' => $field_name .'_'. $node->nid, 'class' => $field_name));
         
         // render new form element
         $vars['rows'][$i][$field_name] = drupal_render($form_element);
@@ -232,18 +235,19 @@ function template_preprocess_draggableviews_view_draggabletable(&$vars) {
       // IMPLEMENTATION OF REALTIMEEDIT MODULE
 
       // prepare all fields
-      foreach($info['realtimeedit_enabled_fields'] as $field => $enabled) {
+      foreach ($info['realtimeedit_enabled_fields'] as $field => $enabled) {
+      
         if ($fields[$field]->options['exclude'] == 0 ) {
 
           // set unique selector
           $css_class = 'realtimeedit-field';
-          $selector = 'realtimeedit-field-' . $node_id . '-' . $field_obj->definition['content_field_name'] . '-alias-' . $key;
-          $wrapper_id = $selector . '-wrapper';
+          $selector = 'realtimeedit-field-'. $node_id .'-'. $field_obj->definition['content_field_name'] .'-alias-'. $key;
+          $wrapper_id = $selector .'-wrapper';
           $ahah_binding = array(
             'url'   => url('realtimeedit/ajax'),
             'event' => 'click',
             'wrapper' => $wrapper_id,
-            'selector' => '#' . $selector,
+            'selector' => '#'. $selector,
             'effect'   => 'fade',
             'method'   => 'replace',
             'progress' => array('type' => 'throbber'),
@@ -254,9 +258,9 @@ function template_preprocess_draggableviews_view_draggabletable(&$vars) {
           drupal_add_js(array('ahah' => array($selector => $ahah_binding)), 'setting');
           
           // check if field uses link
-          if( $fields[$field]->options['link_to_node'] == 0 ){
-            $vars['rows'][$i][$key] = '<span id="' . $wrapper_id . '" class="' . $css_class . '">' . $vars['rows'][$i][$key] . '</span>';
-            //$vars['rows'][$i][$key] .= '<a href="#" id="' . $selector . '">edit</span>';
+          if ($fields[$field]->options['link_to_node'] == 0) {
+          
+            $vars['rows'][$i][$key] = '<span id="'. $wrapper_id .'" class="'. $css_class .'">'. $vars['rows'][$i][$key] .'</span>';
           }
         }
       }
@@ -264,7 +268,7 @@ function template_preprocess_draggableviews_view_draggabletable(&$vars) {
   }
   
   // output data
-  $vars['tabledrag_table_id'] = 'draggableview_' . $view->name;
+  $vars['tabledrag_table_id'] = 'draggableview_'. $view->name;
   
   // prepare tabledrag settings for output
   $vars['tabledrag'] = array();
@@ -294,11 +298,12 @@ function template_preprocess_draggableviews_view_draggabletable(&$vars) {
   }
 }
 
-function template_preprocess_draggableviews_view_draggabletable_form($vars){
+function template_preprocess_draggableviews_view_draggabletable_form($vars) {
   global $user;
   
   // get view object
-  $viewObj = $vars['form']['#parameters'][2];
+  $view_obj = $vars['form']['#parameters'][2];
+  $options  = $view_obj->options;
   
   // add javascript
   // BE AWARE: realtimeedit module js has to be loaded first,
@@ -306,8 +311,8 @@ function template_preprocess_draggableviews_view_draggabletable_form($vars){
   
   //include realtimeedit module
   if (module_exists('realtimeedit')) { // check if module exists
-    drupal_add_js(drupal_get_path('module', 'realtimeedit').'/realtimeedit.js');
-    drupal_add_css(drupal_get_path('module', 'realtimeedit').'/styles.css');
+    drupal_add_js(drupal_get_path('module', 'realtimeedit') .'/realtimeedit.js');
+    drupal_add_css(drupal_get_path('module', 'realtimeedit') .'/styles.css');
   }
   
   // fetch expand information from database
@@ -317,15 +322,15 @@ function template_preprocess_draggableviews_view_draggabletable_form($vars){
     $states[$state->parent_nid] = $state->collapsed;
   }
   // check if "expand" links should be shown
-  if ($viewObj->options['tabledrag_expand']['expand_links']) {
+  if ($options['tabledrag_expand']['expand_links']) {
   
-    drupal_add_js(drupal_get_path('module', 'draggableviews').'/draggableviews.js');
+    drupal_add_js(drupal_get_path('module', 'draggableviews') .'/draggableviews.js');
     
     if (count($states) == 0) {
       // let js know wether child nodes should be expanded or not
       drupal_add_js(array(
                           'draggableviews' => array(
-                            'expand_default' =>  $viewObj->options['tabledrag_expand']['collapsed']
+                            'expand_default' =>  $options['tabledrag_expand']['collapsed']
                                                  ? 1 : 0,
                             ),
                           ),
@@ -340,16 +345,16 @@ function template_preprocess_draggableviews_view_draggabletable_form($vars){
                     'setting');
     }
     
-    drupal_add_css(drupal_get_path('module', 'draggableviews').'/styles.css');
+    drupal_add_css(drupal_get_path('module', 'draggableviews') .'/styles.css');
   }
   
   
   //theme view
-  $sets = $viewObj->render_grouping($viewObj->view->result, $viewObj->options['grouping']);
+  $sets = $view_obj->render_grouping($view_obj->view->result, $options['grouping']);
   
   $output = '';
   foreach ($sets as $title => $records) {
-    $output .= theme($viewObj->theme_functions(), $viewObj->view, $viewObj->options, $records, $title);
+    $output .= theme($view_obj->theme_functions(), $view_bj->view, $options, $records, $title);
   }
   
   $vars['view'] = $output;

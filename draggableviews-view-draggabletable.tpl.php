@@ -16,8 +16,8 @@
  */
 
   //add tabledrag
-  if( count($tabledrag) > 0 ){
-    foreach($tabledrag as $drag){
+  if (count($tabledrag) > 0) {
+    foreach ($tabledrag as $drag) {
       drupal_add_tabledrag($tabledrag_table_id, $drag['action'], $drag['relationship'], $drag['group'], $drag['subgroup'], $drag['source'], $drag['hidden'], $drag['limit']);
     }
   }

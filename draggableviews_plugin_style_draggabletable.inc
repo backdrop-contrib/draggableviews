@@ -1,4 +1,10 @@
 <?php
+// $Id$
+
+/**
+ * @file
+ * Draggableviews style plugin definition.
+ */
 
 /**
  * Style plugin to render each item as a row in a draggable table;
@@ -35,7 +41,7 @@ class draggableviews_plugin_style_draggabletable extends views_plugin_style_tabl
     $input = $form_state['input'];
     
     // get all system-wide node types as a keyed array
-    foreach(node_get_types('types') AS $node_type){
+    foreach (node_get_types('types') AS $node_type) {
       $node_types[$node_type->type] = $node_type->type;
     }
     
@@ -83,7 +89,7 @@ class draggableviews_plugin_style_draggabletable extends views_plugin_style_tabl
          $i++) {
          
       // if option should be deleted, continue loop
-      if(isset($input['tabledrag_order_del_' . $i])) continue;
+      if (isset($input['tabledrag_order_del_'. $i])) continue;
       
       $form['tabledrag_order'][$index] = array(
         'field' => array(
@@ -93,7 +99,7 @@ class draggableviews_plugin_style_draggabletable extends views_plugin_style_tabl
         ),
         'del' => array(
           '#type' => 'button',
-          '#name' => 'tabledrag_order_del_' . $index,
+          '#name' => 'tabledrag_order_del_'. $index,
           '#value' => t('Delete'),
         ),
       );
@@ -147,7 +153,7 @@ class draggableviews_plugin_style_draggabletable extends views_plugin_style_tabl
         $i++) {
         
       // if option should be deleted, continue loop
-      if(isset($input['tabledrag_types_del_' . $i])) continue;
+      if (isset($input['tabledrag_types_del_'. $i])) continue;
       
       $form['tabledrag_types'][$index] = array(
         'node_type' => array(
@@ -162,7 +168,7 @@ class draggableviews_plugin_style_draggabletable extends views_plugin_style_tabl
         ),
         'tabledrag_type_del_button' => array(
           '#type' => 'button',
-          '#name' => 'tabledrag_types_del_' . $index,
+          '#name' => 'tabledrag_types_del_'. $index,
           '#value' => t('Delete'),
         ),
       );
@@ -192,12 +198,12 @@ class draggableviews_plugin_style_draggabletable extends views_plugin_style_tabl
     ******************************************/
     
     //check if realtimeedit module exists
-    if(module_exists('realtimeedit')){
+    if (module_exists('realtimeedit')) {
       // set tabledrag types (root, leaf) for specific node-types
       $form['realtimeedit_enabled_fields'] = array();
-      $leaveIndex_type = -1; // index of tabledrag types that should not be left out
-                             // (..to delete a specific tabledrag type)
-      $extra_rows_type = 0;  // new tabledrag-type-rows to add at end of array
+      $leave_ndex_realtimeedit = -1; // index of tabledrag types that should not be left out
+                                     // (..to delete a specific tabledrag type)
+      $extra_rows_realtimeedit = 0;  // new tabledrag-type-rows to add at end of array
       
       // REALTIMEEDIT ENABLED FIELDS
       /* Build realtimeedit enabled fields
@@ -205,30 +211,30 @@ class draggableviews_plugin_style_draggabletable extends views_plugin_style_tabl
          These fields will be realtime-editable
       */
       $max_count = count($current['realtimeedit_enabled_fields']) + $extra_rows_realtimeedit;
-      $button_index=0; // initalize count variable and button index
-      for($i = 0; $i < $max_count; $i++) {
+      $button_index = 0; // initalize count variable and button index
+      for ($i = 0; $i < $max_count; $i++) {
       
         // if realtimeedit enabled field should be left out, continue loop
         // (delete enabled field from array)
-        if($i == $leaveIndex_realtimeedit) continue;
+        if ($i == $leave_ndex_realtimeedit) continue;
         
         // if current enabled field is an extra row,
         // don't use existing data to fill form-elements (because they are not existing yet)
-        $overwrite = $i < count($current['realtimeedit_enabled_fields']) ? true : false;
+        $overwrite = $i < count($current['realtimeedit_enabled_fields']) ? TRUE : FALSE;
       
         //get options of current enabled field
-        $tmpOtions = $current['realtimeedit_enabled_fields'][$i];
+        $tmp_options = $current['realtimeedit_enabled_fields'][$i];
       
         $form['realtimeedit_enabled_fields'][] = array(
           '#weight' => 10,
           'field' => array(
             '#type' => 'select',
             '#options' => $available_fields,
-            '#value' => $overwrite ? $tmpOtions['field'] : $available_fields[0],
+            '#value' => $overwrite ? $tmp_options['field'] : $available_fields[0],
           ),
           'realtimeedit_del_button' => array(
             '#type' => 'button',
-            '#name' => 'realtimeedit_del_button_' . $button_index,
+            '#name' => 'realtimeedit_del_button_'. $button_index,
             '#value' => t('Delete'),
           ),
         );
@@ -316,7 +322,7 @@ function theme_draggableviews_ui_style_plugin_draggabletable($form) {
   $i = 1;
   foreach (element_children($form['tabledrag_order']) AS $id) {
     $columns = array();
-    $columns[] = 'Level '.$i++;
+    $columns[] = 'Level '. $i++;
     foreach (element_children($form['tabledrag_order'][$id]) AS $col) {
       $columns[] = drupal_render($form['tabledrag_order'][$id][$col]);
     }
@@ -333,7 +339,7 @@ function theme_draggableviews_ui_style_plugin_draggabletable($form) {
   $tabledrag_types_rows = array();
   foreach (element_children($form['tabledrag_types']) AS $id) {
     $columns = array();
-    foreach (element_children($form['tabledrag_types'][$id]) AS $col){
+    foreach (element_children($form['tabledrag_types'][$id]) AS $col) {
       $columns[] = drupal_render($form['tabledrag_types'][$id][$col]);
     }
     $tabledrag_types_rows[] = $columns;
@@ -379,7 +385,7 @@ function theme_draggableviews_ui_style_plugin_draggabletable($form) {
   $output .= $tabledrag_expand_default;
   
   
-  if(module_exists('realtimeedit')){
+  if (module_exists('realtimeedit')) {
     // Implementing realtimeedit module
   
     // add editable fields table to output

@@ -2,7 +2,8 @@
 // $Id$
 
 /**
- * @file Draggableviews processing functions
+ * @file
+ * Draggableviews processing functions.
  */
 
 include_once('draggableviews_theme.inc');
@@ -10,7 +11,7 @@ include_once('draggableviews_theme.inc');
 /**
  * Build the form
  */
-function draggableviews_view_draggabletable_form($form_state, $view){
+function draggableviews_view_draggabletable_form($form_state, $view) {
   $form['submit'] = array(
     '#type' => 'submit',
     '#value' => t('Save'),
@@ -23,9 +24,9 @@ function draggableviews_view_draggabletable_form($form_state, $view){
 /**
  * Implementing hook_submit
  */
-function draggableviews_view_draggabletable_form_submit($vars){
+function draggableviews_view_draggabletable_form_submit($vars) {
   // check permissions
-  if (!user_access('administer nodes')){
+  if (!user_access('administer nodes')) {
     drupal_set_message(t('You are not allowed to edit/reorder these nodes.'), 'error');
     return;
   }
@@ -43,11 +44,11 @@ function draggableviews_view_draggabletable_form_submit($vars){
   foreach ($results as $row) {
     
     if (isset($info['order']['fields'])) {
-      $info['input'][$row->nid][$info['order']['fields'][0]['field_name']] = $input[$info['order']['fields'][0]['field_name'] . '_' . $row->nid];
+      $info['input'][$row->nid][$info['order']['fields'][0]['field_name']] = $input[$info['order']['fields'][0]['field_name'] .'_'. $row->nid];
     }
     
     if (isset($info['hierarchy'])) {
-      $info['input'][$row->nid][$info['hierarchy']['field']['field_name']] = $input[$info['hierarchy']['field']['field_name'] . '_' . $row->nid];
+      $info['input'][$row->nid][$info['hierarchy']['field']['field_name']] = $input[$info['hierarchy']['field']['field_name'] .'_'. $row->nid];
     }
   }
   
@@ -403,7 +404,7 @@ function _draggableviews_save_hierarchy($info) {
     }
     
     // finally save the node
-    if($node = node_submit($node)){
+    if ($node = node_submit($node)) {
       node_save($node); // CAUTION, BUG: node_save destroys og_groups array
     }
   }
@@ -530,26 +531,34 @@ function _draggableviews_get_form_element($value, &$field, &$info, $attributes =
   $widget_types = _content_widget_types();
   $widget_type = $widget_types[$field['widget']['type']];
 */
-  switch($field['widget']['type']){
-  	case 'optionwidgets_select':
-  	  return array(
-  	    '#type' => 'select',
-  	    '#name' => $attributes['field_name'],
-  	    '#value' => $value,
-  	    // slice out the first and the last element, so we make it possible
-  	    // that new nodes may appear on the very top or the very bottom
-  	    '#options' => array_slice(content_allowed_values($field), 1, -1, TRUE),
-  	    '#attributes' => array('class' => $attributes['class']),
-  	  );
-  	  break;
-  	case '__nodereference_select':
-  	  return array(
-  	    '#type' => 'select',
-  	    '#name' => $specific_field_name != NULL ? $specific_field_name: $field_name . '_' . $nid,
-  	    '#value' => $value,
-  	    '#options' => content_allowed_values($field),
-  	    '#attributes' => array('class' => $field_name),
-  	  );
+  switch ($field['widget']['type']) {
+  
+    case 'optionwidgets_select':
+    
+      return array(
+        '#type'  => 'select',
+        '#name'  => $attributes['field_name'],
+        '#value' => $value,
+        // slice out the first and the last element, so we make it possible
+        // that new nodes may appear on the very top or the very bottom
+        '#options' => array_slice(content_allowed_values($field), 1, -1, TRUE),
+        '#attributes' => array('class' => $attributes['class']),
+      );
+      
+      break;
+      
+    case '__nodereference_select':
+    
+      return array(
+        '#type' => 'select',
+        '#name' => $specific_field_name != NULL ? $specific_field_name: $field_name .'_'. $nid,
+        '#value' => $value,
+        '#options' => content_allowed_values($field),
+        '#attributes' => array('class' => $field_name),
+      );
+      
+      break;
+      
     return array
         (
             '#theme' => 'content_multiple_values',
@@ -586,14 +595,16 @@ function _draggableviews_get_form_element($value, &$field, &$info, $attributes =
             '#access' => 1,
             '#count' => 5,
         );
-  	  
-  	case 'hidden':
-  	default:
-      return array(
+        
+      break;
+      
+    case 'hidden':
+    default:
+     return array(
         '#type' => 'hidden',
         '#name' => $attributes['field_name'],
         '#value' => $value,
-  	    '#attributes' => array('class' => $attributes['class']),
+        '#attributes' => array('class' => $attributes['class']),
       );
   }
 }
@@ -628,7 +639,7 @@ function _draggableviews_node_set_value(&$node, $field_name, $field_type, $value
   }
   
   //differ between certain field types
-  switch($field_type){
+  switch ($field_type) {
     case 'nodereference':
       $field[0]['nid'] = $value;
       break;
@@ -646,7 +657,7 @@ function _draggableviews_node_set_value(&$node, $field_name, $field_type, $value
  * @param $field
  *   the cck fields
  */
-function _draggableviews_field_get_minimum_value($field){
+function _draggableviews_field_get_minimum_value($field) {
   // get allowed values and return first element found
   $allowed_values = each(content_allowed_values($field));
   
@@ -705,4 +716,3 @@ function draggableviews_views_pre_view($view, $display_id, $view_args){
     }
   }
 }*/
-?>
