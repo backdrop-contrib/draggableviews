@@ -57,6 +57,22 @@ function draggableviews_view_draggabletable_form_submit($vars) {
   
   // save structure
   _draggableviews_save_hierarchy($info);
+  
+  // save expanded/collapsed state
+  global $user;
+  
+  foreach ($vars['submit']['#post'] AS $key => $val) {
+    if (ereg('draggableviews_collapsed_', $key)) {
+      $parent_nid = substr($key, 25);
+      db_query("DELETE FROM {draggableviews_collapsed}
+                WHERE uid=". $user->uid ." AND 
+                parent_nid=". $parent_nid);
+
+      db_query("INSERT INTO {draggableviews_collapsed}
+                (uid, parent_nid, collapsed) VALUES (%d, %d, %d)",
+                $user->uid, $parent_nid, $val);
+    }
+  }
 }
 
 /**
