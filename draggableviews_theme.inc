@@ -354,7 +354,7 @@ function template_preprocess_draggableviews_view_draggabletable_form($vars) {
   
   $output = '';
   foreach ($sets as $title => $records) {
-    $output .= theme($view_obj->theme_functions(), $view_bj->view, $options, $records, $title);
+    $output .= theme($view_obj->theme_functions(), $view_obj->view, $options, $records, $title);
   }
   
   $vars['view'] = $output;
