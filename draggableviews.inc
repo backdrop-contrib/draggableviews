@@ -9,7 +9,7 @@
 include_once('draggableviews_theme.inc');
 
 /**
- * Build the form
+ * Build the form.
  */
 function draggableviews_view_draggabletable_form($form_state, $view) {
   $form['submit'] = array(
