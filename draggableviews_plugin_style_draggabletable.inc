@@ -91,11 +91,14 @@ class draggableviews_plugin_style_draggabletable extends views_plugin_style_tabl
       // if option should be deleted, continue loop
       if (isset($input['tabledrag_order_del_'. $i])) continue;
       
+      $options      = _draggableviews_filter_fields(array('number'), $handlers);
+      $first_option = each($options);
+      
       $form['tabledrag_order'][$index] = array(
         'field' => array(
           '#type' => 'select',
-          '#options' => array('none' => 'none') + _draggableviews_filter_fields(array('number'), $handlers),
-          '#value' => $current['tabledrag_order'][$i]['field'] ? $current['tabledrag_order'][$i]['field'] : 'none',
+          '#options' => $options,
+          '#value' => $current['tabledrag_order'][$i]['field'] ? $current['tabledrag_order'][$i]['field'] : $first_option['key'],
         ),
         'del' => array(
           '#type' => 'button',

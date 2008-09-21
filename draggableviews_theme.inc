@@ -105,6 +105,8 @@ function template_preprocess_draggableviews_view_draggabletable(&$vars) {
   
   $info = _draggableviews_info($view);
   
+  if (!isset($info['order'])) return;
+  
   // calculate depth of all nodes.
   // If one of the parents of a node is broken,
   // the return will be FALSE
