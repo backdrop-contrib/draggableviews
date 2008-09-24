@@ -350,7 +350,11 @@ function _draggableviews_detect_order_collisions(&$info) {
   //     should be possible for new nodes to default on top
   //     without order collisions
   //  2) @todo The last value should not be used...
+<<<<<<< draggableviews.inc
+  //  3) An order value should only be used once per depth/parent
+=======
   //  3) A order value should only be used once per depth
+>>>>>>> 1.7.2.1
   
   // array(
   //   depth => array(order1, ..),
