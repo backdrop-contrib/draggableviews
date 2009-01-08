@@ -26,8 +26,8 @@ function draggableviews_view_draggabletable_form($form_state, $view) {
  */
 function draggableviews_view_draggabletable_form_submit($vars) {
   // check permissions
-  if (!user_access('administer nodes')) {
-    drupal_set_message(t('You are not allowed to edit/reorder these nodes.'), 'error');
+  if (!user_access('Allow Reordering')) {
+    drupal_set_message(t('You are not allowed to reorder nodes.'), 'error');
     return;
   }
 
@@ -39,16 +39,18 @@ function draggableviews_view_draggabletable_form_submit($vars) {
   
   $info = _draggableviews_info($view);
   
+  if (!isset($info['order'])) return;
+  
   
   // loop through all resulting nodes
   foreach ($results as $row) {
     
     if (isset($info['order']['fields'])) {
-      $info['input'][$row->nid][$info['order']['fields'][0]['field_name']] = $input[$info['order']['fields'][0]['field_name'] .'_'. $row->nid];
+      $info['input'][$row->nid]['order'][] = $input[$info['order']['fields'][0]['field_name'] .'_'. $row->nid];
     }
     
     if (isset($info['hierarchy'])) {
-      $info['input'][$row->nid][$info['hierarchy']['field']['field_name']] = $input[$info['hierarchy']['field']['field_name'] .'_'. $row->nid];
+      $info['input'][$row->nid]['parent'] = $input[$info['hierarchy']['field']['field_name'] .'_'. $row->nid];
     }
   }
   
@@ -67,8 +69,8 @@ function draggableviews_view_draggabletable_form_submit($vars) {
       if (ereg('draggableviews_collapsed_', $key)) {
         $parent_nid = substr($key, 25);
         db_query("DELETE FROM {draggableviews_collapsed}
-                  WHERE uid=". $user->uid ." AND 
-                  parent_nid=". $parent_nid);
+                  WHERE uid=%d AND parent_nid=%d",
+                  $user->uid, $parent_nid);
       
         db_query("INSERT INTO {draggableviews_collapsed}
                   (uid, parent_nid, collapsed) VALUES (%d, %d, %d)",
@@ -121,33 +123,30 @@ function draggableviews_view_draggabletable_form_submit($vars) {
  *     ),
  *   );
  */
-function _draggableviews_info(&$view) {
-  $options = $view->display['default']->display_options['style_options'];
-  $fields  = $view->field;
-  $results = $view->result;
+function _draggableviews_info(&$view, $prepare_results = TRUE) {
+  $options = &$view->display['default']->display_options['style_options'];
+  $fields  = &$view->field;
+  $results = &$view->result;
   
   // build information array
   $info = array();
   if (isset($options['tabledrag_order'])) {
     foreach ($options['tabledrag_order'] as $field) {
       $info['order']['fields'][] = array(
-        'field_name'        => $field['field'],
-        'real_field_name'   => $fields[$field['field']]->content_field['field_name'],
-        'field_alias'       => $fields[$field['field']]->field_alias,
-        'field_type'        => $fields[$field['field']]->content_field['type'],
-        'minimum_value'     => _draggableviews_field_get_minimum_value($fields[$field['field']]->content_field),
+        'handler' => _draggableviews_init_handler($field, $view),
+        'field_name' => $field['field'],
+        'field_alias' => $fields[$field['field']]->field_alias,
       );
     }
     $info['order']['visible'] = strcmp($options['tabledrag_order_visible']['visible'], 'visible') == 0 ? TRUE : FALSE;
-    $info['order']['minimum_value'] = _draggableviews_field_get_minimum_value($fields[$field['field']]->content_field);
+    $info['order']['minimum_value'] = $info['order']['fields'][0]['handler']->get_minimum_value();
   
-    if (count($info['order']['fields']) >= 2 && $options['tabledrag_hierarchy']['parent_field'] != 'none') {
+    if (count($info['order']['fields']) >= 2 && $options['tabledrag_hierarchy']['field'] != 'none') {
       $info['hierarchy'] = array(
         'field' => array(
-          'field_name'        => $options['tabledrag_hierarchy']['parent_field'],
-          'real_field_name' => $fields[$options['tabledrag_hierarchy']['parent_field']]->content_field['field_name'],
-          'field_alias'       => $fields[$options['tabledrag_hierarchy']['parent_field']]->field_alias,
-          'field_type'        => $fields[$options['tabledrag_hierarchy']['parent_field']]->content_field['type'],
+           'handler' => _draggableviews_init_handler($options['tabledrag_hierarchy'], $view),
+           'field_name' => $options['tabledrag_hierarchy']['field'],
+           'field_alias' => $fields[$options['tabledrag_hierarchy']['field']]->field_alias,
         ),
         'visible' => strcmp($options['tabledrag_hierarchy_visible']['visible'], 'visible') == 0 ? TRUE : FALSE,
       );
@@ -158,27 +157,54 @@ function _draggableviews_info(&$view) {
       $info['types'][$type['node_type']] = $type['type'];
     }
   }
-  if (isset($options['realtimeedit_enabled_fields'])) {
-    foreach ($options['realtimeedit_enabled_fields'] as $field) {
-      $info['realtimeedit'][$field['field']] = TRUE;
-    }
+  if ($info['hierarchy']) {
+    $info['expand_links'] = array(
+      'show'              => strcmp($options['tabledrag_expand']['expand_links'], 'expand_links') == 0 ? TRUE : FALSE,
+      'default_collapsed' => strcmp($options['tabledrag_expand']['collapsed'], 'collapsed') == 0 ? TRUE : FALSE,
+    );
   }
   
   $info['nodes'] = array();
   
-  // loop through all resulting nodes
-  foreach ($results as $row) {
-    if (isset($info['order']['fields'])) {
+  if ($options['tabledrag_order'] && $prepare_results) {
+    // loop through all resulting nodes
+    foreach ($results as $row) {
       foreach ($info['order']['fields'] as $field) {
-        $info['nodes'][$row->nid][$field['field_name']] = $row->{$field['field_alias']};
+        $info['nodes'][$row->nid]['order'][] = $row->{$field['field_alias']};
       }
-    }
-    if (isset($info['hierarchy'])) {
-      $info['nodes'][$row->nid][$info['hierarchy']['field']['field_name']] = $row->{$info['hierarchy']['field']['field_alias']};
+      if (isset($info['hierarchy'])) {
+        $info['nodes'][$row->nid]['parent'] = $row->{$info['hierarchy']['field']['field_alias']};
+      }
     }
   }
   
+  $gaga=$info;
+  $gaga['order']['fields'][0]['handler']=array();
+  $gaga['order']['fields'][1]['handler']=array();
+  $gaga['hierarchy']['field']['handler']=array();
+  //drupal_set_message("<pre>".print_r($gaga, true)."</pre>");
   return $info;
+}
+
+/**
+ * Get instance from handler
+ * 
+ * @param field
+ *   The field options specified in the style plugin
+ * @param view
+ *   The view object
+ * 
+ * @return
+ *   An instance of the handler 
+ */
+function _draggableviews_init_handler($field, &$view) {
+  //drupal_set_message("<pre>".print_r(draggableviews_discover_handlers(), true)."</pre>");
+  $handler_info = draggableviews_discover_handlers($field['handler']);
+  require_once($handler_info['path'] .'/'. $handler_info['file']);
+  $handler = new $handler_info['handler'];
+  $handler->init($field['field'], $view);
+  
+  return $handler;
 }
 
 /**
@@ -208,7 +234,7 @@ function _draggableviews_build_hierarchy(&$info) {
       //  1) bring it down to the root level
       //  2) Set order fields to the minimum
       
-      $nodes[$nid][$info['hierarchy']['field']['field_name']] = 0;
+      $nodes[$nid]['parent'] = 0;
       
       // We gracefully sidestep the order-loop
       $depth = -1;
@@ -243,13 +269,10 @@ function _draggableviews_build_hierarchy(&$info) {
     for ($i = $depth; $i >= 0; $i--) {
       // we're operating top-down, so we determine the parents nid by the way
       
-      $depth_field_name = $info['order']['fields'][$i]['field_name'];
-      $first_field_name = $info['order']['fields'][0]['field_name'];
-      
-      $nodes[$nid][$depth_field_name] = $input[$temp_nid][$first_field_name];
+      $nodes[$nid]['order'][$i] = $input[$temp_nid]['order'][0];
       
       if (isset($info['hierarchy']) && $i > 0) {
-        if (!($temp_nid = $input[$temp_nid][$info['hierarchy']['field']['field_name']])) {
+        if (!($temp_nid = $input[$temp_nid]['parent'])) {
           // this line should never be reached assumed the depth
           // was calculated correctly.
           drupal_set_message(t('Undefined State called in draggableviews_build_hierarchy(..)'), 'error');
@@ -261,9 +284,7 @@ function _draggableviews_build_hierarchy(&$info) {
     if (isset($info['hierarchy']) && $depth > -1) {
       // Simply set the parent value
       
-      $parent_field_name = $info['hierarchy']['field']['field_name'];
-      
-      $nodes[$nid][$parent_field_name] = $input[$nid][$parent_field_name];
+      $nodes[$nid]['parent'] = $input[$nid]['parent'];
     }
     
     // Now set all unused weights to a minimum value. Otherwise
@@ -281,10 +302,7 @@ function _draggableviews_build_hierarchy(&$info) {
     $depth = ($depth == -1) ? 0 : $depth;
     
     for ($i = $depth + 1; $i < count($info['order']['fields']); $i++) {
-      
-      $field_info = $info['order']['fields'][$i];
-      
-      $info['nodes'][$nid][$field_info['field_name']] = $field_info['minimum_value'];
+      $info['nodes'][$nid]['order'][$i] = $info['order']['fields'][$i]['handler']->get_minimum_value();
     }
   }
 }
@@ -309,18 +327,16 @@ function _draggableviews_rebuild_hierarchy(&$info) {
   
   // loop through all nodes
   foreach ($nodes as $nid => $prop) {
-    
-
+  	
     $depth = $prop['depth'] ? $prop['depth'] : 0;
     
     // use order weight of the hierarchy level the field is situated in
-    $input[$nid][$info['order']['fields'][0]['field_name']] = $prop[$info['order']['fields'][$depth]['field_name']];
+    $input[$nid][0] = $prop['order'][$depth];
+    $input[$nid]['order'][0] = $prop['order'][$depth];
     
     if (isset($info['hierarchy'])) {
-    
       // set parent
-      $field_name = $info['hierarchy']['field']['field_name'];
-      $input[$nid][$field_name] = $prop[$field_name];
+      $input[$nid]['parent'] = $prop['parent'];
     }
   }
   
@@ -337,6 +353,9 @@ function _draggableviews_rebuild_hierarchy(&$info) {
 
 /**
  * Detect and repair order collisions
+ * 
+ * @return
+ *   TRUE if no collision detected
  */
 function _draggableviews_detect_order_collisions(&$info) {
 
@@ -350,14 +369,10 @@ function _draggableviews_detect_order_collisions(&$info) {
   //     should be possible for new nodes to default on top
   //     without order collisions
   //  2) @todo The last value should not be used...
-<<<<<<< draggableviews.inc
   //  3) An order value should only be used once per depth/parent
-=======
-  //  3) A order value should only be used once per depth
->>>>>>> 1.7.2.1
   
   // array(
-  //   depth => array(order1, ..),
+  //   parent => array(order1, ..),
   //   ..
   // )
   $order = array();
@@ -367,18 +382,27 @@ function _draggableviews_detect_order_collisions(&$info) {
   // loop through all nodes
   foreach ($nodes as $nid => $prop) {
     
-    $depth = $prop['depth'];
+    if (isset($info['hierarchy'])) {
+      $parent = $prop['parent'];
+      // if no parent set use 0
+      if (!isset($parent)) $parent = 0;
+    }
+    else {
+      $parent = 0;
+    }
+    
+    $order_field_value = &$nodes[$nid]['order'][$prop['depth']];
     
     $begin_search = TRUE;
     
     // make sure that the minimum value cannot be used
-    if (!is_array($order[$depth])) $order[$depth] = array($min_value);
+    if (!is_array($order[$parent])) $order[$parent] = array($min_value);
     
     // first try to keep current value
-    $tmp_order = $prop[$info['order']['fields'][$depth]['field_name']];
+    $tmp_order = $order_field_value;
     
-    while (is_numeric(array_search($tmp_order, $order[$depth]))) {
-      // if there already exists an order value for this depth
+    while (is_numeric(array_search($tmp_order, $order[$parent]))) {
+      // if there already exists an order value for this depth/parent
       // we have to find another one.
       // Try to find a free order:
       
@@ -396,9 +420,9 @@ function _draggableviews_detect_order_collisions(&$info) {
       $collision = TRUE;
     }
     
-    $order[$depth] = array_merge(array($tmp_order), $order[$depth]);
+    $order[$parent] = array_merge(array($tmp_order), $order[$parent]);
     
-    $nodes[$nid][$info['order']['fields'][$depth]['field_name']] = $tmp_order;
+    $order_field_value = $tmp_order;
   }
   
   return !$collision;
@@ -414,28 +438,19 @@ function _draggableviews_save_hierarchy($info) {
 
   // loop through all nodes
   foreach ($info['nodes'] as $nid => $prop) {
-  
-    $node = node_load(array('nid' => $nid));
-  
+
     if (isset($info['hierarchy'])) {
-    
-      $field_info = $info['hierarchy']['field'];
-      $value      = $prop[$field_info['field_name']];
-      
-      _draggableviews_node_set_value($node, $field_info['real_field_name'], $field_info['field_type'], $value);
+      $value   = $prop['parent'];
+      $handler = $info['hierarchy']['field']['handler'];
+      $handler->save($nid, $value);
     }
     
-    foreach ($info['order']['fields'] as $field_info) {
+    for ($i = 0; $i < count($info['order']['fields']); $i++) {
       // loop through all order fields
       
-      $value      = $prop[$field_info['field_name']];
-    
-      _draggableviews_node_set_value($node, $field_info['real_field_name'], $field_info['field_type'], $value);
-    }
-    
-    // finally save the node
-    if ($node = node_submit($node)) {
-      node_save($node); // CAUTION, BUG: node_save destroys og_groups array
+      $value   = $prop['order'][$i];
+      $handler = $info['order']['fields'][$i]['handler'];
+      $handler->save($nid, $value);
     }
   }
 }
@@ -452,15 +467,13 @@ function _draggableviews_check_order($nid, &$info) {
     
   for ($i = $nodes[$nid]['depth']; $i >= 0; $i--) {
     // we're operating top-down, so we determine the parents nid by the way
-      
-    $depth_field_name = $info['order']['fields'][$i]['field_name'];
-    
-    if ($nodes[$nid][$depth_field_name] != $nodes[$temp_nid][$depth_field_name]) {
+
+    if ($nodes[$nid]['order'][$i] != $nodes[$temp_nid]['order'][$i]) {
       return FALSE;
     }
     
     if (isset($info['hierarchy']) && $i > 0) {
-      if (!($temp_nid = $nodes[$temp_nid][$info['hierarchy']['field']['field_name']])) {
+      if (!($temp_nid = $nodes[$temp_nid]['parent'])) {
         // this line should never be reached assumed the depth
         // was calculated correctly.
         drupal_set_message(t('Undefined State called in draggableviews_build_hierarchy(..)'), 'error');
@@ -516,11 +529,10 @@ function _draggableviews_get_hierarchy_depth($nid, &$nodes, &$info) {
   $depth = 0;
   $error = FALSE;
   $temp_nid = $nid;
-  $field_name = $info['hierarchy']['field']['field_name'];
   $used_nids = array();
   $used_nids[] = $temp_nid;
   
-  while (!($error = !isset($nodes[$temp_nid])) && ($temp_nid = $nodes[$temp_nid][$field_name]) > 0) {
+  while (!($error = !isset($nodes[$temp_nid])) && ($temp_nid = $nodes[$temp_nid]['parent']) > 0) {
     
     // In order to detect cycles we use an array,
     // where all used node ids are saved in. If any node id
@@ -545,159 +557,6 @@ function _draggableviews_get_hierarchy_depth($nid, &$nodes, &$info) {
 }
 
 /*
- * Get accurate form element
- * 
- * @param $nid
- * @param $field_name
- * @param $value
- * @param $view
- *   The view object
- */
-function _draggableviews_get_form_element($value, &$field, &$info, $attributes = array()) {
-  if (!isset($attributes['field_name'])) $attributes['field_name'] = $field['field_name'];
-  if (!isset($attributes['class'])) $attributes['class'] = $field['field_name'];
-/*
-  $type = content_types($node->type);
-  $field = $type['fields'][$field_name];
-  $field_types = _content_field_types();
-  $field_type = $field_types[$field['type']];
-  $widget_types = _content_widget_types();
-  $widget_type = $widget_types[$field['widget']['type']];
-*/
-  switch ($field['widget']['type']) {
-  
-    case 'optionwidgets_select':
-    
-      return array(
-        '#type'  => 'select',
-        '#name'  => $attributes['field_name'],
-        '#value' => $value,
-        // slice out the first and the last element, so we make it possible
-        // that new nodes may appear on the very top or the very bottom
-        '#options' => array_slice(content_allowed_values($field), 1, -1, TRUE),
-        '#attributes' => array('class' => $attributes['class']),
-      );
-      
-      break;
-      
-    case '__nodereference_select':
-    
-      return array(
-        '#type' => 'select',
-        '#name' => $specific_field_name != NULL ? $specific_field_name: $field_name .'_'. $nid,
-        '#value' => $value,
-        '#options' => content_allowed_values($field),
-        '#attributes' => array('class' => $field_name),
-      );
-      
-      break;
-      
-    return array
-        (
-            '#theme' => 'content_multiple_values',
-            '#title' => 'parent',
-            '#required' => 0,
-            '#description' => NULL, 
-            0 => array
-                (
-                    '#type' => 'nodereference_autocomplete',
-                    '#default_value' => array
-                        (
-                            'nid' => NULL,
-                            '_error_element' => 'default_value_widget][field_parent][0][nid][nid',
-                        ),
-
-                    '#value_callback' => 'nodereference_autocomplete_value',
-                    '#title' => 'parent',
-                    '#description' => NULL,
-                    '#required' => NULL,
-                    '#weight' => 0,
-                    '#delta' => 0,
-                    '#columns' => array
-                        (
-                            0 => 'nid',
-                        ),
-
-                    '#field_name' => 'field_parent',
-                    '#type_name' => 'task',
-                ),
-
-            '#field_name' => 'field_parent',
-            '#tree' => 1,
-            '#weight' => 3,
-            '#access' => 1,
-            '#count' => 5,
-        );
-        
-      break;
-      
-    case 'hidden':
-    default:
-     return array(
-        '#type' => 'hidden',
-        '#name' => $attributes['field_name'],
-        '#value' => $value,
-        '#attributes' => array('class' => $attributes['class']),
-      );
-  }
-}
-
-/*
- * Set cck fields in a node with a specific field-type
- * 
- * @param $node
- *   The node which contains the cck fields
- * @param $field_name
- *   The cck_field_name that should be set
- * @param $field_type
- *   The field-type of the cck field
- * @param $value
- */
-function _draggableviews_node_set_value(&$node, $field_name, $field_type, $value) {
-
-  // get field
-  if (isset($node->$field_name)) {
-    $field = &$node->$field_name;
-  }
-  else {
-    // return if field does not exist
-    return;
-  }
-  
-  if (!isset($value)) {
-    // sometimes there is no value available (e.g. a root without a parent)
-    
-    // set empty array
-    $value = 0;
-  }
-  
-  //differ between certain field types
-  switch ($field_type) {
-    case 'nodereference':
-      $field[0]['nid'] = $value;
-      break;
-    
-    default:
-    case 'number_integer':
-      $field[0]['value'] = $value;
-      break;
-  }
-}
-
-/*
- * get the minimum allowed value of a cck-field  
- * 
- * @param $field
- *   the cck fields
- */
-function _draggableviews_field_get_minimum_value($field) {
-  // get allowed values and return first element found
-  $allowed_values = each(content_allowed_values($field));
-  
-  return $allowed_values['key'];
-}
-
-/*
  * filter handlers by type  
  * 
  * @param $type
@@ -707,20 +566,25 @@ function _draggableviews_field_get_minimum_value($field) {
  * return
  *   the available fields
  */
-function _draggableviews_filter_fields($types = array(), $handlers) {
+function _draggableviews_filter_fields($types = array(''), $handlers) {
 
   $available_fields = array();
   
   foreach ($handlers as $field => $handler) {
-    $available = FALSE;
+    $available = TRUE;
     // search given type in content-field-type
-    if (isset($handler->content_field)) {
-      foreach ($types AS $type) {
-        if (ereg($type, $handler->content_field['type'])) {
-          $available = TRUE;
-          break;
-        }
+    if (true) {
+      /*if (empty($types)) {
+        $available = TRUE;
       }
+      else {
+        foreach ($types AS $type) {
+          if (ereg($type, $handler->content_field['type'])) {
+            $available = TRUE;
+            break;
+          }
+        }
+      }*/
     
       if ($available) {
         if ($label = $handler->label()) {
@@ -734,18 +598,3 @@ function _draggableviews_filter_fields($types = array(), $handlers) {
   }
   return $available_fields;
 }
-
-/*
- * Implementing hook_views_pre_view
- */
-/*
-function draggableviews_views_pre_view($view, $display_id, $view_args){
-  // check  if view uses our style plugin
-  if( $view->display[$display_id]->handler->get_option('style_plugin') == 'draggabletable' ){
-  	
-    // Add the node id field if it's not yet present.
-    if( !array_key_exists('nid', $view->display[$display_id]->display_options['fields']) ){
-      $view->add_item($display_id, 'field', 'node', 'nid');
-    }
-  }
-}*/

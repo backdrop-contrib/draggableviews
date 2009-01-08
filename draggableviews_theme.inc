@@ -182,38 +182,32 @@ function template_preprocess_draggableviews_view_draggabletable(&$vars) {
       
         if (isset($info[$modus])) {
           if ($modus == 'hierarchy') {
-            // there's only one hierarchy field, so take it
-            $field_name = $info['hierarchy']['field']['field_name'];
-            
-            $value = $info['nodes'][$nid][$field_name];
+            $value = $info['nodes'][$nid]['parent'];
             
             if ($value > 0 && !isset($info['nodes'][$value])) {
-              // if parent node doesn't rebuild hierarchy and return
+              // if parent node doesn't exist rebuild hierarchy and return
               _draggableviews_rebuild_hierarchy($info);
               return;
             }
             
             // get the field that should be rendered
-            // it's still the field name
-            // $field_name = $field_name;
-            $field = $fields[$field_name]->content_field;
+            $field = &$info['hierarchy']['field'];
           }
           else {
-            // the field to use depends on the depth
-            $field_name = $info['order']['fields'][$info['nodes'][$node->nid]['depth']]['field_name'];
+            // get depth of current field
+            $depth = $info['nodes'][$node->nid]['depth'];
             
-            $value = $info['nodes'][$nid][$field_name];
+            $value = $info['nodes'][$nid]['order'][$depth];
             
             // get the field that should be rendered
-            $field_name = $info['order']['fields'][0]['field_name'];
-            $field = $fields[$field_name]->content_field;
+            $field = &$info['order']['fields'][0];
           }
           
           // get the form element
-          $form_element = _draggableviews_get_form_element($value, $field, $info, array('field_name' => $field_name .'_'. $nid, 'class' => $field_name));
+          $form_element = $field['handler']->get_form_element($value, array('field_name' => $field['field_name'] .'_'. $nid, 'class' => $field['field_name']));
           
           // render new form element
-          $vars['rows'][$i][$field_name] = drupal_render($form_element);
+          $vars['rows'][$i][$field['field_name']] = drupal_render($form_element);
         }
       }
       
@@ -229,7 +223,7 @@ function template_preprocess_draggableviews_view_draggabletable(&$vars) {
           '#attributes' => array('class' => 'hidden_nid'),
         );
         // append rendered hidden node id to last rendered field
-        $vars['rows'][$i][$field_name] .= drupal_render($hidden_nid);
+        $vars['rows'][$i][$field['field_name']] .= drupal_render($hidden_nid);
       }
     }
     
@@ -239,13 +233,16 @@ function template_preprocess_draggableviews_view_draggabletable(&$vars) {
       $vars['rows'][$i][$first_field['key']] = $indentation . $vars['rows'][$i][$first_field['key']];
     }
     
-    // invoke modules here
-    // @todo invoke modules
+    // Let extension modules alter the output
+    foreach (module_implements('draggableviews_row_alter') as $module) {
+      $function = $module . '_draggableviews_row_alter';
+      $function($vars['rows'][$i], $nid, $info, $view);
+    }
   }
   
   // output data
   $vars['tabledrag_table_id'] = 'draggableview_'. $view->name;
-  
+ 
   if (user_access('Allow Reordering')) {
   
     // prepare tabledrag settings for output
@@ -284,14 +281,6 @@ function template_preprocess_draggableviews_view_draggabletable_form($vars) {
   $view_obj = $vars['form']['#parameters'][2];
   // get structured info array
   $info     = _draggableviews_info($view_obj->view, FALSE);
-  
-  // add javascript
-  // BE AWARE: realtimeedit module js has to be loaded first,
-  // generated links should be appended in the right order
-  
-  // invoke modules here
-  // @todo invoke modules
-  
   
   if (user_access('Allow Reordering') && isset($info['hierarchy'])) {
   

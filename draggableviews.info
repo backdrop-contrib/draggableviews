@@ -3,3 +3,10 @@ name = Draggable views
 description = Make views draggable
 dependencies[] = views
 core = 6.x
+
+; Information added by drupal.org packaging script on 2008-09-21
+version = "6.x-3.0"
+core = "6.x"
+project = "draggableviews"
+datestamp = "1222032618"
+

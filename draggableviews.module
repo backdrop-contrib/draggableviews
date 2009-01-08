@@ -10,16 +10,16 @@
 include_once('draggableviews.inc');
 
 /**
-* Display help and module information
-* @param path which path of the site we're displaying help
-* @param arg array that holds the current path as would be returned from arg() function
-* @return help text for the path
-*/
+ * Display help and module information
+ * @param path which path of the site we're displaying help
+ * @param arg array that holds the current path as would be returned from arg() function
+ * @return help text for the path
+ */
 function draggableviews_help($path, $arg) {
   $output = '';
   switch ($path) {
     case "admin/help#draggableviews":
-      $output = '<p>'.  t("Makes views draggable") .'</p>';
+      $output = '<p>'. t("Makes views draggable") .'</p>';
       break;
   }
   return $output;
@@ -29,15 +29,37 @@ function draggableviews_help($path, $arg) {
  * Implementing hook_admin
  */
 function draggableviews_admin() {
-  $form['draggableviews_some_settings'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Coming soon'),
-    '#default_value' => variable_get('draggableviews_some_settings', 10),
-    '#size' => 8,
-    '#maxlength' => 8,
-    '#description' => t("Some settings."),
-    '#required' => TRUE,
-  );
+  module_load_include('inc', 'views', 'includes/admin');
+
+  $options = views_fetch_fields(array('node', '#global'), 'sort');
+  $implementations = array(1 => "oasch");
+  $form = array();
+
+  if (!empty($options)) {
+    $form['implementations'] = array(
+      '#type' => 'fieldset',
+      '#title' => t('Specific implementations'),
+      '#description' => t('Define how the list of tasks to be analyzed (...or issues, cases, bugs) is going be retrieved.'),
+      '#collapsible' => TRUE,
+      '#collapsed' => (variable_get('project_forecast_tasks_view', '') != ''),
+    );
+    foreach ($options as $key => $option) {
+      $group = preg_replace('/[^a-z0-9]/', '-', strtolower($option['group']));
+      $groups[$group] = $option['group'];
+      $title = t('!group: !field', array('!group' => $option['group'], '!field' => $option['title']));
+      
+      $form['implementations']['field_' .$key] = array(
+        '#prefix' => '<div class="draggableviews-admin"><div class="draggableviews-admin-field">'. $title .'</div>',
+        '#suffix' => '</div>',
+        '#type' => 'select',
+        '#options' => array_merge(array(0 => "None"), $implementations),
+        '#required' => FALSE,
+        '#default_value' => variable_get("draggableviews_implementation_" .str_replace('.', '_', $key), 0),
+        '#description' => t('Choose an inplementation.'),
+      );
+    }
+  }
+
 
   return system_settings_form($form);
 }
@@ -48,12 +70,10 @@ function draggableviews_admin() {
 function draggableviews_menu() {
 
   $items = array();
-
-  /* ADMIN AREA
-  ***************/
   $items['admin/settings/draggableviews'] = array(
     'title' => 'Draggable views settings',
     'description' => 'Configure settings',
+    'file' => 'draggableviews.admin.inc',
     'page callback' => 'drupal_get_form',
     'page arguments' => array('draggableviews_admin'),
     'access arguments' => array('access administration pages'),
@@ -68,24 +88,86 @@ function draggableviews_menu() {
  */
 function draggableviews_admin_validate($form, &$form_state) {
   $some_settings = $form_state['values']['draggableviews_some_settings'];
-  if (!is_numeric($some_settings)) {
-    form_set_error('draggleviews_some_settings', t('You must select a number for the maximum number of links.'));
-  }
-  else if ($some_settings <= 0) {
-    form_set_error('draggableviews_some_settings', t('Maximum number must be positive.'));
+  foreach($form_state['clicked_button']['#post'] AS $key => $implementation) {
+    if (!ereg('field_', $key)) continue;
+    $field = substr($key, 6);
+    variable_set("draggableviews_implementation_". $field, $implementation);
   }
 }
 
 /**
-* Implementing hook_perm
-*/
+ * Discover all Implementations for draggableviews
+ *
+ */
+function draggableviews_discover_handlers($filter_handler = FALSE) {
+  $cache = array();
+  // Get implementation definitions from all modules.
+  foreach (module_implements('draggableviews_handlers') as $module) {
+    $function = $module . '_draggableviews_handlers';
+    $result = $function();
+    if (!is_array($result)) {
+      continue;
+    }
+
+    $path = drupal_get_path('module', $module);
+
+    foreach ($result as $handler => $def) {
+      if (!isset($def['path'])) {
+        $def['path'] = $path;
+      } 
+      if (!isset($def['file'])) {
+        $def['file'] = "$handler.inc";
+      }
+      if (!isset($def['handler'])) {
+        $def['handler'] = $implementation;
+      }
+      // merge the new data in
+      $cache[$handler] = $def;
+    }
+  }
+  
+  if ($filter_handler) {
+    return $cache[$filter_handler];
+  }
+  return $cache;
+}
+
+/**
+ * Return a list of all draggableviews handlers
+ */
+function draggableviews_get_handlers_list() {
+  $handlers = draggableviews_discover_handlers();
+  foreach($handlers as $handler => $def) {
+    $list[$handler] = $def['title'];
+  }
+  
+  return $list;
+}
+
+/**
+ * Implementing hook_draggableviews_handlers
+ */
+function draggableviews_draggableviews_handlers() {
+  return array(
+    'auto' => array(
+      'file' => 'implementations/draggableviews_handler_auto.inc',
+      'title' => t('Auto'),
+      'description' => 'Storage of structure done by draggableviews',
+      'handler' => 'draggableviews_handler_auto',
+    ),
+  );
+}
+
+/**
+ * Implementing hook_perm
+ */
 function draggableviews_perm() {
   return array('Allow Reordering');
 }
 
 /**
-* Implement hook_theme
-*/
+ * Implement hook_theme
+ */
 function draggableviews_theme() {
   return array(
     'draggableviews_ui_style_plugin_draggabletable' => array(
@@ -104,5 +186,6 @@ function draggableviews_theme() {
 function draggableviews_views_api() {
   return array(
     'api' => 2.0,
+    'path' => drupal_get_path('module', 'draggableviews') . '/views',
   );
 }

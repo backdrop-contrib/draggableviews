@@ -1,6 +1,6 @@
 .draggableviews-expand{
   margin-left: 3px;
-  position:relative;
+  position: relative;
   top:3px;
   
   background-image: url("graphics/icon_expand.gif");
@@ -12,7 +12,7 @@
 }
 .draggableviews-collapse{
   margin-left: 3px;
-  position:relative;
+  position: relative;
   top:3px;
   
   background-image: url("graphics/icon_collapse.gif");
@@ -21,11 +21,4 @@
   display: inline-block;
   
   cursor: pointer;
-}
-
-.views-field-edit-node a{
-  background-image: url("graphics/icon_edit2.gif");
-  width: 18px;
-  height: 20px;
-  display: inline-block;
 }
