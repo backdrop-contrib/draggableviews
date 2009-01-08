@@ -1,6 +1,0 @@
-; $Id$
-name = Draggableviews CCK Implementation
-description = Provides CCK-support for order fields
-dependencies[] = draggableviews
-dependencies[] = content
-core = 6.x
