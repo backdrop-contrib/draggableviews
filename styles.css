@@ -22,3 +22,14 @@
   
   cursor: pointer;
 }
+
+tr.draggable.odd.draggableviews-extended{
+  background-color: #fafafa;
+  border: dashed #dae1e6;
+  border-width: 1px 0;
+}
+tr.draggable.even.draggableviews-extended{
+  background-color: #fdfdfe;
+  border: dashed #dae1e6;
+  border-width: 1px 0;
+}

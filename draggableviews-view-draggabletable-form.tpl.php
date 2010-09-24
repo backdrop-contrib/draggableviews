@@ -3,12 +3,11 @@
 
 /**
  * @file
- * Draggableviews: Template to merge the views output with
- * some module-specific output.
+ * Template to merge the views output with some module-specific output.
+ *
+ * - $view: The view output.
+ * - $form: All rendered form elements.
  */
 
-// the view returned by views module
 print $view;
-// submit form
-print $submit_form;
-?>
+print $form_elements;
