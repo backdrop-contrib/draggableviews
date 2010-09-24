@@ -477,7 +477,7 @@ function draggableviews_view_draggabletable_form_submit($form, &$form_state) {
     $uid = $info['expand_links']['by_uid'] ? $user->uid : 0;
 
     foreach ($form_state['input'] as $key => $val) {
-      if (ereg('draggableviews_collapsed_', $key)) {
+      if (preg_match('/draggableviews_collapsed_/', $key)) {
         $parent_nid = drupal_substr($key, 25);
         // TODO Please review the conversion of this statement to the D7 database API syntax.
         /* db_query("DELETE FROM {draggableviews_collapsed}
