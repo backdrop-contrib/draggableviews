@@ -1,4 +1,3 @@
-// $Id$
 /**
  * @file draggableviews.js
  *
