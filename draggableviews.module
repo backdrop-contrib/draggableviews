@@ -630,7 +630,7 @@ function draggableviews_draggableviews_style_plugin_form_alter(&$form, $form_sta
     '#name' => 'draggableviews_arguments',
     '#options' => array('use_args' => t('Use arguments as well as view ID to order nodes.')),
     '#description' => t('If checked, nodes can be reordered for any set of views arguments.  Use with care: If you have many combinations of arguments, your database could become very large.'),
-    '#default_value' => isset($current['draggableviews_arguments']) ? $current['draggableviews_arguments'] : array(),
+    '#default_value' => $current['draggableviews_arguments'],
   );
 }
 
