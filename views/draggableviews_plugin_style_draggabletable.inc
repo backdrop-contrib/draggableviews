@@ -85,9 +85,14 @@ class draggableviews_plugin_style_draggabletable extends views_plugin_style_tabl
     // Check sort criteria.
     if (isset($this->options['tabledrag_order']['field']) && $this->options['tabledrag_order']['field'] != 'none') {
       $order_field = $fields[$this->options['tabledrag_order']['field']];
+      // Change the name for next validation check.
+      if (!strcmp($this->options['tabledrag_order']['handler'], 'fieldapi')) {
+        $order_field['field'] .= '_value';
+      }
+
       // Get the first sort criteria.
       $sort = current($sorts);
-      if (strcmp($order_field['table'] . $order_field['field'] . '_value', $sort['table'] . $sort['field']) != 0 || $sort['order'] == 'DESC') {
+      if (strcmp($order_field['table'] . $order_field['field'], $sort['table'] . $sort['field']) != 0 || $sort['order'] == 'DESC') {
         $errors[] = t('Display "@display": Draggableviews: You must sort by <i>@group: @title</i> ascending as the first sort criteria to display the structure correctly.', array('@display' => $this->display->display_title, '@group' => $handlers[$this->options['tabledrag_order']['field']]->definition['group'], '@title' => $handlers[$this->options['tabledrag_order']['field']]->definition['title']));
       }
     }
