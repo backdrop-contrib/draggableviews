@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * Draggableviews style plugin definition.

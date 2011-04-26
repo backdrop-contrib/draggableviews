@@ -308,7 +308,7 @@ function draggableviews_views_pre_execute(&$view) {
 }
 
 /**
- * Imlpementing hook_views_pre_render
+ * Implements hook_views_pre_render
  *
  * We distinguish between two cases A and B:
  * A) Click sort was used:

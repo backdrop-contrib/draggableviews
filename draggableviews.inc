@@ -1,6 +1,4 @@
 <?php
-
-
 /**
  * @file
  * Draggableviews processing functions.
@@ -109,7 +107,7 @@ function _draggableviews_info($view, $info = NULL) {
         );
       }
       else {
-        drupal_set_message(t('Draggableviews: Handler <i>') . $options['tabledrag_order']['handler'] . t('</i> could not be found.'), 'error');
+        drupal_set_message(t('Draggableviews: Handler <i>@handler</i> could not be found.', array('@handler' => $options['tabledrag_order']['handler'])), 'error');
         unset($info['order']);
         return $info;
       }
@@ -144,7 +142,7 @@ function _draggableviews_info($view, $info = NULL) {
           );
         }
         else {
-          drupal_set_message(t('Draggableviews: Handler <i>') . $options['tabledrag_hierarchy']['handler'] . t('</i> could not be found.'), 'error');
+          drupal_set_message(t('Draggableviews: Handler <i>@handler</i> could not be found.', array('@handler' => $options['tabledrag_hierarchy']['handler'])), 'error');
         }
       }
 
@@ -448,7 +446,7 @@ function _draggableviews_rebuild_hierarchy(&$info) {
   // Nonetheless let's make a final check for debugging reasons.
 
   if (!_draggableviews_quick_check_structure($info)) {
-    drupal_set_message("Draggableviews: Rebuilding structure didn't work. The structure is broken.", "error");
+    drupal_set_message(t("Draggableviews: Rebuilding structure didn't work. The structure is broken."), "error");
   }
 }
 
@@ -524,13 +522,13 @@ function _draggableviews_ascending_numbers(&$info, $offset = 0, $renumber = FALS
         array_pop($last_parent_nid);
       }
     }
-    else if ($parent_nid == $last_nid) {
+    elseif ($parent_nid == $last_nid) {
       // We are entering a new level. This is the first child of the last node.
 
       array_push($last_parent_nid, $last_nid);
       $depth++;
     }
-    else if ($parent_nid != $last_parent_nid[$depth]) {
+    elseif ($parent_nid != $last_parent_nid[$depth]) {
       // This node is neither a member of any previous hierarchy level
 
       // nor a child of the last node (opening a new level)
@@ -540,7 +538,7 @@ function _draggableviews_ascending_numbers(&$info, $offset = 0, $renumber = FALS
       // There's something wrong!
 
       if ($renumber) {
-        drupal_set_message("Something wrong in _draggableviews_ascending_numbers (" . ($renumber ? 'WRITE' : 'CHECK') . ").", "error");
+        drupal_set_message(t("Something wrong in _draggableviews_ascending_numbers (@number).", array('@number' => ($renumber ? 'WRITE' : 'CHECK'))), "error");
       }
       return FALSE;
     }

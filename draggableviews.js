@@ -107,17 +107,17 @@ Drupal.DraggableViews.draggableviews_collapse_all = function(table_id) {
   $("#" + table_id + " tr:has(td ." + Drupal.settings.draggableviews[table_id].parent + "[value!=0])").each( function (i) {
     $(this).hide();
   });
-  
+
   // swap links to expand links
   $("#" + table_id + " tr:has(td .hidden_nid)").each( function (i){
     var parent_id = $(this).find('td .hidden_nid').attr('value');
-    
+
     $(this).find('.draggableviews-expand').each( function (i){
       // set new action and class
       $(this).unbind('click');
       $(this).attr('class', 'draggableviews-collapse');
       $(this).bind('click', function() { Drupal.DraggableViews.draggableviews_expand(parent_id, table_id, true); });
-      
+
       // set collapsed/expanded state
       Drupal.DraggableViews.draggableviews_set_state_field(parent_id, table_id, true);
     });
@@ -128,7 +128,7 @@ Drupal.DraggableViews.draggableviews_collapse_all = function(table_id) {
 Drupal.DraggableViews.draggableviews_set_state_field = function(parent_id, table_id, state) {
   //build field name
   var field_name = 'draggableviews_collapsed_' + parent_id;
-  
+
   $("table[id='" + table_id + "'] input[name='hidden_nid'][value='" + parent_id + "']")
   .parent().each( function(i) {
     var replaced = false;

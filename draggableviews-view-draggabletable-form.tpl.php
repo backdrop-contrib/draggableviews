@@ -1,5 +1,4 @@
 <?php
-
 /**
  * @file
  * Template to merge the views output with some module-specific output.

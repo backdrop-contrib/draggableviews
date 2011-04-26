@@ -125,7 +125,7 @@ function template_preprocess_draggableviews_view_draggabletable(&$vars, $style_p
     drupal_add_js('misc/tableheader.js');
     $vars['class'][] = "sticky-enabled";
   }
-  $vars['class'][] = 'cols-'. count($vars['rows']);
+  $vars['class'][] = 'cols-' . count($vars['rows']);
 
   // Copy/Modification END.
 
