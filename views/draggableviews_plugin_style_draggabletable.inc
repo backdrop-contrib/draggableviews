@@ -384,6 +384,8 @@ class draggableviews_plugin_style_draggabletable extends views_plugin_style_tabl
 
     // TODO $this needs to have $form as its first parameter.
     //return drupal_get_form($form_id, $this);
-    return drupal_render(array_merge(drupal_get_form($form_id, $this), array('#draggableviews_style_plugin' => $this)));
+    $form = drupal_get_form($form_id, $this);
+    $form['#draggableviews_style_plugin'] = $this;
+    return drupal_render($form);
   }
 }
