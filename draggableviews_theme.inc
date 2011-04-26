@@ -343,6 +343,7 @@ function theme_draggableviews_ui_style_plugin_draggabletable($variables) {
     t('Field'),
     t('Column'),
     t('Separator'),
+    t('Align'),
     array(
       'data' => t('Sortable'),
       'align' => 'center',
@@ -354,6 +355,7 @@ function theme_draggableviews_ui_style_plugin_draggabletable($variables) {
     $row[] = drupal_render($form['info'][$id]['name']);
     $row[] = drupal_render($form['columns'][$id]);
     $row[] = drupal_render($form['info'][$id]['separator']);
+    $row[] = drupal_render($form['info'][$id]['align']);
     if (!empty($form['info'][$id]['sortable'])) {
       $row[] = array(
         'data' => drupal_render($form['info'][$id]['sortable']),
@@ -368,7 +370,7 @@ function theme_draggableviews_ui_style_plugin_draggabletable($variables) {
   drupal_render($form['default'][-1]);
 
   // Add the special 'None' row.
-  $rows[] = array(t('None'), '', '', '');
+  $rows[] = array(t('None'), '', '', '', '');
 
   $output .= theme('table', array('header' => $header, 'rows' => $rows));
   // Copy/Modification end
