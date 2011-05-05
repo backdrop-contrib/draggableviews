@@ -324,7 +324,7 @@ function template_preprocess_draggableviews_view_draggabletable_form(&$vars) {
     $vars['form_elements'] = drupal_render_children($vars['form']);
   }
   else {
-    $vars['form'] = '';
+    $vars['form_elements'] = '';
   }
 }
 
