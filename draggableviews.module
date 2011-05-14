@@ -249,7 +249,7 @@ function draggableviews_views_pre_execute(&$view) {
   $info['pager'] = $info['view']->query->pager;
   $info['globals'] = array();
 
-  if ($info['pager']->options['items_per_page'] > 0) {
+  if (isset($info['pager']->options['items_per_page'])) {
     // Paging is beeing used. We modify some paging settings before the view gets executed.
 
 
@@ -332,7 +332,7 @@ function draggableviews_views_pre_render(&$view) {
   $view->draggableviews_info = _draggableviews_info($view, $view->draggableviews_info);
   $info = &$view->draggableviews_info;
 
-  if ($info['pager']->options['items_per_page'] > 0 && empty($info['hierarchy'])) {
+  if (isset($info['pager']->options['items_per_page']) && empty($info['hierarchy'])) {
     // The current page of hierarchies cannot be checked here because $views->total_rows will not be
 
     // calculated when the entire view gets loaded.
@@ -389,7 +389,7 @@ function draggableviews_views_pre_render(&$view) {
     }
   }
 
-  if ($info['pager']->options['items_per_page'] > 0) {
+  if (isset($info['pager']->options['items_per_page'])) {
     global $pager_page_array, $pager_total, $pager_total_items;
     // The global $pager_total variable was calculated with wrong values because we changed the
 
