@@ -23,7 +23,7 @@ class draggableviews_plugin_style_draggabletable extends views_plugin_style_tabl
     $options['tabledrag_hierarchy'] = array('default' => array('field' => 'none', 'handler' => ''));
     $options['tabledrag_hierarchy_visible'] = array('default' => array());
     $options['draggableviews_depth_limit'] = array('default' => 0);
-    $options['draggableviews_repair'] = array('default' => array('repair'));
+    $options['draggableviews_repair'] = array('default' => array('repair' => 'repair'));
     $options['tabledrag_types'] = array('default' => array());
     $options['tabledrag_expand'] = array('default' => array());
     $options['draggableviews_extensions'] = array('default' => array('extension_top' => 3, 'extension_bottom' => 3));
