@@ -144,7 +144,7 @@ function draggableviews_view_draggabletable_form($form, $form_state, $style_plug
         }
         else {
           // Get depth of current field.
-          $depth = $info['nodes'][$nid]['depth'];
+          $depth = isset($info['nodes'][$nid]['depth']) ? $info['nodes'][$nid]['depth'] : 0;
           $value = $info['nodes'][$nid]['order'][$depth];
 
           // Get the field that should be rendered.
@@ -320,7 +320,7 @@ function draggableviews_views_pre_render(&$view) {
   $view->draggableviews_info = _draggableviews_info($view, $view->draggableviews_info);
   $info = &$view->draggableviews_info;
 
-  if (isset($info['pager']->options['items_per_page']) && empty($info['hierarchy'])) {
+  if (isset($info['pager']->options['items_per_page']) && empty($info['hierarchy']) && isset($view->total_rows)) {
     // The current page of hierarchies cannot be checked here because $views->total_rows will not be
 
     // calculated when the entire view gets loaded.
