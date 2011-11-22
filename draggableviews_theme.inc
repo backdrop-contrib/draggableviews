@@ -5,9 +5,11 @@
  * Theme functions.
  */
 
-function template_preprocess_draggableviews_view_draggabletable(&$vars, $style_plugin_name) {
-  $view     = $vars['view'];
 
+/**
+ * Implements template_preprocess_HOOK().
+ */
+function template_preprocess_draggableviews_view_draggabletable(&$vars, $style_plugin_name) {
   // Copy/Modification BEGIN from views/theme/theme.inc,v 1.84.2.14 (2010/06/16). Lines 304-404.
 
   $view     = $vars['view'];
@@ -120,12 +122,12 @@ function template_preprocess_draggableviews_view_draggabletable(&$vars, $style_p
   $vars['row_classes'][0][] = 'views-row-first';
   $vars['row_classes'][count($vars['row_classes']) - 1][] = 'views-row-last';
 
-  $vars['class'] = array('views-table');
+  $vars['classes_array'] = array('views-table');
   if (!empty($options['sticky'])) {
     drupal_add_js('misc/tableheader.js');
-    $vars['class'][] = "sticky-enabled";
+    $vars['classes_array'][] = "sticky-enabled";
   }
-  $vars['class'][] = 'cols-' . count($vars['rows']);
+  $vars['classes_array'][] = 'cols-' . count($vars['rows']);
 
   // Copy/Modification END.
 
@@ -298,6 +300,14 @@ function template_preprocess_draggableviews_view_draggabletable(&$vars, $style_p
   }
 
   drupal_add_css(drupal_get_path('module', 'draggableviews') . '/styles.css');
+}
+
+/**
+ * Implements template_process_HOOK().
+ */
+function template_process_draggableviews_view_draggabletable(&$vars, $style_plugin_name) {
+  // Flatten the classes to a string for the template file.
+  $vars['classes'] = implode(' ', $vars['classes_array']);
 }
 
 function template_preprocess_draggableviews_view_draggabletable_form(&$vars) {
