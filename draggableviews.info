@@ -1,4 +1,4 @@
-name = DraggableViews2
+name = DraggableViews
 description = Makes Views draggable
 dependencies[] = views
 package = Views

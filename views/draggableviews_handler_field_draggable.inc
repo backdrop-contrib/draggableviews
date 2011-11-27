@@ -169,10 +169,18 @@ class draggableviews_handler_field_draggable extends views_handler_field {
       $entity_id = $this->get_value($row);
 
       $form[$this->options['id']][$row_index] = array(
+        '#tree' => TRUE,
+      );
+      // Weight field selectbox.
+      $form[$this->options['id']][$row_index]['weight'] = array(
         '#type' => 'select',
-//        '#default_value' => FALSE,
         '#options' => range(-10, 10),
         '#attributes' => array('class' => array('draggableviews-weight')),
+      );
+      // Item to keep id of the entity.
+      $form[$this->options['id']][$row_index]['id'] = array(
+        '#type' => 'value',
+        '#value' => $this->view->result[$row_index]->{$this->view->base_field},
       );
     }
   }

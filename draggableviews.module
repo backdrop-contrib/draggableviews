@@ -33,3 +33,11 @@ function draggableviews_preprocess_views_view_table(&$vars) {
   // Add javascript.
   drupal_add_tabledrag('draggableviews-table', 'order', 'sibling', 'draggableviews-weight');
 }
+
+/**
+ * Implements hook_views_form_submit().
+ */
+function draggableviews_views_form_submit($form, &$form_state) {
+  $fv = $form_state['values'];
+  dpm($fv);
+}

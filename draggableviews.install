@@ -9,7 +9,7 @@
  * Implements hook_schema().
  */
 function draggableviews_schema() {
-  $schema['draggableviews_order'] = array(
+  $schema['draggableviews_structure'] = array(
     'description' => 'The table saves the order settings of an draggableview.',
     'fields' => array(
       'view_name' => array(

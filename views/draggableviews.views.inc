@@ -3,7 +3,7 @@
 /**
  * Implements hook_views_data_alter().
  */
-function draggableviews2_views_data_alter(&$data) {
+function draggableviews_views_data_alter(&$data) {
   foreach (entity_get_info() as $entity_type => $info) {
     if (isset($info['base table']) && isset($data[$info['base table']])) {
       $data[$info['base table']]['draggableviews'] = array(
