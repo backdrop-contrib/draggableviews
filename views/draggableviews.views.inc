@@ -28,7 +28,7 @@ function draggableviews_views_data_alter(&$data) {
 
       // Explain to every entity how to join with draggableviews structure table.
       $data['draggableviews_structure']['table']['join'][$info['base table']] = array(
-        'handler' => 'views_join', // need to rewrite it to own
+        'handler' => 'draggableviews_join_handler',
         'left_table' => $info['base table'], // Because this is a direct link it could be left out.
         'left_field' => $info['entity keys']['id'],
         'field' => 'entity_id',
