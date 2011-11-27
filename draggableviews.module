@@ -74,3 +74,15 @@ function draggableviews_views_form_submit($form, &$form_state) {
   // Trigger the event "A view has been sorted"
   rules_invoke_event('draggableviews_rules_event_sorted', $view->name);
 }
+
+/**
+ * Implements hook_form_alter().
+ *
+ * Alter views form to change button label.
+ */
+function draggableviews_form_alter(&$form, &$form_state, $form_id) {
+  if (isset($form['draggableviews']) && !empty($form['draggableviews'])) {
+    $label = $form['view']['#value']->field['draggableviews']->options['draggableviews']['save_button_label'];
+    $form['actions']['submit']['#value'] = t($label);
+  }
+}

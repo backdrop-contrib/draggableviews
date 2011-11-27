@@ -11,17 +11,11 @@ class draggableviews_handler_field_draggable extends views_handler_field {
   function option_definition() {
     $options = parent::option_definition();
 
-//    $options['vbo'] = array(
-//      'contains' => array(
-//        'entity_load_capacity' => array('default' => 10),
-//        'operations' => array('default' => array()),
-//        'enable_select_all_pages' => array('default' => TRUE),
-//        'display_type' => array('default' => 0),
-//        'display_result' => array('default' => TRUE),
-//        'merge_single_action' => array('default' => FALSE),
-//        'force_single' => array('default' => FALSE),
-//      ),
-//    );
+    $options['draggableviews'] = array(
+      'contains' => array(
+        'save_button_label' => array('default' => 'Save'),
+      ),
+    );
 
     return $options;
   }
@@ -36,9 +30,16 @@ class draggableviews_handler_field_draggable extends views_handler_field {
 
     $form['draggableviews'] = array(
       '#type' => 'fieldset',
-      '#title' => t('Draggableviews'),
+      '#title' => t('Draggable Views'),
       '#collapsible' => TRUE,
       '#collapsed' => FALSE,
+    );
+
+    $form['draggableviews']['save_button_label'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Custom Save button label'),
+      '#description' => t("Allow to change Save button Label."),
+      '#default_value' => $this->options['draggableviews']['save_button_label'],
     );
 
 //    $form['vbo']['display_type'] = array(
