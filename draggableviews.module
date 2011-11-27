@@ -29,9 +29,9 @@ function draggableviews_preprocess_views_view_table(&$vars) {
   }
 
   // TODO: Change to better unique id.
-  $vars['attributes_array']['id'] = 'draggableviews-table';
+  $vars['attributes_array']['id'] = 'draggableviews-table' . rand(0, 1000);
   // Add javascript.
-  drupal_add_tabledrag('draggableviews-table', 'order', 'sibling', 'draggableviews-table');
+  drupal_add_tabledrag($vars['attributes_array']['id'], 'order', 'sibling', 'draggableviews-weight');
 }
 
 /**
