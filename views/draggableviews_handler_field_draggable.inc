@@ -29,6 +29,11 @@ class draggableviews_handler_field_draggable extends views_handler_field {
   function options_form(&$form, &$form_state) {
     parent::options_form($form, $form_state);
 
+    // Remove not needed settings options.
+    $form['alter']['#access'] = FALSE;
+    $form['style_settings']['#access'] = FALSE;
+    $form['empty_field_behavior']['#access'] = FALSE;
+
     $form['draggableviews'] = array(
       '#type' => 'fieldset',
       '#title' => t('Draggableviews'),
