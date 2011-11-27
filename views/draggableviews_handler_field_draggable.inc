@@ -160,6 +160,12 @@ class draggableviews_handler_field_draggable extends views_handler_field {
       return;
     }
 
+    // Pass view object to submit handler.
+    $form['view'] = array(
+      '#type' => 'value',
+      '#value' => $this->view,
+    );
+
     $form[$this->options['id']] = array(
       '#tree' => TRUE,
     );

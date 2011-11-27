@@ -39,8 +39,8 @@ function draggableviews_schema() {
         'unsigned' => TRUE,
         'not null' => TRUE,
       ),
-      'value' => array(
-        'description' => 'The order value.',
+      'weight' => array(
+        'description' => 'The order weight.',
         'type' => 'int',
         'unsigned' => FALSE,
         'not null' => TRUE,
