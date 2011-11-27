@@ -70,4 +70,7 @@ function draggableviews_views_form_submit($form, &$form_state) {
     );
     drupal_write_record('draggableviews_structure', $record);
   }
+
+  // Trigger the event "A view has been sorted"
+  rules_invoke_event('draggableviews_rules_event_sorted', $view->name);
 }
