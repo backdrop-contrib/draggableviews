@@ -1,0 +1,28 @@
+.sortable {
+  float: left;
+}
+
+.sortable li.views-row {
+  display: block;
+  float: left;
+  width: 180px;
+/*  height: 180px;  if required for fixed height displays */
+  margin: 10px;
+  padding: 5px;
+}
+
+.sortable li.ui-sortable-helper {
+  border: 1px dotted blue;
+}
+.sortable li {
+  border: 1px dotted grey;
+}
+
+#edit-actions {
+  clear: both;
+  margin-left: 20px;
+}
+
+.draggableviews-weight{
+  display:none;
+}
