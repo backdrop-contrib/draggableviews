@@ -65,6 +65,7 @@ class draggableviews_handler_field_draggable extends views_handler_field {
     $form[$this->options['id']] = array(
       '#tree' => TRUE,
     );
+    $range = count($this->view->result);
     // At this point, the query has already been run, so we can access the results
     // in order to get the base key value (for example, nid for nodes).
     foreach ($this->view->result as $row_index => $row) {
@@ -76,7 +77,7 @@ class draggableviews_handler_field_draggable extends views_handler_field {
       // Weight field selectbox.
       $form[$this->options['id']][$row_index]['weight'] = array(
         '#type' => 'select',
-        '#options' => range(-10, 10),
+        '#options' => range(-$range, $range),
         '#attributes' => array('class' => array('draggableviews-weight')),
         '#default_value' => (isset($row->draggableviews_structure_weight)) ?
           $row->draggableviews_structure_weight : 0,
