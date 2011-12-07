@@ -9,12 +9,13 @@
 /*  height: 180px;  if required for fixed height displays */
   margin: 10px;
   padding: 5px;
+  cursor:move;
 }
 
-.draggableviews-processed li.ui-sortable-helper {
+.draggableviews-processed li.views-row.ui-sortable-helper {
   border: 1px dotted blue;
 }
-.draggableviews-processed li {
+.draggableviews-processed li.views-row  {
   border: 1px dotted grey;
 }
 
