@@ -26,6 +26,7 @@ class draggableviews_join_handler extends views_join {
     $condition = "$left_field = $table[alias].$this->field";
 
     // Check whether setting view is set.
+    $arguments = array();
     if (!empty($view_query->view->sort['weight']->options['draggableviews_setting_view'])) {
       $condition .= " AND $table[alias].view_name = :view_name";
       $condition .= " AND $table[alias].view_display = :view_display";
