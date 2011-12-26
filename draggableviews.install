@@ -12,6 +12,12 @@ function draggableviews_schema() {
   $schema['draggableviews_structure'] = array(
     'description' => 'The table saves the order settings of an draggableview.',
     'fields' => array(
+      'dvid' => array(
+        'description' => 'The primary identifier.',
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'not null' => TRUE,
+      ),
       'view_name' => array(
         'description' => 'Makes the order unique for each view.',
         'type' => 'varchar',
@@ -47,7 +53,10 @@ function draggableviews_schema() {
         'default' => 0,
       ),
     ),
-//    'primary key' => array('entity_id', 'view_name', 'view_display', 'args'),
+    'unique keys' => array(
+      'dvid' => array('dvid'),
+    ),
+    'primary key' => array('dvid'),
   );
   return $schema;
 }
