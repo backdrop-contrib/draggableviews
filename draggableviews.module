@@ -26,7 +26,15 @@ function draggableviews_views_form_submit($form, &$form_state) {
   $view = $fv['view'];
   $view_name = $view->name;
   $view_display = $view->current_display;
-  $args_string = json_encode($view->args);
+  // View arguments.
+  $arguments = $view->args;
+  if (isset($view->exposed_input)) {
+    $arguments += $view->exposed_input;
+    ksort($arguments);
+    // Redirect view to the same page with exposed filters set.
+    $form_state['redirect'] = array(current_path(), array('query' => $view->exposed_input));
+  }
+  $args_string = json_encode($arguments);
 
   // Save records to our custom table.
   foreach ($fv['draggableviews'] as $item) {

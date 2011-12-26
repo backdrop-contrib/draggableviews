@@ -41,6 +41,15 @@ class draggableviews_join_handler extends views_join {
         $arguments[':view_name'] = $setting_view_name;
         $arguments[':view_display'] = $setting_view_display;
       }
+
+      // Arguments passed to view (including exposed filters).
+      $view_arguments = $view_query->view->args;
+      if (isset($view_query->view->exposed_input)) {
+        $view_arguments += $view_query->view->exposed_input;
+        ksort($arguments);
+      }
+      $condition .= " AND $table[alias].args = :view_arguments";
+      $arguments[':view_arguments'] = json_encode($view_arguments);
     }
 
     $select_query->addJoin($this->type, $right_table, $table['alias'], $condition, $arguments);
