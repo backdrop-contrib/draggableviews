@@ -19,6 +19,10 @@ function draggableviews_views_api() {
 function draggableviews_views_form_submit($form, &$form_state) {
   $fv = $form_state['values'];
 
+  // Ensure view object exists.
+  if (!isset($fv['view'])) {
+    return;
+  }
   $view = $fv['view'];
   $view_name = $view->name;
   $view_display = $view->current_display;
