@@ -149,3 +149,18 @@ function draggableviews_permission() {
     ),
   );
 }
+
+/**
+ * Evalutes the given PHP code, with the given variables defined.
+ *
+ * @param $code
+ *   The PHP code to run, without <?php ?>
+ * @param $arguments
+ *   Views arguments including values of exposed filters.
+ *
+ * @return
+ *   The return value of the evaled code.
+ */
+function draggableviews_eval_return($code, $arguments) {
+  return eval($code);
+}

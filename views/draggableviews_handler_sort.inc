@@ -22,6 +22,9 @@ class draggableviews_handler_sort extends views_handler_sort {
       $options['draggableviews_setting_view'] = array('default' => NULL);
     }
 
+    $options['draggableviews_setting_arguments'] = array('default' => 'all');
+    $options['draggableviews_setting_arguments_php'] = array('default' => '');
+
     return $options;
   }
 
@@ -83,5 +86,26 @@ class draggableviews_handler_sort extends views_handler_sort {
         drupal_set_message(t('First you should create a view that sets sorting order.'), 'error');
       }
     }
+
+    $form['draggableviews_setting_arguments'] = array(
+      '#title' => t('Arguments handling'),
+      '#type' => 'radios',
+      '#options' => array(
+        'all' => t('Use all arguments'),
+        'none' => t('Do not use any arguments (use empty arguments)'),
+        'php' => t('Prepare arguments with PHP code'),
+      ),
+      '#default_value' => $this->options['draggableviews_setting_arguments'],
+      '#description' => t('When sorting order is saved all arguments passed are saved with order. In display view we can choose how to use these arguments.')
+    );
+    $form['draggableviews_setting_arguments_php'] = array(
+      '#title' => t('PHP code to prepare arguments'),
+      '#type' => 'textarea',
+      '#states' => array(
+        'visible' => array(
+          'input[name="options[draggableviews_setting_arguments]"]' => array('value' => 'php'),
+        ),
+      ),
+    );
   }
 }

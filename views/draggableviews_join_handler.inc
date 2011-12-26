@@ -46,7 +46,15 @@ class draggableviews_join_handler extends views_join {
       $view_arguments = $view_query->view->args;
       if (isset($view_query->view->exposed_input)) {
         $view_arguments += $view_query->view->exposed_input;
-        ksort($arguments);
+        ksort($view_arguments);
+      }
+      // Alter arguments according to sort criteria settings.
+      if ($view_query->view->sort['weight']->options['draggableviews_setting_arguments'] == 'none') {
+        $view_arguments = array();
+      }
+      // If PHP arguments processing is set.
+      if ($view_query->view->sort['weight']->options['draggableviews_setting_arguments'] == 'php') {
+        $view_arguments = draggableviews_eval_return($view_query->view->sort['weight']->options['draggableviews_setting_arguments_php'], $view_arguments);
       }
       $condition .= " AND $table[alias].args = :view_arguments";
       $arguments[':view_arguments'] = json_encode($view_arguments);
