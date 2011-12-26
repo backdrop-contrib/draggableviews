@@ -65,6 +65,11 @@ function draggableviews_views_form_submit($form, &$form_state) {
  */
 function draggableviews_form_alter(&$form, &$form_state, $form_id) {
   if (isset($form['draggableviews']) && !empty($form['draggableviews'])) {
+    // Check permissions.
+    if (!user_access('access draggableviews')) {
+      $form['actions']['submit']['#access'] = FALSE;
+      return;
+    }
     $label = $form['view']['#value']->field['draggableviews']->options['draggableviews']['save_button_label'];
     $form['actions']['submit']['#value'] = t($label);
   }
@@ -76,6 +81,11 @@ function draggableviews_form_alter(&$form, &$form_state, $form_id) {
 function draggableviews_preprocess_views_view_table(&$vars) {
   // Check whether this table view has draggableview field.
   if (!isset($vars['view']->field['draggableviews'])) {
+    return;
+  }
+
+  // Check permissions.
+  if (!user_access('access draggableviews')) {
     return;
   }
 
@@ -102,6 +112,11 @@ function draggableviews_preprocess_views_view_list(&$vars) {
     return;
   }
 
+  // Check permissions.
+  if (!user_access('access draggableviews')) {
+    return;
+  }
+
   // Add class to ul item of the view.
   $class = 'draggableviews-grid-' . rand(0, 1000);
   $vars['list_type_prefix'] = str_replace('>', ' class="' . $class . '">', $vars['list_type_prefix']);
@@ -113,4 +128,16 @@ function draggableviews_preprocess_views_view_list(&$vars) {
   // Add custom js and css.
   drupal_add_js(drupal_get_path('module', 'draggableviews') . '/js/draggableviews_list.js');
   drupal_add_css(drupal_get_path('module', 'draggableviews') . '/css/draggableviews_list.css');
+}
+
+/**
+ * Implements hook_permission().
+ */
+function draggableviews_permission() {
+  return array(
+    'access draggableviews' => array(
+      'title' => t('Access draggable views'),
+      'description' => t('Give users the right to sort their views'),
+    ),
+  );
 }

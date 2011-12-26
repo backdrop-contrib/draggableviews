@@ -1,6 +1,7 @@
 <?php
+
 /**
- * Sort handler for ordering by width
+ * Sort handler for ordering by weight.
  */
 class draggableviews_handler_sort extends views_handler_sort {
   function query() {
