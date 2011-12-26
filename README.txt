@@ -39,3 +39,9 @@ but pass values of only one of values of exposed filters instead of all of them 
 filters: author and node type, but take into account for ordering only node type).
 Please be aware that in PHP code arguments are passed as $arguments variable and you should return array.
 Contextual filters are number keyed and exposed filters are name keyed.
+
+Contextual link "Order view"
+============================
+
+If there is view with sort order draggableviews weight and the order is set by another view we show "Order view"
+contextual link for opening a view that sets the order.
