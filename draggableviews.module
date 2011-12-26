@@ -39,16 +39,13 @@ function draggableviews_views_form_submit($form, &$form_state) {
   // Save records to our custom table.
   foreach ($fv['draggableviews'] as $item) {
     // Delete previous order record.
-    db_query('DELETE FROM {draggableviews_structure} WHERE
-      view_name = :view_name
-      AND view_display = :view_display
-      AND args = :args
-      AND entity_id = :entity_id', array(
-        ':view_name' => $view_name,
-        ':view_display' => $view_display,
-        ':args' => $args_string,
-        ':entity_id' => $item['id'],
-      ));
+    db_delete('draggableviews_structure')
+      ->condition('view_name', $view_name)
+      ->condition('view_display', $view_display)
+      ->condition('args', $args_string)
+      ->condition('entity_id', $item['id'])
+      ->execute();
+
     // Create new order record.
     $record = array(
       'view_name' => $view_name,
