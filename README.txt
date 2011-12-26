@@ -1,5 +1,6 @@
 DraggableViews
----------------
+==============
+
 This module provides dragging entities and saving their order.
 
 Quick install:
@@ -13,3 +14,28 @@ Quick install:
 In the case of table standard drupal tabledrag.js javascript is used.
 
 We also support jQuery UI Sortable javascript. In order to use it please set display style HTML List.
+
+Permissions
+===========
+
+Please add "Access draggable views" permission to users who should be able to reorder views.
+
+Arguments handling
+==================
+
+Every time we save the order of a view, current set of arguments are saved with order.
+You can see this in draggableviews_structure table "args" column. By default when we display order we use all
+currently passed arguments to a view to "match" arguments in "args" column. This means that we can create
+a view with contextual filter or exposed filter criteria and save different orders for different sets of arguments.
+
+We can also completely ignore passed arguments using "Do not use any arguments (use empty arguments)" option
+in Arguments handling of Sort criteria Draggable views weight. Be aware that in this case empty arguments set
+will be used. So you can set order for a view when no arguments passed and then whatever arguments passed,
+empty set will be used.
+
+Prepare arguments with PHP code is an option when you would like to alter arguments before they passed to
+"matching" with "args" column. For us this means that we can create for example several exposed filters,
+but pass values of only one of values of exposed filters instead of all of them (like we create two exposed
+filters: author and node type, but take into account for ordering only node type).
+Please be aware that in PHP code arguments are passed as $arguments variable and you should return array.
+Contextual filters are number keyed and exposed filters are name keyed.
