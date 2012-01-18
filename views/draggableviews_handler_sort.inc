@@ -101,6 +101,7 @@ class draggableviews_handler_sort extends views_handler_sort {
     $form['draggableviews_setting_arguments_php'] = array(
       '#title' => t('PHP code to prepare arguments'),
       '#type' => 'textarea',
+      '#default_value' => $this->options['draggableviews_setting_arguments_php'],
       '#states' => array(
         'visible' => array(
           'input[name="options[draggableviews_setting_arguments]"]' => array('value' => 'php'),
