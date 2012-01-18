@@ -46,10 +46,6 @@ class draggableviews_handler_sort extends views_handler_sort {
 
       // Convert list of objects to options for the form.
       foreach ($views_list as $view_name => $view_object) {
-        // Skip current view.
-        if ($view_name == $this->view->name) {
-          continue;
-        }
         foreach ($view_object->display as $display_name => $display) {
           if ($display_name == 'default') {
             continue;
