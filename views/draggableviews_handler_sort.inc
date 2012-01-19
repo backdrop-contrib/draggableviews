@@ -25,7 +25,6 @@ class draggableviews_handler_sort extends views_handler_sort {
 
   function option_definition() {
     $options = parent::option_definition();
-    unset($options['order']);
 
     // This handler invokes few times for one view,
     // in the first time the $this->view->name is empty,
@@ -46,7 +45,8 @@ class draggableviews_handler_sort extends views_handler_sort {
 
   function options_form(&$form, &$form_state) {
     parent::options_form($form, $form_state);
-    unset($form['order']);
+    $form['order']['#access'] = FALSE;
+    $form['expose_button']['#access'] = FALSE;
 
     // Check whether current views display doesn't have draggableviews field.
     // If it has, it means that this is setting view so we should set
