@@ -6,11 +6,26 @@
 class draggableviews_handler_sort extends views_handler_sort {
   function query() {
     $this->ensure_my_table();
-    $this->query->add_orderby($this->table_alias, $this->real_field, $this->options['order']);
+    // If new items should be placed in the bottom.
+    if ($this->options['draggableviews_setting_new_items_bottom_list']) {
+      // ORDER BY COALESCE(weight, 10000)
+      // New items will get big default instead of NULL
+      $as = $this->table_alias . '_' . $this->real_field;
+      $as = $this->query->add_field($this->table_alias, $this->real_field, $as, array());
+      $this->query->orderby[] = array(
+        'field' => 'COALESCE(' . $as . ', 10000)',
+        'direction' => strtoupper($this->options['order'])
+      );
+    }
+    else {
+      // New items will be placed at the top as have NULL value.
+      $this->query->add_orderby($this->table_alias, $this->real_field);
+    }
   }
 
   function option_definition() {
     $options = parent::option_definition();
+    unset($options['order']);
 
     // This handler invokes few times for one view,
     // in the first time the $this->view->name is empty,
@@ -24,12 +39,14 @@ class draggableviews_handler_sort extends views_handler_sort {
 
     $options['draggableviews_setting_arguments'] = array('default' => 'all');
     $options['draggableviews_setting_arguments_php'] = array('default' => '');
+    $options['draggableviews_setting_new_items_bottom_list'] = array('default' => TRUE);
 
     return $options;
   }
 
   function options_form(&$form, &$form_state) {
     parent::options_form($form, $form_state);
+    unset($form['order']);
 
     // Check whether current views display doesn't have draggableviews field.
     // If it has, it means that this is setting view so we should set
@@ -103,6 +120,12 @@ class draggableviews_handler_sort extends views_handler_sort {
           'input[name="options[draggableviews_setting_arguments]"]' => array('value' => 'php'),
         ),
       ),
+    );
+    $form['draggableviews_setting_new_items_bottom_list'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('New items appear bottom of the list'),
+      '#description' => t('New items means elements (for example nodes) that do not have saved weight (newly created).'),
+      '#default_value' => $this->options['draggableviews_setting_new_items_bottom_list'],
     );
   }
 }
