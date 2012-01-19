@@ -171,8 +171,8 @@ function draggableviews_contextual_links_view_alter(&$element, $items) {
     $view = views_get_view($view_name);
     $view->build($display_id);
 
-    // Proceed only if there is weight sort criteria available.
-    if (!isset($view->sort['weight'])) {
+    // Proceed only if there is draggableviews weight sort criteria available.
+    if (!$sort_key = draggable_views_get_draggable_sort($view)) {
       return;
     }
 
@@ -193,6 +193,25 @@ function draggableviews_contextual_links_view_alter(&$element, $items) {
       );
     }
   }
+}
+
+/**
+ * Get the draggable views weight sort of a view if there is one and return its
+ * ID. If there are multiple of these sorts the first is returned.
+ *
+ * @param $view
+ *   The view object.
+ *
+ * @return
+ *   The ID of the sort or FALSE if there isn't one.
+ */
+function draggable_views_get_draggable_sort($view) {
+  foreach ($view->sort as $id => $sort) {
+    if ($sort->definition['handler'] == 'draggableviews_handler_sort') {
+      return $id;
+    }
+  }
+  return FALSE;
 }
 
 /**
