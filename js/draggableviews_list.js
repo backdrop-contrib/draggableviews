@@ -15,6 +15,11 @@
         $( ".draggableviews-weight" ).each(function (i, Val) {
           $(this).val(i);
         });
+        if (!$(this).hasClass('draggableviews-changed')) {
+          $('<div class="draggableviews-changed-warning messages warning">' + Drupal.t('Changes made in this list will not be saved until the form is submitted.') + '</div>')
+            .insertBefore($(this).parents('.views-form')).hide().fadeIn('slow');
+          $(this).addClass('draggableviews-changed');
+        }
       },
       containment: 'parent',
       cursor: 'move'
