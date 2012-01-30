@@ -14,6 +14,7 @@ class draggableviews_handler_field_draggable extends views_handler_field {
     $options['draggableviews'] = array(
       'contains' => array(
         'save_button_label' => array('default' => 'Save'),
+        'ajax' => array('default' => FALSE),
       ),
     );
 
@@ -40,6 +41,13 @@ class draggableviews_handler_field_draggable extends views_handler_field {
       '#title' => t('Custom Save button label'),
       '#description' => t("Allow to change Save button Label."),
       '#default_value' => $this->options['draggableviews']['save_button_label'],
+    );
+
+    $form['draggableviews']['ajax'] = array(
+      '#type' => 'checkbox',
+      '#title' => t('Ajax'),
+      '#description' => t('Use ajax in draggable form.'),
+      '#default_value' => $this->options['draggableviews']['ajax'],
     );
   }
 

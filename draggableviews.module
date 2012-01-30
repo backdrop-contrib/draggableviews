@@ -75,8 +75,14 @@ function draggableviews_form_alter(&$form, &$form_state, $form_id) {
       $form['actions']['submit']['#access'] = FALSE;
       return;
     }
-    $label = $form['view']['#value']->field['draggableviews']->options['draggableviews']['save_button_label'];
-    $form['actions']['submit']['#value'] = t($label);
+    $options = $form['view']['#value']->field['draggableviews']->options['draggableviews'];
+    $form['actions']['submit']['#value'] = t($options['save_button_label']);
+
+    if ($options['ajax']){
+      $form['actions']['submit']['#ajax'] = array(
+        'callback' => 'draggableviews_view_draggabletable_form_ajax'
+      );
+    }
   }
 }
 
@@ -129,6 +135,8 @@ function draggableviews_preprocess_views_view_list(&$vars) {
   drupal_add_library('system', 'ui.sortable');
   // Add setting of the row class.
   $js_setting = array('draggableviews_row_class' => $class);
+  // Add setting whether ajax enabled or not.
+  $js_setting['draggableviews_ajax'] = $vars['view']->field['draggableviews']->options['draggableviews']['ajax'];
   drupal_add_js($js_setting, 'setting');
   // Add custom js and css.
   drupal_add_js(drupal_get_path('module', 'draggableviews') . '/js/draggableviews_list.js');
@@ -193,6 +201,21 @@ function draggableviews_contextual_links_view_alter(&$element, $items) {
       );
     }
   }
+}
+
+/**
+ * Ajax draggabletable submit handler.
+ */
+function draggableviews_view_draggabletable_form_ajax($form, $form_state){
+  // Find the form element
+  $form_element = "form:has(input[name=form_build_id][value='{$form['form_build_id']['#value']}'])";
+
+  // Remove warning and asterisk.
+  return array('#type' => 'ajax', '#commands' => array(
+    ajax_command_remove("$form_element div.tabledrag-changed-warning"),
+    ajax_command_remove("$form_element span.tabledrag-changed"),
+    ajax_command_remove("$form_element div.draggableviews-changed-warning"),
+  ));
 }
 
 /**

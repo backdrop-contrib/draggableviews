@@ -17,13 +17,20 @@
         });
         if (!$(this).hasClass('draggableviews-changed')) {
           $('<div class="draggableviews-changed-warning messages warning">' + Drupal.t('Changes made in this list will not be saved until the form is submitted.') + '</div>')
-            .insertBefore($(this).parents('.views-form')).hide().fadeIn('slow');
+            .insertBefore($(this).parents('form div')).hide().fadeIn('slow');
           $(this).addClass('draggableviews-changed');
+        }
+        // If Ajax enabled, we should submit the form.
+        if (Drupal.settings.draggableviews_ajax) {
+          $(this).parent().parent().find('#edit-submit').trigger('mousedown');
         }
       },
       containment: 'parent',
       cursor: 'move'
     });
+    if (Drupal.settings.draggableviews_ajax) {
+      $('.views-form .' + Drupal.settings.draggableviews_row_class).parent().parent().find('#edit-submit').hide();
+    }
   }
  }
 })(jQuery);
