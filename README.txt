@@ -14,6 +14,9 @@ Quick install:
 In the case of table standard drupal tabledrag.js javascript is used.
 
 We also support jQuery UI Sortable javascript. In order to use it please set display style HTML List.
+By default HTML list is displayed like grid. If you would like it to be displayed as list override
+CSS styles for example in following way:
+  .draggableviews-processed li.views-row { float: none; width: 100%; margin-left: 0; }
 
 Permissions
 ===========
