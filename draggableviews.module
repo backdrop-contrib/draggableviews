@@ -161,6 +161,10 @@ function draggableviews_permission() {
  * Adds "Order view" contextual link.
  */
 function draggableviews_contextual_links_view_alter(&$element, $items) {
+  // Make sure that views_ui is available.
+  if (!module_exists('views_ui')) {
+    return;
+  }
   // Check permission to use draggable.
   if (!user_access('access draggableviews')) {
     return;
