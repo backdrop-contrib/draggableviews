@@ -2,7 +2,8 @@
 
 /**
 * @file
-* Views field handler. Contains all relevant VBO options and related logic.
+* Views field handler. Contains all relevant Draggableviews
+* options and related logic.
 * Implements the Views Form API.
 */
 

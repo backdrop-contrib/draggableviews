@@ -7,7 +7,7 @@ function draggableviews_views_data_alter(&$data) {
 
   $data['draggableviews_structure']['weight'] = array(
     'title' => t('Draggable views weight'),
-    'help' => t('Sort entities by the draggableviews weight teble field.'),
+    'help' => t('Sort entities by the draggableviews weight table field.'),
     'group' => t('Content'), // The group it appears in on the UI. Could be left out.
     'sort' => array(
       'handler' => 'draggableviews_handler_sort',
