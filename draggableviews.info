@@ -7,3 +7,5 @@ core = 7.x
 files[] = views/draggableviews_handler_field_draggable.inc
 files[] = views/draggableviews_handler_sort.inc
 files[] = views/draggableviews_join_handler.inc
+
+dependencies[] = entity
