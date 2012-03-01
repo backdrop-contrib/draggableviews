@@ -24,37 +24,11 @@ function draggableviews_views_form_submit($form, &$form_state) {
     return;
   }
   $view = $fv['view'];
-  $view_name = $view->name;
-  $view_display = $view->current_display;
-  // View arguments.
-  $arguments = $view->args;
-  if (isset($view->exposed_input)) {
-    $arguments += $view->exposed_input;
-    ksort($arguments);
-    // Redirect view to the same page with exposed filters set.
-    $form_state['redirect'] = array(current_path(), array('query' => $view->exposed_input));
-  }
-  $args_string = json_encode($arguments);
 
-  // Save records to our custom table.
-  foreach ($fv['draggableviews'] as $item) {
-    // Delete previous order record.
-    db_delete('draggableviews_structure')
-      ->condition('view_name', $view_name)
-      ->condition('view_display', $view_display)
-      ->condition('args', $args_string)
-      ->condition('entity_id', $item['id'])
-      ->execute();
-
-    // Create new order record.
-    $record = array(
-      'view_name' => $view_name,
-      'view_display' => $view_display,
-      'args' => $args_string,
-      'entity_id' => $item['id'],
-      'weight' => $item['weight'],
-    );
-    drupal_write_record('draggableviews_structure', $record);
+  // Get name of getter function of plugin.
+  ctools_include('plugins');
+  if ($setter_function = ctools_plugin_load_function('draggableviews', 'handler', $view->field['draggableviews']->options['draggableviews']['handler'], 'setter callback')) {
+    $setter_function($form_state);
   }
 
   // Trigger the event "A view has been sorted"
@@ -153,6 +127,26 @@ function draggableviews_permission() {
       'description' => t('Give users the right to sort their views'),
     ),
   );
+}
+
+/**
+ * Implements hook_ctools_plugin_type().
+ */
+function draggableviews_ctools_plugin_type() {
+  return array(
+    'handler' => array(
+      'use hooks' => FALSE,
+    ),
+  );
+}
+
+/**
+ * Implements hook_ctools_plugin_directory().
+ */
+function draggableviews_ctools_plugin_directory($module, $plugin) {
+  if (($module == 'draggableviews') && ($plugin == 'handler')) {
+    return 'handlers';
+  }
 }
 
 /**
