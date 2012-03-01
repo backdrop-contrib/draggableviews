@@ -208,6 +208,16 @@ function draggableviews_contextual_links_view_alter(&$element, $items) {
 }
 
 /**
+ * Implements hook_views_post_execute().
+ */
+function draggableviews_views_post_execute(&$view) {
+  // Remove 'draggable' field if user has no access to sort a view.
+  if (!user_access('access draggableviews') && isset($view->field['draggableviews'])) {
+    unset($view->field['draggableviews']);
+  }
+}
+
+/**
  * Ajax draggabletable submit handler.
  */
 function draggableviews_view_draggabletable_form_ajax($form, $form_state){
