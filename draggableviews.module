@@ -211,9 +211,18 @@ function draggableviews_contextual_links_view_alter(&$element, $items) {
  * Implements hook_views_post_execute().
  */
 function draggableviews_views_post_execute(&$view) {
-  // Remove 'draggable' field if user has no access to sort a view.
-  if (!user_access('access draggableviews') && isset($view->field['draggableviews'])) {
-    unset($view->field['draggableviews']);
+  if (isset($view->field['draggableviews'])) {
+    // Remove 'draggable' field if user has no access to sort a view.
+    if (!user_access('access draggableviews')) {
+      unset($view->field['draggableviews']);
+    }
+    else {
+      // Move draggableviews field to last column
+      // otherwise tabledrag.js doesn't work.
+      $draggable_field = $view->field['draggableviews'];
+      unset($view->field['draggableviews']);
+      $view->field['draggableviews'] = $draggable_field;
+    }
   }
 }
 
