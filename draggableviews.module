@@ -238,6 +238,7 @@ function draggableviews_view_draggabletable_form_ajax($form, $form_state){
     ajax_command_remove("$form_element div.tabledrag-changed-warning"),
     ajax_command_remove("$form_element span.tabledrag-changed"),
     ajax_command_remove("$form_element div.draggableviews-changed-warning"),
+    ajax_command_invoke("$form_element ul.draggableviews-changed", 'removeClass', array('draggableviews-changed')),
   ));
 }
 
