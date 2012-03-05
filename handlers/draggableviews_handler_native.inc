@@ -26,6 +26,10 @@ class draggableviews_handler_native extends draggableviews_handler {
       // Redirect view to the same page with exposed filters set.
       $form_state['redirect'] = array(current_path(), array('query' => $view->exposed_input));
     }
+
+    // Give other modules a chance to alter saved arguments.
+    drupal_alter('draggableviews_handler_native_arguments', $arguments, $view);
+
     $args_string = json_encode($arguments);
 
     // Save records to our custom table.
