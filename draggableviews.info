@@ -4,6 +4,9 @@ dependencies[] = views
 package = Views
 core = 7.x
 
+files[] = handlers/draggableviews_handler.inc
+files[] = handlers/draggableviews_handler_native.inc
+files[] = handlers/draggableviews_handler_fieldapi.inc
 files[] = views/draggableviews_handler_field_draggable.inc
 files[] = views/draggableviews_handler_sort.inc
 files[] = views/draggableviews_join_handler.inc

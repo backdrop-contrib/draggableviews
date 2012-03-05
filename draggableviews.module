@@ -25,11 +25,9 @@ function draggableviews_views_form_submit($form, &$form_state) {
   }
   $view = $fv['view'];
 
-  // Get name of getter function of plugin.
-  ctools_include('plugins');
-  if ($setter_function = ctools_plugin_load_function('draggableviews', 'handler', $view->field['draggableviews']->options['draggableviews']['handler'], 'setter callback')) {
-    $setter_function($form_state);
-  }
+  // Set the weight.
+  $handler_object = draggableviews_get_handler_class($view->field['draggableviews']->options['draggableviews']['handler']);
+  $handler_object->set($form_state);
 
   // Trigger the event "A view has been sorted"
   if (module_exists('rules')) {
@@ -199,6 +197,45 @@ function draggableviews_contextual_links_view_alter(&$element, $items) {
       );
     }
   }
+}
+
+/**
+ * Get class of handler.
+ *
+ * @param object
+ *   Handler's class object.
+ */
+function draggableviews_get_handler_class($handler_name) {
+  $objects = &drupal_static(__FUNCTION__);
+  if (!isset($objects[$handler_name])) {
+    ctools_include('plugins');
+    if ($class = ctools_plugin_load_class('draggableviews', 'handler', $handler_name, 'handler')) {
+      $objects[$handler_name] = new $class();
+    }
+  }
+
+  return $objects[$handler_name];
+}
+
+/**
+ * Retrieve all plugins.
+ *
+ * Check whether handler class inherits draggablevies_handler.
+ *
+ * @return array
+ *   Array of proper draggableviews handlers.
+ */
+function draggableviews_get_handlers() {
+  ctools_include('plugins');
+  $handlers = ctools_get_plugins('draggableviews', 'handler');
+  $return = array();
+  foreach ($handlers as $handler_id => $handler) {
+    $handler_object = draggableviews_get_handler_class($handler_id);
+    if (in_array('draggableviews_handler', class_parents(get_class($handler_object)))) {
+      $return[$handler_id] = $handler_object;
+    }
+  }
+  return $return;
 }
 
 /**
