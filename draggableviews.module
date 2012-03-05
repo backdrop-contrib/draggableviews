@@ -200,6 +200,25 @@ function draggableviews_contextual_links_view_alter(&$element, $items) {
 }
 
 /**
+ * Implements hook_views_post_execute().
+ */
+function draggableviews_views_post_execute(&$view) {
+  if (isset($view->field['draggableviews'])) {
+    // Remove 'draggable' field if user has no access to sort a view.
+    if (!user_access('access draggableviews')) {
+      unset($view->field['draggableviews']);
+    }
+    else {
+      // Move draggableviews field to last column
+      // otherwise tabledrag.js doesn't work.
+      $draggable_field = $view->field['draggableviews'];
+      unset($view->field['draggableviews']);
+      $view->field['draggableviews'] = $draggable_field;
+    }
+  }
+}
+
+/**
  * Get class of handler.
  *
  * @param object
@@ -250,6 +269,7 @@ function draggableviews_view_draggabletable_form_ajax($form, $form_state){
     ajax_command_remove("$form_element div.tabledrag-changed-warning"),
     ajax_command_remove("$form_element span.tabledrag-changed"),
     ajax_command_remove("$form_element div.draggableviews-changed-warning"),
+    ajax_command_invoke("$form_element ul.draggableviews-changed", 'removeClass', array('draggableviews-changed')),
   ));
 }
 
