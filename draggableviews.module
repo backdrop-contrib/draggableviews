@@ -55,6 +55,8 @@ function draggableviews_form_alter(&$form, &$form_state, $form_id) {
         'callback' => 'draggableviews_view_draggabletable_form_ajax'
       );
     }
+    // Set action as current path.
+    $form['#action'] = base_path() . current_path();
   }
 }
 
