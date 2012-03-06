@@ -139,7 +139,7 @@ class draggableviews_handler_field_draggable extends views_handler_field {
       );
       // Item to keep id of the entity.
       $form[$this->options['id']][$row_index]['id'] = array(
-        '#type' => 'value',
+        '#type' => 'hidden',
         '#value' => $this->view->result[$row_index]->{$this->view->base_field},
       );
     }

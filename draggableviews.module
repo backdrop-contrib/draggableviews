@@ -25,6 +25,12 @@ function draggableviews_views_form_submit($form, &$form_state) {
   }
   $view = $fv['view'];
 
+  // Use 'input' instead of mapped 'values' here. This is done because if in
+  // table display we sort by header then set weights and save, we got
+  // totally wrong results ($form_state['values']['draggableviews'] mapped
+  // wrong from $form_state['input']['draggableviews'])
+  $form_state['values']['draggableviews'] = $form_state['input']['draggableviews'];
+
   // Set the weight.
   $handler_object = draggableviews_get_handler_class($view->field['draggableviews']->options['draggableviews']['handler']);
   $handler_object->set($form_state);
