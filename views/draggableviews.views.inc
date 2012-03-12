@@ -6,18 +6,19 @@
 function draggableviews_views_data_alter(&$data) {
 
   $data['draggableviews_structure']['weight'] = array(
-    'title' => t('Draggable views weight'),
+    'title' => t('Weight'),
     'help' => t('Sort entities by the draggableviews weight table field.'),
-    'group' => t('Content'), // The group it appears in on the UI. Could be left out.
+    'group' => t('Draggableviews'),
     'sort' => array(
       'handler' => 'draggableviews_handler_sort',
     ),
   );
 
   foreach (entity_get_info() as $entity_type => $info) {
-    if (isset($info['base table']) && isset($data[$info['base table']])) {
+    if (isset($info['base table']) && isset($data[$info['base table']]['table'])) {
       $data[$info['base table']]['draggableviews'] = array(
-        'title' => t('Draggable views'),
+        'title' => $data[$info['base table']]['table']['group'],
+        'group' => t('Draggableviews'),
         'help' => t('Provide a draggable functionality.'),
         'real field' => $info['entity keys']['id'],
         'field' => array(
