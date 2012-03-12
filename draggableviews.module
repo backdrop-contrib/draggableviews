@@ -88,8 +88,7 @@ function draggableviews_preprocess_views_view_table(&$vars) {
     $row_classes[] = 'draggable';
   }
 
-  // TODO: Change to better unique id.
-  $vars['attributes_array']['id'] = 'draggableviews-table' . rand(0, 1000);
+  $vars['attributes_array']['id'] = 'draggableviews-table-' . $vars['view']->name . '-' . $vars['view']->current_display;
   // Add javascript.
   drupal_add_tabledrag($vars['attributes_array']['id'], 'order', 'sibling', 'draggableviews-weight');
 }
@@ -109,7 +108,7 @@ function draggableviews_preprocess_views_view_list(&$vars) {
   }
 
   // Add class to ul item of the view.
-  $class = 'draggableviews-grid-' . rand(0, 1000);
+  $class = 'draggableviews-grid-' . $vars['view']->name . '-' . $vars['view']->current_display;
   $vars['list_type_prefix'] = str_replace('>', ' class="' . $class . '">', $vars['list_type_prefix']);
   // Add javascript.
   drupal_add_library('system', 'ui.sortable');
