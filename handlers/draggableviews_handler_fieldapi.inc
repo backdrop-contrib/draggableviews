@@ -67,7 +67,7 @@ class draggableviews_handler_fieldapi extends draggableviews_handler {
 
   function set($form_state) {
     $fv = $form_state['values'];
-    $view = $fv['view'];
+    $view = $form_state['build_info']['args'][0];
     $view_name = $view->name;
     $view_display = $view->current_display;
     // View arguments.

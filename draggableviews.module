@@ -12,18 +12,37 @@ function draggableviews_views_api() {
 }
 
 /**
- * Implements hook_views_form_submit().
+ * Implements hook_form_alter().
  *
+ * Alter views form to change button label.
+ */
+function draggableviews_form_alter(&$form, &$form_state, $form_id) {
+  if (isset($form['draggableviews']) && !empty($form['draggableviews'])) {
+    // Check permissions.
+    if (!user_access('access draggableviews')) {
+      $form['actions']['submit']['#access'] = FALSE;
+      return;
+    }
+    $view = $form_state['build_info']['args'][0];
+    $options = $view->field['draggableviews']->options['draggableviews'];
+    $form['actions']['submit']['#value'] = t($options['save_button_label']);
+    $form['actions']['submit']['#submit'] = array('draggableviews_views_submit');
+
+    if ($options['ajax']){
+      $form['actions']['submit']['#ajax'] = array(
+        'callback' => 'draggableviews_view_draggabletable_form_ajax'
+      );
+    }
+    // Set action as current path.
+    $form['#action'] = base_path() . current_path();
+  }
+}
+
+/**
  * Save weight records after form submit.
  */
-function draggableviews_views_form_submit($form, &$form_state) {
-  $fv = $form_state['values'];
-
-  // Ensure view object exists.
-  if (!isset($fv['view'])) {
-    return;
-  }
-  $view = $fv['view'];
+function draggableviews_views_submit($form, &$form_state) {
+  $view = $form_state['build_info']['args'][0];
 
   // Use 'input' instead of mapped 'values' here. This is done because if in
   // table display we sort by header then set weights and save, we got
@@ -38,31 +57,6 @@ function draggableviews_views_form_submit($form, &$form_state) {
   // Trigger the event "A view has been sorted"
   if (module_exists('rules')) {
     rules_invoke_event('draggableviews_rules_event_sorted', $view->name);
-  }
-}
-
-/**
- * Implements hook_form_alter().
- *
- * Alter views form to change button label.
- */
-function draggableviews_form_alter(&$form, &$form_state, $form_id) {
-  if (isset($form['draggableviews']) && !empty($form['draggableviews'])) {
-    // Check permissions.
-    if (!user_access('access draggableviews')) {
-      $form['actions']['submit']['#access'] = FALSE;
-      return;
-    }
-    $options = $form['view']['#value']->field['draggableviews']->options['draggableviews'];
-    $form['actions']['submit']['#value'] = t($options['save_button_label']);
-
-    if ($options['ajax']){
-      $form['actions']['submit']['#ajax'] = array(
-        'callback' => 'draggableviews_view_draggabletable_form_ajax'
-      );
-    }
-    // Set action as current path.
-    $form['#action'] = base_path() . current_path();
   }
 }
 
