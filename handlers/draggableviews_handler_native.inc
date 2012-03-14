@@ -28,7 +28,7 @@ class draggableviews_handler_native extends draggableviews_handler {
     }
 
     // Give other modules a chance to alter saved arguments.
-    drupal_alter('draggableviews_handler_native_arguments', $arguments, $view);
+    drupal_alter('draggableviews_handler_native_arguments', $arguments, $view, $fv['draggableviews']);
 
     $args_string = json_encode($arguments);
 
