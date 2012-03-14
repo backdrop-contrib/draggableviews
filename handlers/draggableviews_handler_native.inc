@@ -20,11 +20,11 @@ class draggableviews_handler_native extends draggableviews_handler {
     $view_display = $view->current_display;
     // View arguments.
     $arguments = $view->args;
-    if (isset($view->exposed_input)) {
-      $arguments += $view->exposed_input;
+    if (isset($view->exposed_raw_input)) {
+      $arguments += $view->exposed_raw_input;
       ksort($arguments);
       // Redirect view to the same page with exposed filters set.
-      $form_state['redirect'] = array(current_path(), array('query' => $view->exposed_input));
+      $form_state['redirect'] = array(current_path(), array('query' => $view->exposed_raw_input));
     }
 
     // Give other modules a chance to alter saved arguments.

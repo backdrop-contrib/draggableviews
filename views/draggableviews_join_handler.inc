@@ -44,8 +44,8 @@ class draggableviews_join_handler extends views_join {
 
       // Arguments passed to view (including exposed filters).
       $view_arguments = $view_query->view->args;
-      if (isset($view_query->view->exposed_input)) {
-        $view_arguments += $view_query->view->exposed_input;
+      if (isset($view_query->view->exposed_raw_input)) {
+        $view_arguments += $view_query->view->exposed_raw_input;
         ksort($view_arguments);
       }
       // Alter arguments according to sort criteria settings.
