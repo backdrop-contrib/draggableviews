@@ -1,0 +1,6 @@
+name = Draggableviews Test
+description = Provides views for testing.
+dependencies[] = draggableviews
+package = Views
+core = 7.x
+hidden = TRUE

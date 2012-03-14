@@ -1,4 +1,4 @@
-name = DraggableViews
+name = Draggableviews
 description = Makes Views draggable
 dependencies[] = views
 package = Views
@@ -10,5 +10,6 @@ files[] = handlers/draggableviews_handler_fieldapi.inc
 files[] = views/draggableviews_handler_field_draggable.inc
 files[] = views/draggableviews_handler_sort.inc
 files[] = views/draggableviews_join_handler.inc
+files[] = test/draggableviews.test
 
 dependencies[] = entity
