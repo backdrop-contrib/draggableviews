@@ -41,6 +41,13 @@ class draggableviews_handler_fieldapi extends draggableviews_handler {
       }
     }
 
+    // If options are emtpy, show warning message.
+    if (count($options) == 1) {
+      $form['field_warning'] = array(
+        '#markup' => '<div class="messages warning">' . t('Add weight integer field to sorts so it can be selected.') . '</div>',
+      );
+    }
+
     $form['field'] = array(
       '#type' => 'select',
       '#title' => t('Field'),
