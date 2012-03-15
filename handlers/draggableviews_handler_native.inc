@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * Native handler plugin.
+ */
+
 $plugin = array(
   'label' => 'Native',
   'handler' => array(

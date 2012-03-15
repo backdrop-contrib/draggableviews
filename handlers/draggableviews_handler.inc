@@ -1,6 +1,11 @@
 <?php
 
 /**
+ * @file
+ * Base plugin implementation.
+ */
+
+/**
  * Parent class for all handlers.
  */
 class draggableviews_handler {

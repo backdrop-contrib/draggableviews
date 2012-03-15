@@ -1,7 +1,12 @@
 <?php
 
 /**
- * Implements hook_rules_event_info()
+ * @file
+ * Rules hooks implementation.
+ */
+
+/**
+ * Implements hook_rules_event_info().
  */
 function draggableviews_rules_event_info() {
   $events = array();

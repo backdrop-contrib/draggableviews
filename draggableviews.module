@@ -1,6 +1,5 @@
 <?php
 
-
 /**
  * Implements hook_views_api().
  */
@@ -28,7 +27,7 @@ function draggableviews_form_alter(&$form, &$form_state, $form_id) {
     $form['actions']['submit']['#value'] = t($options['save_button_label']);
     $form['actions']['submit']['#submit'] = array('draggableviews_views_submit');
 
-    if ($options['ajax']){
+    if ($options['ajax']) {
       $form['actions']['submit']['#ajax'] = array(
         'callback' => 'draggableviews_view_draggabletable_form_ajax'
       );
@@ -255,7 +254,7 @@ function draggableviews_get_handlers() {
 /**
  * Ajax draggabletable submit handler.
  */
-function draggableviews_view_draggabletable_form_ajax($form, $form_state){
+function draggableviews_view_draggabletable_form_ajax($form, $form_state) {
   // Find the form element
   $form_element = "form:has(input[name=form_build_id][value='{$form['form_build_id']['#value']}'])";
 

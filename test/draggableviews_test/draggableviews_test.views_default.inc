@@ -1,6 +1,11 @@
 <?php
 
 /**
+ * @file
+ * Views to import for testing.
+ */
+
+/**
  * Implements hook_views_default_views().
  */
 function draggableviews_test_views_default_views() {

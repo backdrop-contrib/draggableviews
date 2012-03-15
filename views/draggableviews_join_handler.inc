@@ -1,4 +1,10 @@
 <?php
+
+/**
+ * @file
+ * Native handler join handler.
+ */
+
 /**
  * Join handler for extra join conditions.
  */

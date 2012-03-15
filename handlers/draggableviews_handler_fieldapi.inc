@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * Field API handler plugin.
+ */
+
 $plugin = array(
   'label' => 'FieldAPI',
   'handler' => array(
@@ -32,7 +37,7 @@ class draggableviews_handler_fieldapi extends draggableviews_handler {
       }
 
       // Remove "_value" from field name and try to load the field.
-      $field_name = substr($field_name, 0, strlen($field_name) - 6);
+      $field_name = drupal_substr($field_name, 0, drupal_strlen($field_name) - 6);
       if ($field_info = field_info_field($field_name)) {
         if ($field_info['type'] == 'number_integer') {
           $views_field_data = field_views_field_default_views_data($field_info);
@@ -99,7 +104,7 @@ class draggableviews_handler_fieldapi extends draggableviews_handler {
     $options_field = $view->field['draggableviews']->options['draggableviews']['draggableviews_handler_fieldapi']['field'];
     list($field_tabe, $field_column) = explode(':', $options_field);
     // Remove '_value' from column name to get field name.
-    $field_name = substr($field_column, 0, strlen($field_column) - 6);
+    $field_name = drupal_substr($field_column, 0, drupal_strlen($field_column) - 6);
 
     // Save the values of the field.
     foreach ($fv['draggableviews'] as $item) {

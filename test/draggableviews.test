@@ -1,5 +1,9 @@
 <?php
 
+/**
+ * @file
+ * Test cases file.
+ */
 
 /**
  * Class for testing Draggableviews module.

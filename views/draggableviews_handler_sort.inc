@@ -1,6 +1,11 @@
 <?php
 
 /**
+ * @file
+ * Native handler sort.
+ */
+
+/**
  * Sort handler for ordering by weight.
  */
 class draggableviews_handler_sort extends views_handler_sort {
@@ -14,7 +19,7 @@ class draggableviews_handler_sort extends views_handler_sort {
       $as = $this->query->add_field($this->table_alias, $this->real_field, $as, array());
       $this->query->orderby[] = array(
         'field' => 'COALESCE(' . $as . ', 10000)',
-        'direction' => strtoupper($this->options['order'])
+        'direction' => drupal_strtoupper($this->options['order'])
       );
     }
     else {

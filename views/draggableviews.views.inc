@@ -1,6 +1,11 @@
 <?php
 
 /**
+ * @file
+ * Views hooks implementations.
+ */
+
+/**
  * Implements hook_views_data_alter().
  */
 function draggableviews_views_data_alter(&$data) {

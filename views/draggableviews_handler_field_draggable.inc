@@ -1,11 +1,11 @@
 <?php
 
 /**
-* @file
-* Views field handler. Contains all relevant Draggableviews
-* options and related logic.
-* Implements the Views Form API.
-*/
+ * @file
+ * Views field handler. Contains all relevant Draggableviews
+ * options and related logic.
+ * Implements the Views Form API.
+ */
 
 class draggableviews_handler_field_draggable extends views_handler_field {
 
@@ -66,7 +66,7 @@ class draggableviews_handler_field_draggable extends views_handler_field {
       }
       $form['draggableviews'][$handler_id] = array(
         '#type' => 'fieldset',
-        '#title' => $form['draggableviews']['handler']['#options'][$handler_id],
+        '#title' => check_plain($form['draggableviews']['handler']['#options'][$handler_id]),
         '#collapsible' => FALSE,
         '#states' => array(
           'visible' => array(
