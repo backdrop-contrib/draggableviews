@@ -33,17 +33,18 @@ class draggableviews_join_handler extends views_join {
 
     // Check whether setting view is set.
     $arguments = array();
-    if (!empty($view_query->view->sort['weight']->options['draggableviews_setting_view'])) {
+    $weight_key = draggable_views_get_draggable_sort($view_query->view);
+    if (!empty($view_query->view->sort[$weight_key]->options['draggableviews_setting_view'])) {
       $condition .= " AND $table[alias].view_name = :view_name";
       $condition .= " AND $table[alias].view_display = :view_display";
 
       // If it is setting view, set current view name and display name.
-      if ($view_query->view->sort['weight']->options['draggableviews_setting_view'] == 'self') {
+      if ($view_query->view->sort[$weight_key]->options['draggableviews_setting_view'] == 'self') {
         $arguments[':view_name'] = $view_query->view->name;
         $arguments[':view_display'] = $view_query->view->current_display;
       }
       else {
-        list($setting_view_name, $setting_view_display) = explode(':', $view_query->view->sort['weight']->options['draggableviews_setting_view']);
+        list($setting_view_name, $setting_view_display) = explode(':', $view_query->view->sort[$weight_key]->options['draggableviews_setting_view']);
         $arguments[':view_name'] = $setting_view_name;
         $arguments[':view_display'] = $setting_view_display;
       }
@@ -55,12 +56,12 @@ class draggableviews_join_handler extends views_join {
         ksort($view_arguments);
       }
       // Alter arguments according to sort criteria settings.
-      if ($view_query->view->sort['weight']->options['draggableviews_setting_arguments'] == 'none') {
+      if ($view_query->view->sort[$weight_key]->options['draggableviews_setting_arguments'] == 'none') {
         $view_arguments = array();
       }
       // If PHP arguments processing is set.
-      if ($view_query->view->sort['weight']->options['draggableviews_setting_arguments'] == 'php') {
-        $view_arguments = draggableviews_eval_return($view_query->view->sort['weight']->options['draggableviews_setting_arguments_php'], $view_arguments);
+      if ($view_query->view->sort[$weight_key]->options['draggableviews_setting_arguments'] == 'php') {
+        $view_arguments = draggableviews_eval_return($view_query->view->sort[$weight_key]->options['draggableviews_setting_arguments_php'], $view_arguments);
       }
       $condition .= " AND $table[alias].args = :view_arguments";
       $arguments[':view_arguments'] = json_encode($view_arguments);

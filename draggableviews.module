@@ -184,6 +184,16 @@ function draggableviews_contextual_links_view_alter(&$element, $items) {
     $order_view = views_get_view($order_view_name);
     if (isset($order_view->display[$order_view_display_id]->display_options['path'])) {
       $path = $order_view->display[$order_view_display_id]->display_options['path'];
+      // If page expects arguments, we provide arguments set to current view.
+      if (strpos($path, '%') !== FALSE && !empty($view->args)) {
+        $placeholders = array();
+        foreach (explode('/', $path) as $path_part) {
+          if (strpos($path_part, '%') !== FALSE) {
+            $placeholders[] = $path_part;
+          }
+        }
+        $path = str_replace($placeholders, $view->args, $path);
+      }
       $element['#links']['draggableviews-order'] = array(
         'title' => t('Order view'),
         'href' => $path,
