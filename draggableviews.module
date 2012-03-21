@@ -165,8 +165,7 @@ function draggableviews_contextual_links_view_alter(&$element, $items) {
   if (  isset($element['#element']['#views_contextual_links_info']['views_ui']['view_display_id'])
     && !empty($element['#element']['#views_contextual_links_info']['views_ui']['view_display_id'])) {
     $display_id = $element['#element']['#views_contextual_links_info']['views_ui']['view_display_id'];
-    $view_name = $element['#element']['#views_contextual_links_info']['views_ui']['view_name'];
-    $view = views_get_view($view_name);
+    $view = $element['#element']['#views_contextual_links_info']['views_ui']['view'];
     $view->build($display_id);
 
     // Proceed only if there is draggableviews weight sort criteria available.
