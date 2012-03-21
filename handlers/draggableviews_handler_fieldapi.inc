@@ -29,7 +29,7 @@ class draggableviews_handler_fieldapi extends draggableviews_handler {
 
     // Check all the sortings added to a view. Hope there is
     // better way to determine them. Need to research.
-    foreach ($field->view->display_handler->default_display->display->display_options['sorts'] as $sort_option) {
+    foreach ($field->view->display_handler->display->display_options['sorts'] as $sort_option) {
       $field_name = $sort_option['field'];
       // Field should be like "field_name_value".
       if (strpos($field_name, 'field_') === FALSE || strpos($field_name, '_value') === FALSE) {
