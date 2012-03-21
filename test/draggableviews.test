@@ -116,9 +116,6 @@ class DraggableviewsNativeHandlerTestCase extends DraggableviewsTestCase {
   }
 
   function testSort() {
-    $account = $this->drupalCreateUser(array('access content', 'access draggableviews', 'access user profiles', 'access contextual links'));
-    $this->drupalLogin($account);
-
     $permissions = array('access content');
     $rid = $this->drupalCreateRole($permissions);
 
@@ -141,6 +138,9 @@ class DraggableviewsNativeHandlerTestCase extends DraggableviewsTestCase {
 
       $accounts[$account->uid] = $account;
     }
+
+    $account = $this->drupalCreateUser(array('access content', 'access draggableviews', 'access user profiles', 'access contextual links'));
+    $this->drupalLogin($account);
 
     // Now lets sort and save a view.
     $edit = array(
