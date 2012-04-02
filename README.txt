@@ -18,6 +18,16 @@ By default HTML list is displayed like grid. If you would like it to be displaye
 CSS styles for example in following way:
   .draggableviews-processed li.views-row { float: none; width: 100%; margin-left: 0; }
 
+One view/display to set order another to display
+================================================
+
+You can create one view to set the order and another view to display the order. Or even
+create one view with two separate displays. In a view that displays the order there
+should be no draggableviews field (that makes view sortable), then in the settings of
+the "draggableviews weight" sorting criteria there will be selectbox "Display sort as"
+where you can choose the source view of your weights. This is applicable when you use
+ Native handler.
+
 Permissions
 ===========
 
