@@ -22,14 +22,14 @@ function draggableviews_schema() {
       'view_name' => array(
         'description' => 'Makes the order unique for each view.',
         'type' => 'varchar',
-        'length' => 32,
+        'length' => 128,
         'not null' => TRUE,
         'default' => '',
       ),
       'view_display' => array(
         'description' => 'Makes the order unique for each view display.',
         'type' => 'varchar',
-        'length' => 32,
+        'length' => 64,
         'not null' => TRUE,
         'default' => '',
       ),
@@ -60,4 +60,28 @@ function draggableviews_schema() {
     'primary key' => array('dvid'),
   );
   return $schema;
+}
+
+/**
+ * Increase sizes of view_name and view_display fields of
+ * draggableviews_strucutre table.
+ */
+function draggableviews_update_7001() {
+  $new_field = array(
+    'description' => 'Makes the order unique for each view.',
+    'type' => 'varchar',
+    'length' => 128,
+    'not null' => TRUE,
+    'default' => '',
+  );
+  db_change_field('draggableviews_structure', 'view_name', 'view_name', $new_field);
+
+  $new_field = array(
+    'description' => 'Makes the order unique for each view display.',
+    'type' => 'varchar',
+    'length' => 64,
+    'not null' => TRUE,
+    'default' => '',
+  );
+  db_change_field('draggableviews_structure', 'view_display', 'view_display', $new_field);
 }
