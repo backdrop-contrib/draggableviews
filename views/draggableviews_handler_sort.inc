@@ -87,9 +87,10 @@ class draggableviews_handler_sort extends views_handler_sort {
     // If it is setting view.
     if (!is_array($options)) {
       $form['order']['#access'] = FALSE;
+      $options = isset($this->options['draggableviews_setting_view']) ? $this->options['draggableviews_setting_view'] : 'self';
       $form['draggableviews_setting_view'] = array(
         '#type' => 'value',
-        '#value' => $this->options['draggableviews_setting_view'],
+        '#value' => $options,
       );
     }
     else {
