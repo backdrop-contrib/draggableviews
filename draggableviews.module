@@ -161,12 +161,22 @@ function draggableviews_contextual_links_view_alter(&$element, $items) {
   if (module_exists('views_ui') && views_ui_contextual_links_suppress()) {
     return;
   }
+
   // Add Draggableviews contextual link "Order view".
-  if (  isset($element['#element']['#views_contextual_links_info']['views_ui']['view_display_id'])
-    && !empty($element['#element']['#views_contextual_links_info']['views_ui']['view_display_id'])
-    && isset($element['#element']['#views_contextual_links_info']['views_ui']['view'])) {
-    $display_id = $element['#element']['#views_contextual_links_info']['views_ui']['view_display_id'];
-    $view = $element['#element']['#views_contextual_links_info']['views_ui']['view'];
+  $views_ui_element = array();
+  if (isset($element['#element']['#views_contextual_links_info']['views_ui'])) {
+    $views_ui_element = $element['#element']['#views_contextual_links_info']['views_ui'];
+  }
+  // In case of block #views_contextual_links_info element is inside of
+  // 'content' and not '#element' directly.
+  // @see http://drupal.org/node/1413596#comment-5912688
+  if (empty($views_ui_element) && isset($element['#element']['content']['#views_contextual_links_info']['views_ui'])) {
+    $views_ui_element = $element['#element']['content']['#views_contextual_links_info']['views_ui'];
+  }
+
+  if ( !empty($views_ui_element['view_display_id']) && isset($views_ui_element['view'])) {
+    $display_id = $views_ui_element['view_display_id'];
+    $view = $views_ui_element['view'];
     $view->build($display_id);
 
     // Proceed only if there is draggableviews weight sort criteria available.
