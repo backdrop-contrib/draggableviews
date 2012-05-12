@@ -39,6 +39,10 @@ class draggableviews_handler_native extends draggableviews_handler {
 
     // Save records to our custom table.
     foreach ($fv['draggableviews'] as $item) {
+      // Make sure id is available.
+      if (!isset($item['id'])) {
+        continue;
+      }
       // Delete previous order record.
       db_delete('draggableviews_structure')
         ->condition('view_name', $view_name)
