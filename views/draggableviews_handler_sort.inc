@@ -38,7 +38,7 @@ class draggableviews_handler_sort extends views_handler_sort {
       $options['draggableviews_setting_view'] = array('default' => $this->view->name);
     }
     else {
-      $options['draggableviews_setting_view'] = array('default' => NULL);
+      $options['draggableviews_setting_view'] = array('default' => 'self');
     }
 
     $options['draggableviews_setting_arguments'] = array('default' => 'all');
