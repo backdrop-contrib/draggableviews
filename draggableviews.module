@@ -34,9 +34,16 @@ function draggableviews_form_alter(&$form, &$form_state, $form_id) {
     }
     // Set action as current path.
     $form['#action'] = base_path() . current_path();
-    // Keep destination.
-    if (isset($_GET['destination'])) {
-      $form['#action'] .= '?destination=' . $_GET['destination'];
+    // Keep destination and other GET params.
+    if (count($_GET) > 1) {
+      if (isset($_GET['destination'])) {
+        $form['#action'] .= '?destination=' . $_GET['destination'];
+      }
+      else {
+        $get = $_GET;
+        unset($get['q']);
+        $form['#action'] .= '?destination=' . urlencode(current_path() . '?' . http_build_query($get));
+      }
     }
   }
 }
