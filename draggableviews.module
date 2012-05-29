@@ -190,7 +190,7 @@ function draggableviews_contextual_links_view_alter(&$element, $items) {
 
     // Proceed only if order view is no self.
     $order_view_display = $view->sort[$sort_key]->options['draggableviews_setting_view'];
-    if (empty($order_view_display) || $order_view_display == 'self') {
+    if (empty($order_view_display) || $order_view_display == 'self' || $order_view_display == $view->name . ':' . $display_id) {
       return;
     }
     list($order_view_name, $order_view_display_id) = explode(':', $order_view_display);
