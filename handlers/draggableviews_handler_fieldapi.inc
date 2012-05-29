@@ -113,9 +113,11 @@ class draggableviews_handler_fieldapi extends draggableviews_handler {
 
     // Save the values of the field.
     foreach ($fv['draggableviews'] as $item) {
-      $entity_wrapper = entity_metadata_wrapper($entity_type, $item['id']);
-      $entity_wrapper->{$field_name}->set($item['weight']);
-      $entity_wrapper->save();
+      if (isset($item['id']) && isset($item['weight'])) {
+        $entity_wrapper = entity_metadata_wrapper($entity_type, $item['id']);
+        $entity_wrapper->{$field_name}->set($item['weight']);
+        $entity_wrapper->save();
+      }
     }
   }
 }
