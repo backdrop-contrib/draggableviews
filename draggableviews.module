@@ -206,14 +206,23 @@ function draggableviews_contextual_links_view_alter(&$element, $items) {
     if (isset($order_view->display[$order_view_display_id]->display_options['path'])) {
       $path = $order_view->display[$order_view_display_id]->display_options['path'];
       // If page expects arguments, we provide arguments set to current view.
-      if (strpos($path, '%') !== FALSE && !empty($view->args)) {
-        $placeholders = array();
+      $args = $view->args;
+      if (strpos($path, '%') !== FALSE && !empty($args)) {
+        $new_path_array = array();
         foreach (explode('/', $path) as $path_part) {
           if (strpos($path_part, '%') !== FALSE) {
-            $placeholders[] = $path_part;
+            $new_path_array[] = (!empty($args)) ? array_shift($args) : '';
+          }
+          else {
+            $new_path_array[] = $path_part;
           }
         }
-        $path = str_replace($placeholders, $view->args, $path);
+        $path = implode('/', $new_path_array);
+      }
+      // If page path doesn't have % in the path or we still have some argument
+      // remain, simply append them to the end of the path.
+      if (!empty($args)) {
+        $path .= '/' . implode('/', $args);
       }
       $element['#links']['draggableviews-order'] = array(
         'title' => t('Order view'),
