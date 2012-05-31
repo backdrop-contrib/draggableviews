@@ -33,7 +33,7 @@ function draggableviews_form_alter(&$form, &$form_state, $form_id) {
       );
     }
     // Set action as current path.
-    $form['#action'] = base_path() . current_path();
+    $form['#action'] = url(current_path());
     // Keep destination and other GET params.
     if (count($_GET) > 1) {
       if (isset($_GET['destination'])) {
