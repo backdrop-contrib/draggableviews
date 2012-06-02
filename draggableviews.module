@@ -92,7 +92,7 @@ function draggableviews_preprocess_views_view_table(&$vars) {
     $row_classes[] = 'draggable';
   }
 
-  $vars['attributes_array']['id'] = 'draggableviews-table-' . $vars['view']->name . '-' . $vars['view']->current_display;
+  $vars['attributes_array']['id'] = drupal_html_id('draggableviews-table-' . $vars['view']->name . '-' . $vars['view']->current_display);
   // Add javascript.
   drupal_add_tabledrag($vars['attributes_array']['id'], 'order', 'sibling', 'draggableviews-weight');
 }
