@@ -38,6 +38,7 @@ class draggableviews_handler_native extends draggableviews_handler {
     $args_string = json_encode($arguments);
 
     // Save records to our custom table.
+    $weight = 0;
     foreach ($fv['draggableviews'] as $item) {
       // Make sure id is available.
       if (!isset($item['id'])) {
@@ -57,9 +58,14 @@ class draggableviews_handler_native extends draggableviews_handler {
         'view_display' => $view_display,
         'args' => $args_string,
         'entity_id' => $item['id'],
-        'weight' => $item['weight'],
+        'weight' => $weight,
       );
+      // If parent element exists, save it.
+      if (isset($item['parent'])) {
+        $record['parent'] = $item['parent'];
+      }
       drupal_write_record('draggableviews_structure', $record);
+      $weight++;
     }
   }
 }

@@ -6,12 +6,12 @@
  */
 
 /**
- * Parent class for all sort handlers.
+ * Parent class for all hierarchy handlers.
  */
-class draggableviews_handler {
+class draggableviews_hierarchy_handler {
 
   /**
-   * Get the weight value.
+   * Get the parent value.
    *
    * @param object $field
    *   Draggableviews field handler. View is $field->view,
@@ -25,7 +25,7 @@ class draggableviews_handler {
   public function get($field, $index) {}
 
   /**
-   * Save weight value.
+   * Save parent value.
    *
    * @param $form_state
    *   Attay of form state of the form.
@@ -51,4 +51,22 @@ class draggableviews_handler {
    *   Array with default values.
    */
   public function option_definition() {}
+
+  /**
+   * Get "results" array index of and item with specific base field id.
+   *
+   * @param object $view
+   *   Views object
+   * @param type $id
+   *   Base field id.
+   *
+   * @return int
+   */
+  public function get_index($view, $id) {
+    foreach ($view->result as $key => $item) {
+      if ($item->{$view->base_field} == $id) {
+        return $key;
+      }
+    }
+  }
 }

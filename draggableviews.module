@@ -79,8 +79,25 @@ function draggableviews_preprocess_views_view_table(&$vars) {
     return;
   }
 
+  // Add identation if hierarchy is available.
+  if (!empty($vars['view']->field['draggableviews']->options['draggableviews']['hierarchy_handler'])) {
+    $hierarchy_handler_object = draggableviews_get_handler_class($vars['view']->field['draggableviews']->options['draggableviews']['hierarchy_handler'], 'hierarchy_handler');
+    foreach ($vars['rows'] as $key => $row) {
+      $first_column = current(array_keys($row));
+      $field = (object) array('view' => $vars['view']);
+      $depth = $hierarchy_handler_object->get_depth($field, $key);
+
+      $vars['rows'][$key][$first_column] = theme('indentation', array('size' => $depth)) . $vars['rows'][$key][$first_column];
+    }
+  }
+
   // Check permissions.
   if (!user_access('access draggableviews')) {
+    // Remove column "draggableviews" from results and header.
+    foreach ($vars['rows'] as &$row) {
+      unset($row['draggableviews']);
+    }
+    unset($vars['header']['draggableviews']);
     return;
   }
 
@@ -95,6 +112,11 @@ function draggableviews_preprocess_views_view_table(&$vars) {
   $vars['attributes_array']['id'] = drupal_html_id('draggableviews-table-' . $vars['view']->name . '-' . $vars['view']->current_display);
   // Add javascript.
   drupal_add_tabledrag($vars['attributes_array']['id'], 'order', 'sibling', 'draggableviews-weight');
+  // Parent javascripts.
+  if (!empty($vars['view']->field['draggableviews']->options['draggableviews']['hierarchy_handler'])) {
+    drupal_add_tabledrag($vars['attributes_array']['id'], 'match', 'parent', 'draggableviews-parent', 'draggableviews-parent', 'draggableviews-id', FALSE);
+    drupal_add_tabledrag($vars['attributes_array']['id'], 'depth', 'group', 'draggableviews-depth', NULL, NULL, FALSE);
+  }
 }
 
 /**
@@ -146,6 +168,9 @@ function draggableviews_ctools_plugin_type() {
     'handler' => array(
       'use hooks' => FALSE,
     ),
+    'hierarchy_handler' => array(
+      'use hooks' => FALSE,
+    ),
   );
 }
 
@@ -153,7 +178,7 @@ function draggableviews_ctools_plugin_type() {
  * Implements hook_ctools_plugin_directory().
  */
 function draggableviews_ctools_plugin_directory($module, $plugin) {
-  if (($module == 'draggableviews') && ($plugin == 'handler')) {
+  if (($module == 'draggableviews') && ($plugin == 'handler' || $plugin == 'hierarchy_handler')) {
     return 'handlers';
   }
 }
@@ -238,17 +263,11 @@ function draggableviews_contextual_links_view_alter(&$element, $items) {
  */
 function draggableviews_views_post_execute(&$view) {
   if (isset($view->field['draggableviews'])) {
-    // Remove 'draggable' field if user has no access to sort a view.
-    if (!user_access('access draggableviews')) {
-      unset($view->field['draggableviews']);
-    }
-    else {
-      // Move draggableviews field to last column
-      // otherwise tabledrag.js doesn't work.
-      $draggable_field = $view->field['draggableviews'];
-      unset($view->field['draggableviews']);
-      $view->field['draggableviews'] = $draggable_field;
-    }
+    // Move draggableviews field to last column
+    // otherwise tabledrag.js doesn't work.
+    $draggable_field = $view->field['draggableviews'];
+    unset($view->field['draggableviews']);
+    $view->field['draggableviews'] = $draggable_field;
   }
 }
 
@@ -258,11 +277,11 @@ function draggableviews_views_post_execute(&$view) {
  * @param object
  *   Handler's class object.
  */
-function draggableviews_get_handler_class($handler_name) {
+function draggableviews_get_handler_class($handler_name, $handler_type = 'handler') {
   $objects = &drupal_static(__FUNCTION__);
   if (!isset($objects[$handler_name])) {
     ctools_include('plugins');
-    if ($class = ctools_plugin_load_class('draggableviews', 'handler', $handler_name, 'handler')) {
+    if ($class = ctools_plugin_load_class('draggableviews', $handler_type, $handler_name, 'handler')) {
       $objects[$handler_name] = new $class();
     }
   }
@@ -271,7 +290,7 @@ function draggableviews_get_handler_class($handler_name) {
 }
 
 /**
- * Retrieve all plugins.
+ * Retrieve all sort plugins.
  *
  * Check whether handler class inherits draggablevies_handler.
  *
@@ -285,6 +304,27 @@ function draggableviews_get_handlers() {
   foreach ($handlers as $handler_id => $handler) {
     $handler_object = draggableviews_get_handler_class($handler_id);
     if (in_array('draggableviews_handler', class_parents(get_class($handler_object)))) {
+      $return[$handler_id] = $handler_object;
+    }
+  }
+  return $return;
+}
+
+/**
+ * Retrieve all hierarchy plugins.
+ *
+ * Check whether handler class inherits draggablevies_hierarcy_handler.
+ *
+ * @return array
+ *   Array of proper draggableviews handlers.
+ */
+function draggableviews_get_hierarchy_handlers() {
+  ctools_include('plugins');
+  $handlers = ctools_get_plugins('draggableviews', 'hierarchy_handler');
+  $return = array();
+  foreach ($handlers as $handler_id => $handler) {
+    $handler_object = draggableviews_get_handler_class($handler_id);
+    if (in_array('draggableviews_hierarchy_handler', class_parents(get_class($handler_object)))) {
       $return[$handler_id] = $handler_object;
     }
   }

@@ -9,12 +9,17 @@
 
 class draggableviews_handler_field_draggable extends views_handler_field {
 
+  function construct() {
+    parent::construct();
+  }
+
   function option_definition() {
     $options = parent::option_definition();
 
     $options['draggableviews'] = array(
       'contains' => array(
         'handler' => array('default' => 'draggableviews_handler_native'),
+        'hierarchy_handler' => array('default' => ''),
         'save_button_label' => array('default' => 'Save'),
         'ajax' => array('default' => FALSE),
       ),
@@ -52,7 +57,7 @@ class draggableviews_handler_field_draggable extends views_handler_field {
 
     $form['draggableviews']['handler'] = array(
       '#type' => 'select',
-      '#title' => t('Handler'),
+      '#title' => t('Sort handler'),
       '#options' => $handler_options,
       '#default_value' => $this->options['draggableviews']['handler'],
     );
@@ -79,9 +84,47 @@ class draggableviews_handler_field_draggable extends views_handler_field {
       }
     }
 
+    $hierarchy_handler_options = array('' => t('- None -'));
+    $hierarchy_handler_forms = array();
+    foreach (draggableviews_get_hierarchy_handlers() as $handler_id => $handler_object) {
+      $handler = ctools_get_plugins('draggableviews', 'hierarchy_handler', $handler_id);
+      $hierarchy_handler_options[$handler_id] = filter_xss($handler['label']);
+      $hierarchy_handler_forms[$handler_id] = $handler_object->options_form($this);
+    }
+
+    $form['draggableviews']['hierarchy_handler'] = array(
+      '#type' => 'select',
+      '#title' => t('Hierarchy handler'),
+      '#options' => $hierarchy_handler_options,
+      '#default_value' => $this->options['draggableviews']['hierarchy_handler'],
+    );
+
+    // Add handler's form element as fielset that
+    // is active only if handler selected.
+    foreach ($hierarchy_handler_forms as $handler_id => $hierarchy_handler_form_element) {
+      // Skip empty handler's form elements.
+      if (empty($hierarchy_handler_form_element)) {
+        continue;
+      }
+      $form['draggableviews'][$handler_id] = array(
+        '#type' => 'fieldset',
+        '#title' => check_plain($form['draggableviews']['handler']['#options'][$handler_id]),
+        '#collapsible' => FALSE,
+        '#states' => array(
+          'visible' => array(
+            'select[name="options[draggableviews][hierarchy_handler]"]' => array('value' => $handler_id),
+          ),
+        ),
+      );
+      foreach ($hierarchy_handler_form_element as $key => $form_element) {
+        $form['draggableviews'][$handler_id][$key] = $form_element;
+      }
+    }
+
     $form['draggableviews']['save_button_label'] = array(
       '#type' => 'textfield',
       '#title' => t('Custom Save button label'),
+      '#size' => 20,
       '#description' => t("Allow to change Save button Label."),
       '#default_value' => $this->options['draggableviews']['save_button_label'],
     );
@@ -135,7 +178,22 @@ class draggableviews_handler_field_draggable extends views_handler_field {
       $form[$this->options['id']][$row_index]['id'] = array(
         '#type' => 'hidden',
         '#value' => $this->view->result[$row_index]->{$this->field_alias},
+        '#attributes' => array('class' => 'draggableviews-id'),
       );
+      // Add parent and depth field.
+      if (!empty($this->options['draggableviews']['hierarchy_handler'])) {
+        $hierarchy_handler_object = draggableviews_get_handler_class($this->options['draggableviews']['hierarchy_handler'], 'hierarchy_handler');
+        $form[$this->options['id']][$row_index]['parent'] = array(
+          '#type' => 'hidden',
+          '#default_value' => $hierarchy_handler_object->get($this, $row_index),
+          '#attributes' => array('class' => 'draggableviews-parent'),
+        );
+        $form[$this->options['id']][$row_index]['depth'] = array(
+          '#type' => 'hidden',
+          '#default_value' => $hierarchy_handler_object->get_depth($this, $row_index),
+          '#attributes' => array('class' => 'draggableviews-depth'),
+        );
+      }
     }
   }
 }

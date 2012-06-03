@@ -53,6 +53,13 @@ function draggableviews_schema() {
         'not null' => TRUE,
         'default' => 0,
       ),
+      'parent' => array(
+        'description' => 'The order parent.',
+        'type' => 'int',
+        'unsigned' => FALSE,
+        'not null' => TRUE,
+        'default' => 0,
+      ),
     ),
     'unique keys' => array(
       'dvid' => array('dvid'),
@@ -84,4 +91,18 @@ function draggableviews_update_7001() {
     'default' => '',
   );
   db_change_field('draggableviews_structure', 'view_display', 'view_display', $new_field);
+}
+
+/**
+ * Add "parent" field to draggableviews_strucutre table.
+ */
+function draggableviews_update_7002() {
+  $spec = array(
+    'description' => 'The order parent.',
+    'type' => 'int',
+    'unsigned' => FALSE,
+    'not null' => TRUE,
+    'default' => 0,
+  );
+  db_add_field('draggableviews_structure', 'parent', $spec);
 }
