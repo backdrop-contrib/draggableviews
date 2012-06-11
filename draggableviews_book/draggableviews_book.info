@@ -1,0 +1,7 @@
+name = Draggableviews Book
+description = Reorder books
+dependencies[] = draggableviews
+package = Views
+core = 7.x
+
+files[] = draggableviews_book_views_handler_argument.inc
