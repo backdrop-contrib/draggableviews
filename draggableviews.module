@@ -215,7 +215,7 @@ function draggableviews_contextual_links_view_alter(&$element, $items) {
     $view->build($display_id);
 
     // Proceed only if there is draggableviews weight sort criteria available.
-    if (!$sort_key = draggable_views_get_draggable_sort($view)) {
+    if (!$sort_key = _draggableviews_get_draggable_sort($view)) {
       return;
     }
 
@@ -367,7 +367,7 @@ function draggableviews_view_draggabletable_form_ajax($form, $form_state) {
  * @return
  *   The ID of the sort or FALSE if there isn't one.
  */
-function draggable_views_get_draggable_sort($view) {
+function _draggableviews_get_draggable_sort($view) {
   foreach ($view->sort as $id => $sort) {
     if ($sort->definition['handler'] == 'draggableviews_handler_sort') {
       return $id;
@@ -387,7 +387,7 @@ function draggable_views_get_draggable_sort($view) {
  * @return
  *   The return value of the evaled code.
  */
-function draggableviews_eval_return($code, $arguments) {
+function _draggableviews_eval_return($code, $arguments) {
   return eval($code);
 }
 
@@ -395,7 +395,7 @@ function draggableviews_eval_return($code, $arguments) {
  * Load built order view.
  */
 function _draggableviews_load_order_view($view) {
-  if ($sort_key = draggable_views_get_draggable_sort($view)) {
+  if ($sort_key = _draggableviews_get_draggable_sort($view)) {
     $order_view_name_display = $view->sort[$sort_key]->options['draggableviews_setting_view'];
     if ($order_view_name_display == 'self') {
       $order_view = $view;

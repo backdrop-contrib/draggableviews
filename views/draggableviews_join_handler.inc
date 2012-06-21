@@ -35,7 +35,7 @@ class draggableviews_join_handler extends views_join {
 
     // Check whether setting view is set.
     $arguments = array();
-    $weight_key = draggable_views_get_draggable_sort($view);
+    $weight_key = _draggableviews_get_draggable_sort($view);
     if (!empty($view->sort[$weight_key]->options['draggableviews_setting_view'])) {
       $condition .= " AND $table[alias].view_name = :view_name";
       $condition .= " AND $table[alias].view_display = :view_display";
@@ -63,7 +63,7 @@ class draggableviews_join_handler extends views_join {
       }
       // If PHP arguments processing is set.
       if ($view->sort[$weight_key]->options['draggableviews_setting_arguments'] == 'php') {
-        $view_arguments = draggableviews_eval_return($view->sort[$weight_key]->options['draggableviews_setting_arguments_php'], $view_arguments);
+        $view_arguments = _draggableviews_eval_return($view->sort[$weight_key]->options['draggableviews_setting_arguments_php'], $view_arguments);
       }
       $condition .= " AND $table[alias].args = :view_arguments";
       $arguments[':view_arguments'] = json_encode($view_arguments);
