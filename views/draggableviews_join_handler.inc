@@ -72,9 +72,11 @@ class draggableviews_join_handler extends views_join {
     $select_query->addJoin($this->type, $right_table, $table['alias'], $condition, $arguments);
 
     // Add also parent field.
-    if (isset($view_query->view->field['draggableviews']->options['draggableviews']['hierarchy_handler'])
-      && $view_query->view->field['draggableviews']->options['draggableviews']['hierarchy_handler'] == 'draggableviews_hierarchy_handler_native') {
-      $select_query->addField($table['alias'], 'parent', 'draggableviews_structure_parent');
+    if ($order_view = _draggableviews_load_order_view($view)) {
+      if (isset($order_view->field['draggableviews']->options['draggableviews']['hierarchy_handler'])
+        && $order_view->field['draggableviews']->options['draggableviews']['hierarchy_handler'] == 'draggableviews_hierarchy_handler_native') {
+        $select_query->addField($table['alias'], 'parent', 'draggableviews_structure_parent');
+      }
     }
   }
 }

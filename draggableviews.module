@@ -72,21 +72,22 @@ function draggableviews_views_submit($form, &$form_state) {
  * Implementes hook_preprocess_views_view_table().
  */
 function draggableviews_preprocess_views_view_table(&$vars) {
+  if ($order_view = _draggableviews_load_order_view($vars['view'])) {
+    // Add identation if hierarchy is available.
+    if (!empty($order_view->field['draggableviews']->options['draggableviews']['hierarchy_handler'])) {
+      $hierarchy_handler_object = draggableviews_get_handler_class($order_view->field['draggableviews']->options['draggableviews']['hierarchy_handler'], 'hierarchy_handler');
+      foreach ($vars['rows'] as $key => $row) {
+        $first_column = current(array_keys($row));
+        $field = (object) array('view' => $vars['view']);
+        $depth = $hierarchy_handler_object->get_depth($field, $key);
+        $vars['rows'][$key][$first_column] = theme('indentation', array('size' => $depth)) . $vars['rows'][$key][$first_column];
+      }
+    }
+  }
+
   // Check whether this table view has draggableview field.
   if (!isset($vars['view']->field['draggableviews'])) {
     return;
-  }
-
-  // Add identation if hierarchy is available.
-  if (!empty($vars['view']->field['draggableviews']->options['draggableviews']['hierarchy_handler'])) {
-    $hierarchy_handler_object = draggableviews_get_handler_class($vars['view']->field['draggableviews']->options['draggableviews']['hierarchy_handler'], 'hierarchy_handler');
-    foreach ($vars['rows'] as $key => $row) {
-      $first_column = current(array_keys($row));
-      $field = (object) array('view' => $vars['view']);
-      $depth = $hierarchy_handler_object->get_depth($field, $key);
-
-      $vars['rows'][$key][$first_column] = theme('indentation', array('size' => $depth)) . $vars['rows'][$key][$first_column];
-    }
   }
 
   // Check permissions.
@@ -388,4 +389,23 @@ function draggable_views_get_draggable_sort($view) {
  */
 function draggableviews_eval_return($code, $arguments) {
   return eval($code);
+}
+
+/**
+ * Load built order view.
+ */
+function _draggableviews_load_order_view($view) {
+  if ($sort_key = draggable_views_get_draggable_sort($view)) {
+    $order_view_name_display = $view->sort[$sort_key]->options['draggableviews_setting_view'];
+    if ($order_view_name_display == 'self') {
+      $order_view = $view;
+    }
+    else {
+      list($order_view_name, $order_view_display) = explode(':', $order_view_name_display);
+      $order_view = views_get_view($order_view_name);
+      $order_view->build($order_view_display);
+    }
+
+    return $order_view;
+  }
 }
