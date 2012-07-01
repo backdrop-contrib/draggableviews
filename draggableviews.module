@@ -111,6 +111,11 @@ function draggableviews_preprocess_views_view_table(&$vars) {
   $vars['attributes_array']['id'] = drupal_html_id('draggableviews-table-' . $vars['view']->name . '-' . $vars['view']->current_display);
   // Add javascript.
   drupal_add_tabledrag($vars['attributes_array']['id'], 'order', 'sibling', 'draggableviews-weight');
+
+  // Add javascript for autosave functionality.
+  if ($vars['view']->field['draggableviews']->options['draggableviews']['ajax']) {
+    drupal_add_js(drupal_get_path('module', 'draggableviews') . '/js/draggableviews_table.js');
+  }
   // Parent javascripts.
   if (!empty($vars['view']->field['draggableviews']->options['draggableviews']['hierarchy_handler'])) {
     drupal_add_tabledrag($vars['attributes_array']['id'], 'match', 'parent', 'draggableviews-parent', 'draggableviews-parent', 'draggableviews-id', FALSE);
