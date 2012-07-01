@@ -388,11 +388,13 @@ function _draggableviews_get_draggable_sort($view) {
  *   The PHP code to run, without <?php ?>
  * @param $arguments
  *   Views arguments including values of exposed filters.
+ * @param $view
+ *   The view being sorted.
  *
  * @return
  *   The return value of the evaled code.
  */
-function _draggableviews_eval_return($code, $arguments) {
+function _draggableviews_eval_return($code, $arguments, $view) {
   return eval($code);
 }
 
