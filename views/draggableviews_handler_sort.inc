@@ -13,12 +13,11 @@ class draggableviews_handler_sort extends views_handler_sort {
     $this->ensure_my_table();
     // If new items should be placed in the bottom.
     if ($this->options['draggableviews_setting_new_items_bottom_list']) {
-      // ORDER BY COALESCE(weight, 10000)
       // New items will get big default instead of NULL
-      $as = $this->table_alias . '_' . $this->real_field;
-      $as = $this->query->add_field($this->table_alias, $this->real_field, $as, array());
+      $alias = $this->table_alias . '_' . $this->field . '_coalesce';
+      $this->query->add_field(NULL, "COALESCE($this->table_alias.$this->field, 10000)", $alias);
       $this->query->orderby[] = array(
-        'field' => 'COALESCE(' . $as . ', 10000)',
+        'field' => $alias,
         'direction' => drupal_strtoupper($this->options['order'])
       );
     }
