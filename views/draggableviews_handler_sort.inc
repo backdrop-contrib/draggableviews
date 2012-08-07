@@ -55,33 +55,7 @@ class draggableviews_handler_sort extends views_handler_sort {
     // Check whether current views display doesn't have draggableviews field.
     // If it has, it means that this is setting view so we should set
     // option draggableviews_setting_view to 'self'
-    $view_clone = clone $this->view;
-    $view_clone->build($view_clone->current_display);
-    $options = 'self';
-    // Check whether field exists. If not it is displaying view so lets show
-    // all options of other setting views.
-    if (!isset($view_clone->field['draggableviews'])) {
-      // Get list of all enabled views.
-      $views_list = views_get_enabled_views();
-      $options = array();
-
-      // Convert list of objects to options for the form.
-      foreach ($views_list as $view_name => $view_object) {
-        foreach ($view_object->display as $display_name => $display) {
-          if ($display_name == 'default') {
-            continue;
-          }
-          // Clone view and build it so we can see all the fields.
-          $view_clone = clone $view_object;
-          $view_clone->build($display_name);
-
-          // If draggableviews field attached, show this view in options.
-          if (isset($view_clone->field['draggableviews'])) {
-            $options[$view_name . ':' . $display_name] = $view_object->human_name . ' (' . $display->display_title . ')';
-          }
-        }
-      }
-    }
+    $options = _draggableviews_get_views_options($this->view);
 
     // If it is setting view.
     if (!is_array($options)) {
