@@ -18,6 +18,14 @@ function draggableviews_views_data_alter(&$data) {
       'handler' => 'draggableviews_handler_sort',
     ),
   );
+  $data['draggableviews_structure']['parent'] = array(
+    'title' => t('Parent'),
+    'help' => t('The parent entity id.'),
+    'group' => t('Draggableviews'),
+    'field' => array(
+      'handler' => 'views_handler_field_numeric',
+    ),
+  );
 
   foreach (entity_get_info() as $entity_type => $info) {
     if (isset($info['base table']) && isset($data[$info['base table']]['table'])) {
@@ -31,7 +39,6 @@ function draggableviews_views_data_alter(&$data) {
           'click sortable' => FALSE,
         ),
       );
-
       // Explain to every entity how to join with draggableviews structure table.
       $data['draggableviews_structure']['table']['join'][$info['base table']] = array(
         'handler' => 'draggableviews_join_handler',
