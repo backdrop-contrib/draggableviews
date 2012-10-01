@@ -12,9 +12,14 @@ function draggableviews_views_data_alter(&$data) {
 
   $data['draggableviews_structure']['weight'] = array(
     'title' => t('Weight'),
-    'help' => t('Sort entities by the draggableviews weight table field.'),
     'group' => t('Draggableviews'),
+    'field' => array(
+      'help' => t('Display the weight value.'),
+      'handler' => 'views_handler_field_numeric',
+      'click sortable' => TRUE,
+    ),
     'sort' => array(
+      'help' => t('Sort entities by the draggableviews weight table field.'),
       'handler' => 'draggableviews_handler_sort',
     ),
   );
