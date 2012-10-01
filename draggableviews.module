@@ -403,7 +403,7 @@ function _draggableviews_get_order_view_display($view, $include_self = TRUE) {
     return FALSE;
   }
   if (!$include_self) {
-    if ($order_view_display == 'self' || $order_view_display == $view->name . ':' . $display_id) {
+    if ($order_view_display == 'self' || $order_view_display == $view->name . ':' . $view->current_display) {
       return FALSE;
     }
   }
