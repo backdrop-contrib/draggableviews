@@ -24,7 +24,7 @@
           }
           else {
             // If view ajaxified.
-            $('<div class="draggableviews-changed-notice messages warning">' + Drupal.t('Order of the list has been changed.') + '</div>')
+            $('<div class="draggableviews-changed-notice messages warning">' + Drupal.t('Order of this view has been changed.') + '</div>')
               .insertBefore($(this).parents('form div.item-list')).hide().fadeIn('slow').delay(3000).fadeOut('slow');
             $(this).addClass('draggableviews-changed');
           }
