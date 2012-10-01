@@ -477,7 +477,8 @@ function _draggableviews_get_order_path($view, $include_self = TRUE) {
 function _draggableviews_get_views_options($view = NULL) {
   if (!empty($view)) {
     $view_clone = clone $view;
-    $view_clone->build($view_clone->current_display);
+    $view_clone->set_display($view_clone->current_display);
+    $view_clone->init_handlers();
     if (isset($view_clone->field['draggableviews'])) {
       return 'self';
     }
@@ -495,7 +496,8 @@ function _draggableviews_get_views_options($view = NULL) {
       }
       // Clone view and build it so we can see all the fields.
       $view_clone = clone $view;
-      $view_clone->build($display_name);
+      $view_clone->set_display($display_name);
+      $view_clone->init_handlers();
 
       // If draggableviews field attached, show this view in options.
       if (isset($view_clone->field['draggableviews'])) {
