@@ -376,8 +376,14 @@ function _draggableviews_load_order_view($view, $include_self = TRUE) {
     }
     else {
       list($order_view_name, $order_view_display) = explode(':', $order_view_name_display);
-      $order_view = views_get_view($order_view_name);
-      $order_view->build($order_view_display);
+      if ($order_view_name == $view->name)  {
+        $order_view = $view;
+      }
+      else {
+        // Need to get the order view, as order is not part of this one.
+        $order_view = views_get_view($order_view_name);
+        $order_view->build($order_view_display);
+      }
     }
 
     return $order_view;
