@@ -7,7 +7,7 @@ function draggableviews_views_api() {
   return array(
     'api' => 3,
     'path' => drupal_get_path('module', 'draggableviews') . '/views',
-  );
+    );
 }
 
 /**
@@ -16,42 +16,45 @@ function draggableviews_views_api() {
  * Alter views form to change button label.
  */
 function draggableviews_form_alter(&$form, &$form_state, $form_id) {
-  if (isset($form['draggableviews']) && !empty($form['draggableviews'])) {
-    $view = $form_state['build_info']['args'][0];
-    // Check permissions and number of results.
-    if (!user_access('access draggableviews') || count($view->result) < 2) {
-      $form['actions']['submit']['#access'] = FALSE;
-      return;
-    }
+  if (!isset($form['draggableviews']) || !empty($form['draggableviews'])) {
+//    $form['actions']['submit']['#access'] = FALSE;
+    return;
+  }
 
-    // Do not show "Submit" button on preview.
-    $current_path = current_path();
-    if (strpos($current_path, 'admin/structure/views/nojs/preview') !== FALSE) {
-      $form['actions']['submit']['#access'] = FALSE;
-      $form['actions']['message'] = array('#markup' => t('It is not possible to save order in Preview mode.'));
-      return;
-    }
+  $view = $form_state['build_info']['args'][0];
+  // Check permissions and number of results.
+  if (!user_access('access draggableviews') || count($view->result) < 2) {
+    $form['actions']['submit']['#access'] = FALSE;
+    return;
+  }
 
-    $options = $view->field['draggableviews']->options['draggableviews'];
-    $form['actions']['submit']['#value'] = t($options['save_button_label']);
-    $form['actions']['submit']['#submit'] = array('draggableviews_views_submit');
+  // Do not show "Submit" button on preview.
+  $current_path = current_path();
+  if (strpos($current_path, 'admin/structure/views/nojs/preview') !== FALSE) {
+    $form['actions']['submit']['#access'] = FALSE;
+    $form['actions']['message'] = array('#markup' => t('It is not possible to save order in Preview mode.'));
+    return;
+  }
 
-    if ($options['ajax']) {
-      $form['actions']['submit']['#ajax'] = array(
-        'callback' => 'draggableviews_view_draggabletable_form_ajax'
-      );
+  $options = $view->field['draggableviews']->options['draggableviews'];
+  $form['actions']['submit']['#value'] = t($options['save_button_label']);
+  $form['actions']['submit']['#submit'] = array('draggableviews_views_submit');
+
+  if ($options['ajax']) {
+    $form['actions']['submit']['#ajax'] = array(
+      'callback' => 'draggableviews_view_draggabletable_form_ajax'
+    );
+  }
+  // Set action as current path.
+  $form['#action'] = url(current_path());
+  // Keep destination and other GET params.
+  if (count($_GET) > 1) {
+    $get = $_GET;
+    unset($get['q']);
+    if (!isset($_GET['destination'])) {
+      $get['destination'] = current_path() . '?' . drupal_http_build_query($get);
     }
-    // Set action as current path.
-    $form['#action'] = url(current_path());
-    // Keep destination and other GET params.
-    if (count($_GET) > 1) {
-      $get = $_GET;
-      unset($get['q']);
-      if (!isset($_GET['destination'])) {
-        $get['destination'] = current_path() . '?' . drupal_http_build_query($get);
-      }
-      $form['#action'] .= '?' . drupal_http_build_query($get);
-    }
+    $form['#action'] .= '?' . drupal_http_build_query($get);
   }
 }
 
