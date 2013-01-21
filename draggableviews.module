@@ -16,7 +16,7 @@ function draggableviews_views_api() {
  * Alter views form to change button label.
  */
 function draggableviews_form_alter(&$form, &$form_state, $form_id) {
-  if (!isset($form['draggableviews']) || !empty($form['draggableviews'])) {
+  if (!isset($form['draggableviews']) || empty($form['draggableviews'])) {
 //    $form['actions']['submit']['#access'] = FALSE;
     return;
   }
