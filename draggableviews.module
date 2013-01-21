@@ -23,6 +23,15 @@ function draggableviews_form_alter(&$form, &$form_state, $form_id) {
       $form['actions']['submit']['#access'] = FALSE;
       return;
     }
+
+    // Do not show "Submit" button on preview.
+    $current_path = current_path();
+    if (strpos($current_path, 'admin/structure/views/nojs/preview') !== FALSE) {
+      $form['actions']['submit']['#access'] = FALSE;
+      $form['actions']['message'] = array('#markup' => t('It is not possible to save order in Preview mode.'));
+      return;
+    }
+
     $options = $view->field['draggableviews']->options['draggableviews'];
     $form['actions']['submit']['#value'] = t($options['save_button_label']);
     $form['actions']['submit']['#submit'] = array('draggableviews_views_submit');
