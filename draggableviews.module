@@ -38,7 +38,7 @@ function draggableviews_form_alter(&$form, &$form_state, $form_id) {
   $current_path = current_path();
   if (strpos($current_path, 'admin/structure/views/nojs/preview') !== FALSE) {
     $form['actions']['submit']['#access'] = FALSE;
-    $form['actions']['message'] = array('#markup' => t('It is not possible to save order in Preview mode.'));
+    $form['actions']['message'] = array('#markup' => '<div class="messages warning">' . t('It is not possible to save order in Preview mode.') . '</div>');
     return;
   }
 
