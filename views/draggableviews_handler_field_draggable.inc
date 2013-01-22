@@ -152,6 +152,11 @@ class draggableviews_handler_field_draggable extends views_handler_field {
       return;
     }
 
+    // If this view is a summary, do not add a form.
+    if ($this->field_alias == 'unknown') {
+      return;
+    }
+
     $form[$this->options['id']] = array(
       '#tree' => TRUE,
     );
