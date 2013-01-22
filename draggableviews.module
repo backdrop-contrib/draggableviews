@@ -20,6 +20,7 @@ function draggableviews_form_alter(&$form, &$form_state, $form_id) {
     // If form is empty, but this is a view with draggableviews field, we hide
     // Save button. This scenario occurs in case of displaying summary.
     if (isset($form_state['build_info']['args'][0])
+      && is_object($form_state['build_info']['args'][0])
       && get_class($form_state['build_info']['args'][0]) == 'view'
       && isset($form_state['build_info']['args'][0]->fields['draggableviews'])) {
       $form['actions']['submit']['#access'] = FALSE;
