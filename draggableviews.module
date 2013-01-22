@@ -99,6 +99,7 @@ function draggableviews_preprocess_views_view_table(&$vars) {
         $field = (object) array('view' => $vars['view']);
         $depth = $hierarchy_handler_object->get_depth($field, $key);
         $vars['rows'][$key][$first_column] = theme('indentation', array('size' => $depth)) . $vars['rows'][$key][$first_column];
+        $vars['row_classes'][$key][] = 'depth-' . $depth;
       }
     }
   }
