@@ -82,7 +82,7 @@ function draggableviews_schema() {
  */
 function draggableviews_update_7101() {
   if (!db_field_exists('draggableviews_structure', 'dvid')) {
-    drupal_set_message(t("Draggableviews 1.x to 2.x upgrade script started"));
+    drupal_set_message(t("Draggableviews 1.x to 2.x upgrade script started."));
 
     // New schema for draggableviews 2.x (schema version 7200).
     $schema['draggableviews_structure_new'] = array(
@@ -198,16 +198,17 @@ function draggableviews_update_7101() {
       }
     }
 
-    // Drop the table.
+    // Drop the tables.
     db_drop_table('draggableviews_structure');
+    db_drop_table('draggableviews_collapsed');
 
-    // Create the table
+    // Create the table.
     db_create_table('draggableviews_structure', $schema['draggableviews_structure_new']);
 
-    // Save the new formatted information
+    // Save the new formatted information.
     $query_set_new->execute();
 
-    drupal_set_message(t("Draggableviews 1.x to 2.x upgrade script finished"));
+    drupal_set_message(t("Draggableviews 1.x to 2.x upgrade script finished."));
   }
   else {
     drupal_set_message(t("draggableviews_update_7101 skipped.  Database looks like its already been updated."));
