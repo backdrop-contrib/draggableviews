@@ -239,11 +239,11 @@ function draggableviews_update_7201() {
 }
 
 /**
- * Add "parent" field to draggableviews_strucutre table.
+ * Add "parent" field to draggableviews_structure table.
  */
 function draggableviews_update_7202() {
   // Commit 0fd7c9f create this as 7002().  This got rename to 7202().  Check if field exist.
-  if (!count(db_query("SHOW COLUMNS FROM `draggableviews_structure` WHERE Field = 'parent'")->fetchALL())) {
+  if (!db_field_exists('draggableviews_structure', 'parent')) {
     $spec = array(
         'description' => 'The order parent.',
         'type' => 'int',
