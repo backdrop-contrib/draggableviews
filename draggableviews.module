@@ -45,7 +45,7 @@ function draggableviews_form_alter(&$form, &$form_state, $form_id) {
 
   $options = $view->field['draggableviews']->options['draggableviews'];
   $form['actions']['submit']['#value'] = t($options['save_button_label']);
-  $form['actions']['submit']['#submit'] = array('draggableviews_views_submit');
+  $form['actions']['submit']['#submit'][] = 'draggableviews_views_submit';
 
   if ($options['ajax']) {
     $form['actions']['submit']['#ajax'] = array(
