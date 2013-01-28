@@ -30,16 +30,7 @@ class draggableviews_handler_sort extends views_handler_sort {
   function option_definition() {
     $options = parent::option_definition();
 
-    // This handler invokes few times for one view,
-    // in the first time the $this->view->name is empty,
-    // so we need this check.
-    if (is_object($this->view)) {
-      $options['draggableviews_setting_view'] = array('default' => $this->view->name);
-    }
-    else {
-      $options['draggableviews_setting_view'] = array('default' => 'self');
-    }
-
+    $options['draggableviews_setting_view'] = array('default' => '');
     $options['draggableviews_setting_arguments'] = array('default' => 'all');
     $options['draggableviews_setting_arguments_php'] = array('default' => '');
     $options['draggableviews_setting_new_items_bottom_list'] = array('default' => TRUE);
@@ -52,15 +43,14 @@ class draggableviews_handler_sort extends views_handler_sort {
     $form['expose_button']['#access'] = FALSE;
     $form['order']['#description'] = t('Please remember to override settings of the sort criterion if you have display that sets weights and you choose descendling order.');
 
-    // Check whether current views display doesn't have draggableviews field.
-    // If it has, it means that this is setting view so we should set
-    // option draggableviews_setting_view to 'self'
+    // Grab all of the views and their display that contain a draggableviews
+    // field. If this display has one then 'view->name:view->current_display'
+    // is returned.
     $options = _draggableviews_get_views_options($this->view);
 
     // If it is setting view.
     if (!is_array($options)) {
       $form['order']['#access'] = FALSE;
-      $options = isset($this->options['draggableviews_setting_view']) ? $this->options['draggableviews_setting_view'] : 'self';
       $form['draggableviews_setting_view'] = array(
         '#type' => 'value',
         '#value' => $options,

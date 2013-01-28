@@ -41,7 +41,8 @@ class draggableviews_join_handler extends views_join {
       $condition .= " AND $table[alias].view_display = :view_display";
 
       // If it is setting view, set current view name and display name.
-      if ($view->sort[$weight_key]->options['draggableviews_setting_view'] == 'self') {
+      if (isset($view->field['draggableviews'])) {
+      // if ($view->sort[$weight_key]->options['draggableviews_setting_view'] == 'self') {
         $arguments[':view_name'] = $view->name;
         $arguments[':view_display'] = $view->current_display;
       }

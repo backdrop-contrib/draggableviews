@@ -104,8 +104,7 @@ function draggableviews_preprocess_views_view_table(&$vars) {
       }
     }
   }
-
-  // Check whether this table view has draggableview field.
+  // If this view is not the sort view, then stop here.
   if (!isset($vars['view']->field['draggableviews'])) {
     return;
   }
@@ -387,7 +386,13 @@ function _draggableviews_eval_return($code, $arguments, $view) {
 }
 
 /**
- * Load built order view.
+ * Load and/or built the order view with the correct view display.
+ *
+ * @param $view
+ *   The view object
+ *
+ * @return
+ *   The view object with the sort display
  */
 function _draggableviews_load_order_view($view, $include_self = TRUE) {
   if ($order_view_name_display = _draggableviews_get_order_view_display($view, $include_self)) {
@@ -397,12 +402,29 @@ function _draggableviews_load_order_view($view, $include_self = TRUE) {
     else {
       list($order_view_name, $order_view_display) = explode(':', $order_view_name_display);
       if ($order_view_name == $view->name)  {
-        $order_view = $view;
+        if ($order_view_display == $view->current_display) {
+          $order_view = $view;
+        }
+        else {
+          // The current $view object does not have the information of the
+          // display view that sorts it. An example would be the draggableviews
+          // field, which is only in the sort order display.
+          $order_view = views_get_view($order_view_name);
+          // Error gets thrown if the order_view_display has not been saved yet.
+          if (!isset($order_view)) {
+            // TODO: Error message can get repeated 3-4 times.  Should only happen once.
+            drupal_set_message(t('The order view is unavailable. Try saving or resaving the view'), 'error');
+            return;
+          }
+          $order_view->set_display($order_view_display);
+          $order_view->init_handlers();
+        }
       }
       else {
         // Need to get the order view, as order is not part of this one.
         $order_view = views_get_view($order_view_name);
-        $order_view->build($order_view_display);
+        $order_view->set_display($order_view_display);
+        $order_view->init_handlers();
       }
     }
 
@@ -500,7 +522,7 @@ function _draggableviews_get_views_options($view = NULL) {
     $view_clone->set_display($view_clone->current_display);
     $view_clone->init_handlers();
     if (isset($view_clone->field['draggableviews'])) {
-      return 'self';
+      return $view_clone->name . ':' . $view_clone->current_display;
     }
   }
   // Check whether field exists for all enabled views. We only want the
