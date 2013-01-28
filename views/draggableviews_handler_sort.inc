@@ -13,9 +13,9 @@ class draggableviews_handler_sort extends views_handler_sort {
     $this->ensure_my_table();
     // If new items should be placed in the bottom.
     if ($this->options['draggableviews_setting_new_items_bottom_list']) {
-      // New items will get big default instead of NULL
+      // New items will get the biggest integer possible instead of NULL.
       $alias = $this->table_alias . '_' . $this->field . '_coalesce';
-      $this->query->add_field(NULL, "COALESCE($this->table_alias.$this->field, 10000)", $alias);
+      $this->query->add_field(NULL, "COALESCE($this->table_alias.$this->field, 2147483647)", $alias);
       $this->query->orderby[] = array(
         'field' => $alias,
         'direction' => drupal_strtoupper($this->options['order'])
