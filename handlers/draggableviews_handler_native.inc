@@ -35,6 +35,9 @@ class draggableviews_handler_native extends draggableviews_handler {
     // Give other modules a chance to alter saved arguments.
     drupal_alter('draggableviews_handler_native_arguments', $arguments, $view, $fv['draggableviews']);
 
+    // Never save 'items per page' argument.
+    unset($arguments['items_per_page']);
+
     $args_string = json_encode($arguments);
 
     // Save records to our custom table.
