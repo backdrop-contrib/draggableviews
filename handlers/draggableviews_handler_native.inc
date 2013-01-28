@@ -15,7 +15,7 @@ $plugin = array(
 class draggableviews_handler_native extends draggableviews_handler {
   public function get($field, $index) {
     $row = $field->view->result[$index];
-    return (isset($row->draggableviews_structure_weight)) ? $row->draggableviews_structure_weight : 0;
+    return (isset($row->draggableviews_structure_weight_coalesce)) ? $row->draggableviews_structure_weight_coalesce : 0;
   }
 
   function set($form_state) {
