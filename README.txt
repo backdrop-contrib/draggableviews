@@ -4,7 +4,7 @@ DraggableViews
 This module provides dragging entities and saving their order.
 
 Quick install:
- 1) Activate Draggableviews module at admin/modules
+ 1) Activate Draggableviews module at admin/modules.
  2) Navigate to view edit-page, click on the first link at the Format section and then choose style "table".
  3) Click Add button at the "Fields" section and choose field "Content:title", add and apply.
  4) Click Add button at the "Fields" section and choose field "Draggableviews: Content", add apply.
@@ -28,6 +28,46 @@ the "draggableviews weight" sorting criteria there will be selectbox "Display so
 where you can choose the source view of your weights. This is applicable when you use
  Native handler.
 
+Step by Step Guide for Creating a New View with 2 Displays:
+===========================================================
+Requirements: Draggableviews 7.x-2.x, Views 7.x-3.x, Views UI module enabled.
+
+ 1) Activate Draggableviews module at admin/modules.
+ 2) Create a new view
+    - Goto '/admin/structure/views/add' on your site.
+    - Check off 'Create a page'.
+    - Check off 'Create a block'.
+    - Set the 'Display format' for the page to what you desire.
+    - Set the "'Display format' of" to fields.
+    - Set the 'Display format' for the block to table.
+    - Fill in the rest of the views information.
+    - Click Contine & edit button.
+ 3) Under the "FIELDS" section, do you see "Content: Title (Title)"?  If you do not:
+    - Click 'add' button at the "Fields" section and choose field "Content:title", add and apply.
+ 4) Click on 'Block' under the 'Display', to change the view display to the block display.
+ 5) Add the Draggableviews Field:
+    - Click Add button at the "FIELDS" section.
+    - At the top of the overlay, Change "For: 'All displays'" to 'This block (override)'.
+      - If you do not do this then the field will be add to all displays and will prevent your
+        page display from using the block display to sort the order.
+ 5) Click Add button at the "SORT CRITERIA" section choose field "Draggableviews: Weight", add and choose sort asc, then apply.
+ 6) Under the "SORT CRITERIA" section, do you see "Content: Post date (asc)"?  If you do:
+    - Click on it.  At the bottom, click the 'Remove' button.
+      - An alternative is to rearrange the "SORT CRITERIA" order, making sure 'Draggableviews: Weight (asc)
+        appears first (or on top).
+ 7) Save the view and you're done.*
+*Things to confirm after you saved your new view.
+- In the Administrative Views UI, Go back to your View's 'page' display.
+  -> Click 'Draggableviews: Weight (asc)' under 'SORT CRITERIA'
+  -> You should see:
+
+  Display sort as:
+  <title of view> (<display title>)
+
+  This should the view and block display you just create.
+
+  FYI - This is also where you can change it to another view.
+
 Permissions
 ===========
 
@@ -41,17 +81,30 @@ You can see this in draggableviews_structure table "args" column. By default whe
 currently passed arguments to a view to "match" arguments in "args" column. This means that we can create
 a view with contextual filter or exposed filter criteria and save different orders for different sets of arguments.
 
-We can also completely ignore passed arguments using "Do not use any arguments (use empty arguments)" option
-in Arguments handling of Sort criteria Draggable views weight. Be aware that in this case empty arguments set
+Using the "Do not use any arguments (use empty arguments)" option will completely ignore passed arguments used
+in the Arguments handling of Sort criteria Draggable views weight. Be aware that in this case empty arguments set
 will be used. So you can set order for a view when no arguments passed and then whatever arguments passed,
 empty set will be used.
 
-Prepare arguments with PHP code is an option when you would like to alter arguments before they passed to
-"matching" with "args" column. For us this means that we can create for example several exposed filters,
+Using the "Prepare arguments with PHP code" option will let you alter arguments before they passed to
+"matching" with "args" column. For us this means that we can create, for example, several exposed filters,
 but pass values of only one of values of exposed filters instead of all of them (like we create two exposed
 filters: author and node type, but take into account for ordering only node type).
-Please be aware that in PHP code arguments are passed as $arguments variable and you should return array.
-Contextual filters are number keyed and exposed filters are name keyed.
+Please be aware that in PHP code arguments are passed as $arguments variable and you should return an array.
+IE return array('status' => 1, 'user' => 2);  or return $arguments; // $arguments is already an array
+
+When using arguments,  make sure your ordering view display has the same arguments as the display you want to show
+the end user.  If they do not match, then your ordering will not match.
+
+Using hook_draggableviews_handler_native_arguments_alter(&$arguments, $view, &$form_values) {} You may remove or change
+the arguments save to the database, just as the "Prepare arguments with PHP code" option. See draggavleviews.api.php
+for more details.
+
+In the $arguments array, Contextual filters are number keyed and exposed filters are name keyed.
+
+Removed Arguments:
+- The pager 'item_per_page' exposed filter will never be saved.
+
 
 Contextual link "Order view"
 ============================
