@@ -29,6 +29,9 @@ class draggableviews_handler_field_draggable extends views_handler_field {
     foreach (draggableviews_get_handlers() as $handler_id => $handler_object) {
       $options['draggableviews']['contains'][$handler_id] = array('default' => $handler_object->option_definition());
     }
+    foreach (draggableviews_get_hierarchy_handlers() as $handler_id => $handler_object) {
+      $options['draggableviews']['contains'][$handler_id] = array('default' => $handler_object->option_definition());
+    }
     return $options;
   }
 
