@@ -22,6 +22,10 @@ function draggableviews_views_data_alter(&$data) {
       'help' => t('Sort entities by the draggableviews weight table field.'),
       'handler' => 'draggableviews_handler_sort',
     ),
+    'filter' => array(
+       'help' => t('Filter by the draggableviews weight value (Native handler only).'),
+      'handler' => 'views_handler_filter_numeric',
+    ),
   );
   $data['draggableviews_structure']['parent'] = array(
     'title' => t('Parent'),
@@ -29,6 +33,10 @@ function draggableviews_views_data_alter(&$data) {
     'group' => t('Draggableviews'),
     'field' => array(
       'handler' => 'views_handler_field_numeric',
+    ),
+    'filter' => array(
+      'help' => t('Filter by the draggableviews parent\'s entity id (Native handler only).'),
+      'handler' => 'views_handler_filter_numeric',
     ),
   );
 
