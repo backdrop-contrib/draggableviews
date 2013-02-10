@@ -256,19 +256,6 @@ function draggableviews_contextual_links_view_alter(&$element, $items) {
 }
 
 /**
- * Implements hook_views_post_execute().
- */
-function draggableviews_views_post_execute(&$view) {
-  if (isset($view->field['draggableviews'])) {
-    // Move draggableviews field to last column
-    // otherwise tabledrag.js doesn't work.
-    $draggable_field = $view->field['draggableviews'];
-    unset($view->field['draggableviews']);
-    $view->field['draggableviews'] = $draggable_field;
-  }
-}
-
-/**
  * Implements hook_post_render().
  */
 function draggableviews_views_post_render(&$view, &$output, &$cache) {

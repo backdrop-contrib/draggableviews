@@ -62,3 +62,16 @@ function draggableviews_views_data_alter(&$data) {
     }
   }
 }
+
+/**
+ * Implements hook_views_post_execute().
+ */
+function draggableviews_views_post_execute(&$view) {
+  if (isset($view->field['draggableviews'])) {
+    // Move draggableviews field to last column
+    // otherwise tabledrag.js doesn't work.
+    $draggable_field = $view->field['draggableviews'];
+    unset($view->field['draggableviews']);
+    $view->field['draggableviews'] = $draggable_field;
+  }
+}
