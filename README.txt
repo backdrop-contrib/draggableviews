@@ -111,3 +111,11 @@ Contextual link "Order view"
 
 If there is view with sort order draggableviews weight and the order is set by another view we show "Order view"
 contextual link for opening a view that sets the order.
+
+
+Troubleshooting Drag n' drop Not Showing
+========================================
+1. Make sure javascript is turned on and loading property.  Doublecheck your source code.  For tables (D7) its <root>/misc/tabledrag.js.
+2. Make sure you have draggableviews permission for the correct role.
+3. Select 'show row weights'.  By default, this is located at the top right of the table. See http://drupal.org/files/draggableviews-1978526-hode-row-weights.png" for a visual image.
+4. 'Show row weights' is a global variable/setting.  If you turn it off for 1 table, then all tables, across all pages, across all users, will not see it.  To fix this in the UI, you have to 'hide row weights' on another page/table, such as admin/structure/block (D7) or admin/build/block (D6), or go into the variables table in the database.
