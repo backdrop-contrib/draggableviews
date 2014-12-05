@@ -65,7 +65,7 @@ class draggableviews_handler_field_draggable extends views_handler_field {
       '#default_value' => $this->options['draggableviews']['handler'],
     );
 
-    // Add handler's form element as fielset that
+    // Add handler's form element as fieldset that
     // is active only if handler selected.
     foreach ($handler_forms as $handler_id => $handler_form_element) {
       // Skip empty handler's form elements.
@@ -102,7 +102,7 @@ class draggableviews_handler_field_draggable extends views_handler_field {
       '#default_value' => $this->options['draggableviews']['hierarchy_handler'],
     );
 
-    // Add handler's form element as fielset that
+    // Add handler's form element as fieldset that
     // is active only if handler selected.
     foreach ($hierarchy_handler_forms as $handler_id => $hierarchy_handler_form_element) {
       // Skip empty handler's form elements.

@@ -54,7 +54,7 @@ function draggableviews_book_views_post_execute($view) {
   }
 
   // Set the weights arrays for every item. This collects weights of all parents
-  // plus its own weght. Weights are saved according to depth levels.
+  // plus its own weight. Weights are saved according to depth levels.
   foreach ($keyed_result as &$item) {
     _draggableviews_book_result_set_weight($item, $keyed_result);
   }

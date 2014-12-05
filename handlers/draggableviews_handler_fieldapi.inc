@@ -30,7 +30,7 @@ class draggableviews_handler_fieldapi extends draggableviews_handler {
     // Check all the sortings added to a view. Hope there is
     // better way to determine them. Need to research.
     $sorts = $field->view->display_handler->display->display_options['sorts'];
-    // If no sorts avaialble for current display, use sorts from default display.
+    // If no sorts available for current display, use sorts from default display.
     if (empty($sorts)) {
       $sorts = $field->view->display['default']->display_options['sorts'];
     }
@@ -51,7 +51,7 @@ class draggableviews_handler_fieldapi extends draggableviews_handler {
       }
     }
 
-    // If options are emtpy, show warning message.
+    // If options are empty, show warning message.
     if (count($options) == 1) {
       $form['field_warning'] = array(
         '#markup' => '<div class="messages warning">' . t('Add weight integer field to sorts so it can be selected.') . '</div>',

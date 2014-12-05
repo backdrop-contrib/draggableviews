@@ -40,7 +40,7 @@ class draggableviews_handler_sort extends views_handler_sort {
   function options_form(&$form, &$form_state) {
     parent::options_form($form, $form_state);
     $form['expose_button']['#access'] = FALSE;
-    $form['order']['#description'] = t('Please remember to override settings of the sort criterion if you have display that sets weights and you choose descendling order.');
+    $form['order']['#description'] = t('Please remember to override settings of the sort criterion if you have display that sets weights and you choose descending order.');
 
     // Grab all of the views and their display that contain a draggableviews
     // field. If this display has one then 'view->name:view->current_display'

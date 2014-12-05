@@ -21,7 +21,7 @@
             // Submit form with AJAX.
             $table.parent().find('#edit-actions input').triggerHandler('mousedown');
             // The previously dragged row is left with class styling the row
-            // yellow style, indicating unsaved state. To increate UX we remove
+            // yellow style, indicating unsaved state. To increase UX we remove
             // this class with some delay to indicate that progress was made in
             // the background.
             $('.drag-previous').removeClass('drag-previous');

@@ -217,7 +217,7 @@ function draggableviews_update_7101() {
 
 /**
  * Increase sizes of view_name and view_display fields of
- * draggableviews_strucutre table.
+ * draggableviews_structure table.
  */
 function draggableviews_update_7201() {
   $new_field = array(
