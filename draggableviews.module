@@ -163,7 +163,7 @@ function draggableviews_preprocess_views_view_list(&$vars) {
   // Add JavaScript.
   drupal_add_library('system', 'ui.sortable');
   // Add setting of the row class.
-  $js_setting = array('draggableviews_row_class' => $class);
+  $js_setting['draggableviews_row_class'][] = $class;
   // Add setting whether ajax enabled or not.
   $js_setting['draggableviews_ajax'] = $vars['view']->field['draggableviews']->options['draggableviews']['ajax'];
   drupal_add_js($js_setting, 'setting');
