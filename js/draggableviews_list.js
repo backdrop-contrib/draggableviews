@@ -31,14 +31,14 @@
         }
         // If Ajax enabled, we should submit the form.
         if (Drupal.settings.draggableviews_ajax) {
-          $(this).parent().parent().find('#edit-submit').trigger('mousedown');
+          $(this).parent().parent().find('.form-actions input[id^="edit-submit"]').trigger('mousedown');
         }
       },
       containment: 'parent',
       cursor: 'move'
     });
     if (Drupal.settings.draggableviews_ajax) {
-      $('.views-form .' + Drupal.settings.draggableviews_row_class).parent().parent().find('#edit-submit').hide();
+      $('.views-form .' + Drupal.settings.draggableviews_row_class).parent().parent().find('.form-actions input[id^="edit-submit"]').hide();
     }
   }
  }

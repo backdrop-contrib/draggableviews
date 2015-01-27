@@ -19,7 +19,7 @@
             $('.tabledrag-changed-warning').hide();
             $table = $(this.table);
             // Submit form with AJAX.
-            $table.parent().find('#edit-actions input').triggerHandler('mousedown');
+            $table.parent().find('.form-actions input[id^="edit-submit"]').triggerHandler('mousedown');
             // The previously dragged row is left with class styling the row
             // yellow style, indicating unsaved state. To increase UX we remove
             // this class with some delay to indicate that progress was made in
@@ -29,7 +29,7 @@
               .insertBefore($table).hide().fadeIn('slow').delay(3000).fadeOut('slow');
           }
           // Hide Save button.
-          $('#' + prop).parent().find('#edit-actions input').hide();
+          $('#' + prop).parent().find('.form-actions input[id^="edit-submit"]').hide();
         }
       }
     }
