@@ -74,12 +74,8 @@ class draggableviews_handler_fieldapi extends draggableviews_handler {
     list($field_table, $field_name) = explode(':', $field_option);
     // Current row.
     $row = $field->view->result[$index];
-    // Check whether key has table name and field name in it.
-    foreach ($row as $key => $value) {
-      if (strpos($key, $field_table) !== FALSE && strpos($key, $field_name) !== FALSE) {
-        return $value;
-      }
-    }
+    $alias = $field->view->query->get_field_alias($field_table, $field_name);
+    return ($alias) ? $row->{$alias} : NULL;
   }
 
   function set($form_state) {
