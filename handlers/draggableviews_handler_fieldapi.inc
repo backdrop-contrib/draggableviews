@@ -92,11 +92,11 @@ class draggableviews_handler_fieldapi extends draggableviews_handler {
       $form_state['redirect'] = array(current_path(), array('query' => $view->exposed_raw_input));
     }
 
-    $base_table = $view->base_table;
+    $base_table = $view->field['draggableviews']->table;
     $entity_info_all = entity_get_info();
     $entity_type = '';
     foreach ($entity_info_all as $entity_name_key => $entity_info) {
-      if ($entity_info['base table'] == $view->base_table) {
+      if ($entity_info['base table'] == $base_table) {
         $entity_type = $entity_name_key;
         break;
       }
