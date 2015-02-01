@@ -71,7 +71,14 @@ Requirements: Draggableviews 7.x-2.x, Views 7.x-3.x, Views UI module enabled.
 Permissions
 ===========
 
-Please add "Access draggable views" permission to users who should be able to reorder views.
+Add "Access draggable views" permission to users who should be able to reorder views.  If a user does not have this
+permission they can still see the view, however they will not be able to reorder it.
+
+If you want only want the order view visible to users with "Access draggable views" then set the Access to
+"Permission: Access draggable views".
+
+When users have the "Access draggable views" and "Use contextual links" permission, they will see
+a contextual link from the non-reordering view to the ordering view.
 
 Arguments handling
 ==================
