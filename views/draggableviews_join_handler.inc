@@ -53,7 +53,7 @@ class draggableviews_join_handler extends views_join {
       }
 
       // Arguments passed to view (including exposed filters).
-      $view_arguments = $view->args;
+      $view_arguments = isset($view->args) ? $view->args : array();
       if (isset($view->exposed_raw_input)) {
         $view_arguments += $view->exposed_raw_input;
         // Remove 'items_per_page' argument if added by exposed pager filter.
