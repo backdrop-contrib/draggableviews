@@ -16,7 +16,7 @@ function draggableviews_views_api() {
  * Alter views form to change button label.
  */
 function draggableviews_form_alter(&$form, &$form_state, $form_id) {
-  if (!isset($form['draggableviews']) || empty($form['draggableviews'])) {
+  if (!isset($form['draggableviews'][0]) || empty($form['draggableviews'])) {
     $debug = 1;
     // If form is empty, but this is a view with draggableviews field, we hide
     // Save button. This scenario occurs in case of displaying summary.
