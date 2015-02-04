@@ -24,7 +24,9 @@
             // yellow style, indicating unsaved state. To increase UX we remove
             // this class with some delay to indicate that progress was made in
             // the background.
-            $('.drag-previous').removeClass('drag-previous');
+            setTimeout(function() {
+              $('.drag-previous').removeClass('drag-previous');
+            }, 3000);
             $('<div class="draggableviews-changed-notice messages warning">' + Drupal.t('Order of this view has been changed.') + '</div>')
               .insertBefore($table).hide().fadeIn('slow').delay(3000).fadeOut('slow');
           }
