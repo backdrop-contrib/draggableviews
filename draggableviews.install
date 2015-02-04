@@ -64,6 +64,7 @@ function draggableviews_schema() {
     'indexes' => array(
       'view' => array('view_name', 'view_display', 'args', 'entity_id'),
       'weight' => array('weight'),
+      'entity_id' => array('entity_id'),
     ),
     'unique keys' => array(
       'dvid' => array('dvid'),
@@ -265,5 +266,14 @@ function draggableviews_update_7203() {
   }
   if (!db_index_exists('draggableviews_structure', 'weight')) {
     db_add_index('draggableviews_structure', 'weight', array('weight'));
+  }
+}
+
+/**
+ * Add indexes to the draggableviews_structure table.
+ */
+function draggableviews_update_7204() {
+  if (!db_index_exists('draggableviews_structure', 'entity_id')) {
+    db_add_index('draggableviews_structure', 'entity_id', array('entity_id'));
   }
 }
