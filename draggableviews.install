@@ -66,9 +66,6 @@ function draggableviews_schema() {
       'weight' => array('weight'),
       'entity_id' => array('entity_id'),
     ),
-    'unique keys' => array(
-      'dvid' => array('dvid'),
-    ),
     'primary key' => array('dvid'),
   );
   return $schema;
@@ -275,5 +272,29 @@ function draggableviews_update_7203() {
 function draggableviews_update_7204() {
   if (!db_index_exists('draggableviews_structure', 'entity_id')) {
     db_add_index('draggableviews_structure', 'entity_id', array('entity_id'));
+  }
+}
+
+/**
+ * Remove unique key on the draggableviews_structure table.
+ */
+function draggableviews_update_7205() {
+  // Table has both primary and unique index.  Only need one.
+  $table = 'draggableviews_structure';
+  $name = 'dvid';
+
+  try {
+    if (db_drop_unique_key($table, $name)) {
+      // Constraint was found and removed.
+      return t('Unique key DVID successfully removed.');
+    }
+    else {
+      // Constraint was not found, nothing was altered.
+      return t('No unique key DVID was found.');
+    }
+  }
+  catch (PDOException $e) {
+    // Constraint was found, but something went wrong, see $e->getMessage() for more info.
+    throw new DrupalUpdateException($e->getMessage);
   }
 }
