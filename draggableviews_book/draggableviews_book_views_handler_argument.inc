@@ -1,6 +1,12 @@
 <?php
 
 /**
+ * @file
+ *   Draggableviews book views handler argument.
+ */
+
+
+/**
  * Argument that refers to a certain book page.
  */
 class views_handler_argument_draggableviews_book extends views_handler_argument {

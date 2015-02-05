@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * Draggableviews book views hierarchy handler.
+ */
+
 $plugin = array(
   'label' => 'Book',
   'handler' => array(

@@ -1,6 +1,11 @@
 <?php
 
 /**
+ * @file
+ *   Draggableviews book default view.
+ */
+
+/**
  * Implements hook_views_default_views().
  */
 function draggableviews_book_views_default_views() {

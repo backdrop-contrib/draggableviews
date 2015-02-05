@@ -1,6 +1,12 @@
 <?php
 
 /**
+ * @file
+ *   Draggableviews book module install/schema hooks.
+ */
+
+
+/**
  * Implements hook_install().
  *
  * Set the weight more than views.

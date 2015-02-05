@@ -245,7 +245,7 @@ class DraggableviewsFieldAPIHandlerTestCase extends DraggableviewsTestCase {
     // Create five nodes.
     $nodes = array();
     for ($i = 0; $i < 5; $i++) {
-      $node = $this->drupalCreateNode(array('type' => 'article',));
+      $node = $this->drupalCreateNode(array('type' => 'article'));
       $nodes[$node->nid] = $node;
     }
 
@@ -304,49 +304,32 @@ class DraggableviewsFieldAPIHandlerTestCase extends DraggableviewsTestCase {
 
   // Create a integer field for Article nodes.
   function createField() {
-    $field = array (
+    $field = array(
       'translatable' => '0',
-      'entity_types' =>
-      array (
-      ),
-      'settings' =>
-      array (
-      ),
-      'storage' =>
-      array (
+      'entity_types' => array(),
+      'settings' => array(),
+      'storage' => array(
         'type' => 'field_sql_storage',
-        'settings' =>
-        array (
-        ),
+        'settings' => array(),
         'module' => 'field_sql_storage',
         'active' => '1',
-        'details' =>
-        array (
-          'sql' =>
-          array (
-            'FIELD_LOAD_CURRENT' =>
-            array (
-              'field_data_field_weight' =>
-              array (
+        'details' => array(
+          'sql' => array(
+            'FIELD_LOAD_CURRENT' => array(
+              'field_data_field_weight' => array(
                 'value' => 'field_weight_value',
               ),
             ),
-            'FIELD_LOAD_REVISION' =>
-            array (
-              'field_revision_field_weight' =>
-              array (
+            'FIELD_LOAD_REVISION' => array(
+              'field_revision_field_weight' => array(
                 'value' => 'field_weight_value',
               ),
             ),
           ),
         ),
       ),
-      'foreign keys' =>
-      array (
-      ),
-      'indexes' =>
-      array (
-      ),
+      'foreign keys' => array(),
+      'indexes' => array(),
       'id' => '5',
       'field_name' => 'field_weight',
       'type' => 'number_integer',
@@ -355,56 +338,45 @@ class DraggableviewsFieldAPIHandlerTestCase extends DraggableviewsTestCase {
       'locked' => '0',
       'cardinality' => '1',
       'deleted' => '0',
-      'columns' =>
-      array (
-        'value' =>
-        array (
+      'columns' => array(
+        'value' => array(
           'type' => 'int',
-          'not null' => false,
+          'not null' => FALSE,
         ),
       ),
-      'bundles' =>
-      array (
-        'node' =>
-        array (
+      'bundles' => array(
+        'node' => array(
           0 => 'article',
         ),
       ),
     );
     field_create_field($field);
 
-    $instance = array (
+    $instance = array(
       'label' => 'Weight',
-      'widget' =>
-      array (
+      'widget' => array(
         'weight' => 0,
         'type' => 'number',
         'module' => 'number',
         'active' => 0,
-        'settings' =>
-        array (
-        ),
+        'settings' => array(),
       ),
-      'settings' =>
-      array (
+      'settings' => array(
         'min' => '',
         'max' => '',
         'prefix' => '',
         'suffix' => '',
-        'user_register_form' => false,
+        'user_register_form' => FALSE,
       ),
-      'display' =>
-      array (
-        'default' =>
-        array (
+      'display' => array(
+        'default' => array(
           'label' => 'above',
           'type' => 'number_integer',
-          'settings' =>
-          array (
+          'settings' => array(
             'thousand_separator' => ' ',
             'decimal_separator' => '.',
             'scale' => 0,
-            'prefix_suffix' => true,
+            'prefix_suffix' => TRUE,
           ),
           'module' => 'number',
           'weight' => 11,

@@ -1,5 +1,10 @@
 <?php
 
+/**
+ * @file
+ * Draggableviews views book handler.
+ */
+
 $plugin = array(
   'label' => 'Book',
   'handler' => array(

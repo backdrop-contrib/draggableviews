@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Native handler sort.
+ * Draggableviews views native handler sort.
  */
 
 /**
