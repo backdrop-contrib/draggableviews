@@ -256,17 +256,6 @@ function draggableviews_contextual_links_view_alter(&$element, $items) {
 }
 
 /**
- * Implements hook_post_render().
- */
-function draggableviews_views_post_render(&$view, &$output, &$cache) {
-  // Hide "Save" button when there are no results available. We cannot do this
-  // in form_alter hook as view is not yet executed there.
-  if (empty($view->result)) {
-    $output = str_replace('<div class="form-actions form-wrapper" id="edit-actions">', '<div class="form-actions form-wrapper" id="edit-actions" style="display:none">', $output);
-  }
-}
-
-/**
  * Get class of handler.
  *
  * @param object
