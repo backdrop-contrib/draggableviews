@@ -22,6 +22,7 @@ function draggableviews_book_views_default_views() {
   /* Display: Master */
   $handler = $view->new_display('default', 'Master', 'default');
   $handler->display->display_options['title'] = 'Reorder Book';
+  $handler->display->display_options['use_more_always'] = FALSE;
   $handler->display->display_options['access']['type'] = 'perm';
   $handler->display->display_options['cache']['type'] = 'none';
   $handler->display->display_options['query']['type'] = 'views_query';
@@ -44,6 +45,12 @@ function draggableviews_book_views_default_views() {
   $handler->display->display_options['fields']['draggableviews']['draggableviews']['handler'] = 'draggableviews_handler_book';
   $handler->display->display_options['fields']['draggableviews']['draggableviews']['hierarchy_handler'] = 'draggableviews_hierarchy_handler_book';
   $handler->display->display_options['fields']['draggableviews']['draggableviews']['ajax'] = 0;
+  /* Sort criterion: Draggableviews: Weight */
+  $handler->display->display_options['sorts']['weight']['id'] = 'weight';
+  $handler->display->display_options['sorts']['weight']['table'] = 'draggableviews_structure';
+  $handler->display->display_options['sorts']['weight']['field'] = 'weight';
+  $handler->display->display_options['sorts']['weight']['draggableviews_setting_view'] = 'book:page';
+  $handler->display->display_options['sorts']['weight']['draggableviews_setting_new_items_bottom_list'] = 1;
   /* Contextual filter: Book: All sub nodes of this book page. */
   $handler->display->display_options['arguments']['book']['id'] = 'book';
   $handler->display->display_options['arguments']['book']['table'] = 'draggableviews_book_structure';
