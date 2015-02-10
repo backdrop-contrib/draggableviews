@@ -102,6 +102,19 @@ function _draggableviews_book_uasort($item1, $item2) {
       return -1;
     }
 
+    // Order by title if weights are the same.
+    if (isset($item1->weight[$i]) && isset($item2->weight[$i]) && $item1->weight[$i] == $item2->weight[$i]) {
+      $comp = strcmp($item1->node_title, $item2->node_title);
+      // Str1 is less than str2.
+      if ($comp  < 0) {
+        return -1;
+      }
+      // Str1 is greater than str2.
+      elseif ($comp > 0) {
+        return 1;
+      }
+    }
+
     // If weights on the same depth level are not the same compare them.
     if (isset($item1->weight[$i]) && isset($item2->weight[$i]) && $item1->weight[$i] != $item2->weight[$i]) {
       return ($item1->weight[$i] < $item2->weight[$i]) ? -1 : 1;
