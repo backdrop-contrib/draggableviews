@@ -165,24 +165,23 @@ function draggableviews_update_7101() {
       }
     }
 
-   // get the old data out
-   $query_get_old = db_select('draggableviews_structure', 'dvs');
-   $query_get_old->join('draggableviews_structure', 'dvsd1', 'dvs.view_name = dvsd1.view_name and dvs.nid = dvsd1.nid');
+    // Get the old data out.
+    $query_get_old = db_select('draggableviews_structure', 'dvs');
+    $query_get_old->join('draggableviews_structure', 'dvsd1', 'dvs.view_name = dvsd1.view_name and dvs.nid = dvsd1.nid');
 
-   $query_get_old->fields('dvs', array('view_name', 'nid', 'args', 'value'))
-   ->fields('dvsd1', array('value'));
+    $query_get_old->fields('dvs', array('view_name', 'nid', 'args', 'value'))
+      ->fields('dvsd1', array('value'));
 
-   $query_get_old->condition('dvs.delta', 0)
-   ->condition('dvsd1.delta', 1);
+    $query_get_old->condition('dvs.delta', 0)
+      ->condition('dvsd1.delta', 1);
 
-   $query_get_old = $query_get_old->execute();
+    $query_get_old = $query_get_old->execute();
 
     $query_set_new = db_insert('draggableviews_structure')
       ->fields(array('view_name', 'view_display', 'args', 'entity_id', 'weight', 'parent'));
 
     foreach ($query_get_old->fetchAll() as $record) {
 
-     // $query_set_save_old->values(get_object_vars($record));
       foreach ($draggableviews_info[$record->view_name] as $name => $display) {
         $new_record = array(
           'view_name' => $record->view_name,

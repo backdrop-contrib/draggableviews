@@ -243,6 +243,6 @@ function draggableviews_test_views_default_views() {
   $handler->display->display_options['path'] = 'nodes-display';
 
   $views[$view->name] = $view;
-  
+
   return $views;
 }
