@@ -62,7 +62,11 @@ function draggableviews_schema() {
       ),
     ),
     'indexes' => array(
-      'view' => array('view_name', 'view_display', 'args', 'entity_id'),
+      'view' => array(
+        array('view_name', 50),
+        array('view_display', 50),
+        array('args', 50),
+        'entity_id'),
       'weight' => array('weight'),
       'entity_id' => array('entity_id'),
     ),
@@ -258,7 +262,13 @@ function draggableviews_update_7202() {
  */
 function draggableviews_update_7203() {
   if (!db_index_exists('draggableviews_structure', 'view')) {
-    db_add_index('draggableviews_structure', 'view', array('view_name', 'view_display', 'args', 'entity_id'));
+    $index_data = array(
+      array('view_name', 50),
+      array('view_display', 50),
+      array('args', 50),
+      'entity_id',
+    );
+    db_add_index('draggableviews_structure', 'view', $index_data);
   }
   if (!db_index_exists('draggableviews_structure', 'weight')) {
     db_add_index('draggableviews_structure', 'weight', array('weight'));
@@ -295,5 +305,23 @@ function draggableviews_update_7205() {
   catch (PDOException $e) {
     // Constraint was found, but something went wrong, see $e->getMessage() for more info.
     throw new DrupalUpdateException($e->getMessage);
+  }
+}
+
+/**
+ * Support MYISAM store engine tables.
+ */
+function draggableviews_update_7206() {
+  // draggableviews_update_7202() added an index that was too big for MYISAM store engine tables (now fixed).
+  // MYISAM index can only have 1000 byte columns. Using utf8 collation, this is approximately 55.5 characters.
+  if (db_index_exists('draggableviews_structure', 'view')) {
+    db_drop_index('draggableviews_structure', 'view');
+    $index_data = array(
+        array('view_name', 50),
+        array('view_display', 50),
+        array('args', 50),
+        'entity_id',
+    );
+    db_add_index('draggableviews_structure', 'view', $index_data);
   }
 }
