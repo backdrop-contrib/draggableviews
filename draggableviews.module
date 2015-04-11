@@ -11,45 +11,91 @@ function draggableviews_views_api() {
 }
 
 /**
+ * Gets the Draggableviews field if it exists on the passed-in view.
+ *
+ * @return
+ *  The field object if found. Otherwise, FALSE.
+ */
+function _draggableviews_get_field($view) {
+  foreach ($view->field as $field_name => $field) {
+    if ($field instanceof draggableviews_handler_field_draggable) {
+      // Add in the view object for convenience.
+      $field->view = $view;
+      return $field;
+    }
+  }
+  return FALSE;
+}
+/**
  * Implements hook_form_alter().
  *
  * Alter views form to change button label.
  */
 function draggableviews_form_alter(&$form, &$form_state, $form_id) {
-  if (!isset($form['draggableviews'][0]) || empty($form['draggableviews'])) {
-    $debug = 1;
-    // If form is empty, but this is a view with draggableviews field, we hide
-    // Save button. This scenario occurs in case of displaying summary.
-    if (isset($form_state['build_info']['args'][0])
-      && is_object($form_state['build_info']['args'][0])
-      && get_class($form_state['build_info']['args'][0]) == 'view'
-      && isset($form_state['build_info']['args'][0]->field['draggableviews'])) {
-      $form['actions']['submit']['#access'] = FALSE;
-    }
+  if (strpos($form_id, 'views_form_') === 0) {
+    $draggableviews = _draggableviews_get_field($form_state['build_info']['args'][0]);
+  }
+  // Not a draggableviews-enabled views form.
+  if (empty($draggableviews)) {
     return;
   }
 
-  $view = $form_state['build_info']['args'][0];
-  // Check permissions and number of results.
-  if (!user_access('access draggableviews') || count($view->result) < 2) {
+  // Remove the default submit button.
+  // The submit button added by Views Form API might be used by a non-Draggableviews
+  // form handler. If there is no such handler on the view, hide the button.
+  $has_other_views_form_handlers = FALSE;
+  foreach ($draggableviews->view->field as $field) {
+    if (property_exists($field, 'views_form_callback') || method_exists($field, 'views_form')) {
+      if (!($field instanceof draggableviews_handler_field_draggable)) {
+        $has_other_views_form_handlers = TRUE;
+      }
+      // If there is another handler that wants remove the button, however, will leave it there
+      // it if there is another handler exist, then this will causes a problem, as the button will
+      // show up when neither one wanted it. A known example is the Views Bulk Operations module.
+      if($field instanceof views_bulk_operations_handler_field_operations) {
+        // VBO Does wants it on the confirmation page, but not the initial view form page.
+        if ($form_state['step'] == 'views_form_views_form') {
+          // Reset it back to FALSE.
+          $has_other_views_form_handlers = FALSE;
+        }
+      }
+    }
+  }
+  if (!$has_other_views_form_handlers) {
     $form['actions']['submit']['#access'] = FALSE;
+  }
+
+  // Create draggableviews save order button.
+  $form['actions']['save-order'] = array(
+      '#type' => 'submit',
+  );
+
+  // If there is no results remove the save-order button.
+  if (!isset($form['draggableviews'][0])) {
+    $form['actions']['save-order']['#access'] = FALSE;
+    return;
+  }
+
+  // Check permissions and number of results.
+  if (!user_access('access draggableviews') || count($draggableviews->view->result) < 2) {
+    $form['actions']['save-order']['#access'] = FALSE;
     return;
   }
 
   // Do not show "Submit" button on preview.
   $current_path = current_path();
   if (strpos($current_path, 'admin/structure/views/nojs/preview') !== FALSE) {
-    $form['actions']['submit']['#access'] = FALSE;
     $form['actions']['message'] = array('#markup' => '<div class="messages warning">' . t('It is not possible to save order in Preview mode.') . '</div>');
+    $form['actions']['save-order']['#access'] = FALSE;
     return;
   }
 
-  $options = $view->field['draggableviews']->options['draggableviews'];
-  $form['actions']['submit']['#value'] = t($options['save_button_label']);
-  $form['actions']['submit']['#submit'][] = 'draggableviews_views_submit';
+  $options = $draggableviews->view->field['draggableviews']->options['draggableviews'];
+  $form['actions']['save-order']['#value'] = t($options['save_button_label']);
+  $form['actions']['save-order']['#submit'][] = 'draggableviews_views_submit';
 
   if ($options['ajax']) {
-    $form['actions']['submit']['#ajax'] = array(
+    $form['actions']['save-order']['#ajax'] = array(
       'callback' => 'draggableviews_view_draggabletable_form_ajax'
     );
   }
