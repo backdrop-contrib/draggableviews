@@ -95,10 +95,19 @@ empty set will be used.
 
 Using the "Prepare arguments with PHP code" option will let you alter arguments before they passed to
 "matching" with "args" column. For us this means that we can create, for example, several exposed filters,
-but pass values of only one of values of exposed filters instead of all of them (like we create two exposed
-filters: author and node type, but take into account for ordering only node type).
-Please be aware that in PHP code arguments are passed as $arguments variable and you should return an array.
-IE return array('status' => 1, 'user' => 2);  or return $arguments; // $arguments is already an array
+but pass values of only one of values of exposed filters instead of all of them.
+
+Please be aware that in PHP code arguments are passed as an $arguments variable and you should return an array.
+An example:
+  return array('status' => 1, 'user' => 2);  or return $arguments; // $arguments is already an array.
+
+In the $arguments array
+  - Contextual filters are NUMBER keyed.
+  - Exposed filters are NAME keyed.
+
+For example, say we create two exposed filters: author and node type, but wish to take into account for ordering 
+only node type. We would use the following:
+  unset($arguments['author']); return $arguments;
 
 When using arguments,  make sure your ordering view display has the same arguments as the display you want to show
 the end user.  If they do not match, then your ordering will not match.
@@ -106,8 +115,6 @@ the end user.  If they do not match, then your ordering will not match.
 Using hook_draggableviews_handler_native_arguments_alter(&$arguments, $view, &$form_values) {} You may remove or change
 the arguments save to the database, just as the "Prepare arguments with PHP code" option. See draggavleviews.api.php
 for more details.
-
-In the $arguments array, Contextual filters are number keyed and exposed filters are name keyed.
 
 Removed Arguments:
 - The pager 'item_per_page' exposed filter will never be saved.

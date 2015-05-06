@@ -87,7 +87,7 @@ class draggableviews_handler_sort extends views_handler_sort {
       '#default_value' => $this->options['draggableviews_setting_arguments_php'],
       '#description' => t('Enter the php code to prepare the arguments. Do not enter &lt;?php ?&gt; tags.
           The following variables are available - $view (the view), $arguments (existing arguments -
-          manipulate these to alter the arguments used to sort). See README.txt for more details.'),
+          manipulate these, and then return them, to alter the arguments used to sort). See README.txt for more details.'),
       '#states' => array(
         'visible' => array(
           'input[name="options[draggableviews_setting_arguments]"]' => array('value' => 'php'),
