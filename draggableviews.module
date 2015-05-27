@@ -26,6 +26,20 @@ function _draggableviews_get_field($view) {
   }
   return FALSE;
 }
+
+/**
+ * Implements hook_views_pre_view().
+ */
+function draggableviews_views_pre_view(&$view, &$display_id, &$args) {
+  // User has Views UI access however they do not have access to draggableviews.
+  // To prevent confusion, display a warning message when they are previewing the
+  // current display when it has a draggableviews field.
+  if (isset($view->preview) && isset($view->display_handler->handlers['field']['draggableviews']) && !user_access('access draggableviews')) {
+    drupal_set_message(t("Current display has a draggableviews field, however you cannot see it in the preview because you do not have
+      '@permission' permission.", array('@permission' => 'access draggableviews')), 'warning');
+  }
+}
+
 /**
  * Implements hook_form_alter().
  *
@@ -82,7 +96,7 @@ function draggableviews_form_alter(&$form, &$form_state, $form_id) {
     return;
   }
 
-  // Do not show "Submit" button on preview.
+  // Do not show "Submit" button on preview and warn user they cannot save in Preview mode.
   $current_path = current_path();
   if (strpos($current_path, 'admin/structure/views/nojs/preview') !== FALSE) {
     $form['actions']['message'] = array('#markup' => '<div class="messages warning">' . t('It is not possible to save order in Preview mode.') . '</div>');
