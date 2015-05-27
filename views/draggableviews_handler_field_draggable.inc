@@ -140,10 +140,12 @@ class draggableviews_handler_field_draggable extends views_handler_field {
     );
   }
 
+  function access() {
+    return user_access('access draggableviews');
+  }
+
   function render($values) {
-    if (user_access('access draggableviews')) {
       return '<!--form-item-' . $this->options['id'] . '--' . $this->view->row_index . '-->';
-    }
   }
 
   /**
