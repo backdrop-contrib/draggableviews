@@ -110,6 +110,9 @@ class draggableviews_handler_fieldapi extends draggableviews_handler {
     // Give other modules a chance to alter saved arguments.
     drupal_alter('draggableviews_handler_fieldapi_arguments', $fv['draggableviews'], $view);
 
+    // Reorder the items by weight.
+    uasort($fv['draggableviews'], 'drupal_sort_weight');
+
     // Save the values of the field.
     foreach ($fv['draggableviews'] as $item) {
       if (isset($item['id']) && isset($item['weight'])) {

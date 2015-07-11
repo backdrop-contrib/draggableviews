@@ -42,6 +42,10 @@ class draggableviews_handler_native extends draggableviews_handler {
 
     // Save records to our custom table.
     $weight = 0;
+
+    // Reorder the items by weight.
+    uasort($fv['draggableviews'], 'drupal_sort_weight');
+
     foreach ($fv['draggableviews'] as $item) {
       // Make sure id is available.
       if (!isset($item['id'])) {
