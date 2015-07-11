@@ -21,7 +21,7 @@ class draggableviews_hierarchy_handler_native extends draggableviews_hierarchy_h
   public function get_depth($field, $index) {
     // $index can be NULL for multiple reasons. Common problem
     // is after parent is deleted.
-    if (!isset($index)) {
+    if (!isset($index) || !isset($field->view->result[$index])) {
       return;
     }
     $row = $field->view->result[$index];
