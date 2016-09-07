@@ -591,3 +591,20 @@ function _draggableviews_get_views_options($view = NULL) {
   }
   return $options;
 }
+
+/**
+ * Implements hook_node_delete().
+ */
+function draggableviews_node_delete($node) {
+  // Code to check if entry present in draggableviews_structure table.
+  $nid = $node->nid;
+  $query = db_select('draggableviews_structure', 'ds')
+      ->condition('entity_id', $nid)
+      ->fields('ds', array('view_name'));
+
+  $result = $query->execute()->rowCount();
+  // Code to remove entries from draggableviews_structure table.
+  if ($result > 0) {
+    db_delete('draggableviews_structure')->condition('entity_id', $nid)->execute();
+  }
+}
