@@ -3,17 +3,5 @@ description = Makes Views draggable
 package = Views
 backdrop = 1.x
 
-files[] = views/draggableviews_handler_field_draggable.inc
-files[] = views/draggableviews_handler_sort.inc
-files[] = views/draggableviews_join_handler.inc
-
-files[] = handlers/draggableviews_handler.inc
-files[] = handlers/draggableviews_handler_native.inc
-files[] = handlers/draggableviews_handler_fieldapi.inc
-files[] = handlers/draggableviews_hierarchy_handler.inc
-files[] = handlers/draggableviews_hierarchy_handler_native.inc
-
-files[] = test/draggableviews.test
-
 dependencies[] = entity
 dependencies[] = views

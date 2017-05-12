@@ -608,3 +608,19 @@ function draggableviews_node_delete($node) {
     db_delete('draggableviews_structure')->condition('entity_id', $nid)->execute();
   }
 }
+
+/**
+ * Implements hook_autoload_info().
+ */
+function draggableviews_autoload_info() {
+  return array(
+    'draggableviews_join_handler' => 'views/draggableviews_join_handler.inc',
+    'draggableviews_handler_sort' => 'views/draggableviews_handler_sort.inc',
+    'draggableviews_handler_field_draggable' => 'views/draggableviews_handler_field_draggable.inc',
+    'draggableviews_hierarchy_handler_native' => 'handlers/draggableviews_hierarchy_handler_native.inc',
+    'draggableviews_hierarchy_handler' => 'handlers/draggableviews_hierarchy_handler.inc',
+    'draggableviews_handler_native' => 'handlers/draggableviews_handler_native.inc',
+    'draggableviews_handler_fieldapi' => 'handlers/draggableviews_handler_fieldapi.inc',
+    'draggableviews_handler' => 'handlers/draggableviews_handler.inc',
+  );
+}
