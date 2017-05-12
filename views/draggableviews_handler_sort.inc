@@ -65,7 +65,7 @@ class draggableviews_handler_sort extends views_handler_sort {
       );
       // If there is no setting views available, show error message.
       if (empty($options)) {
-        drupal_set_message(t('First you should create a view that sets sorting order.'), 'error');
+        backdrop_set_message(t('First you should create a view that sets sorting order.'), 'error');
       }
     }
 

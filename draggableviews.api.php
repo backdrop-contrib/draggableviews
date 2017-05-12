@@ -12,7 +12,7 @@
  * to be recorded to database. Also you can add new records to be saved to
  * database (for example for translated nodes, etc.)
  *
- * @see http://drupal.org/node/1463596#comment-5687620
+ * @see http://backdrop.org/node/1463596#comment-5687620
  *
  * @param array $arguments
  *   Array of arguments before saving.

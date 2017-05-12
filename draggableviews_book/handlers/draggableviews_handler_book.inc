@@ -45,7 +45,7 @@ class draggableviews_handler_book extends draggableviews_handler {
       $node->book = $book;
       _book_update_outline($node);
 
-      drupal_static_reset('book_get_books');
+      backdrop_static_reset('book_get_books');
     }
   }
 }

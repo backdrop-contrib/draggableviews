@@ -1,7 +1,7 @@
 name = Draggableviews
 description = Makes Views draggable
 package = Views
-core = 7.x
+backdrop = 1.x
 
 files[] = views/draggableviews_handler_field_draggable.inc
 files[] = views/draggableviews_handler_sort.inc
@@ -15,6 +15,5 @@ files[] = handlers/draggableviews_hierarchy_handler_native.inc
 
 files[] = test/draggableviews.test
 
-dependencies[] = ctools
 dependencies[] = entity
 dependencies[] = views

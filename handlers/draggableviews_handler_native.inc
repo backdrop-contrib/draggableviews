@@ -33,7 +33,7 @@ class draggableviews_handler_native extends draggableviews_handler {
     }
 
     // Give other modules a chance to alter saved arguments.
-    drupal_alter('draggableviews_handler_native_arguments', $arguments, $view, $fv['draggableviews']);
+    backdrop_alter('draggableviews_handler_native_arguments', $arguments, $view, $fv['draggableviews']);
 
     // Never save 'items_per_page' argument added by exposed pager filter.
     unset($arguments['items_per_page']);
@@ -44,7 +44,7 @@ class draggableviews_handler_native extends draggableviews_handler {
     $weight = 0;
 
     // Reorder the items by weight.
-    uasort($fv['draggableviews'], 'drupal_sort_weight');
+    uasort($fv['draggableviews'], 'backdrop_sort_weight');
 
     foreach ($fv['draggableviews'] as $item) {
       // Make sure id is available.
@@ -71,7 +71,7 @@ class draggableviews_handler_native extends draggableviews_handler {
       if (isset($item['parent'])) {
         $record['parent'] = $item['parent'];
       }
-      drupal_write_record('draggableviews_structure', $record);
+      backdrop_write_record('draggableviews_structure', $record);
       $weight++;
     }
   }

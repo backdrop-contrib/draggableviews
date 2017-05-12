@@ -19,7 +19,7 @@ class draggableviews_hierarchy_handler_book extends draggableviews_hierarchy_han
 
     $parent_link_path = db_query('SELECT link_path FROM {menu_links} WHERE mlid = :mlid', array(':mlid' => $parent_mlid))->fetchField();
 
-    return !empty($parent_link_path) ? drupal_substr($parent_link_path, 5) : 0;
+    return !empty($parent_link_path) ? backdrop_substr($parent_link_path, 5) : 0;
   }
 
   public function get_depth($field, $index) {

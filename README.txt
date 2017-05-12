@@ -11,7 +11,7 @@ Quick install:
  5) Click Add button at the "Sort criteria" section and choose field "Draggableviews: Weight", add and choose sort asc, then apply.
  6) Save the view and you're done.
 
-In the case of table standard drupal tabledrag.js JavaScript is used.
+In the case of table standard backdrop tabledrag.js JavaScript is used.
 
 We also support jQuery UI Sortable JavaScript. In order to use it please set display style HTML List.
 By default HTML list is displayed like grid. If you would like it to be displayed as list override
@@ -131,5 +131,5 @@ Troubleshooting Drag n' drop Not Showing
 ========================================
 1. Make sure JavaScript is turned on and loading property.  Double check your source code.  For tables (D7) its <root>/misc/tabledrag.js.
 2. Make sure you have draggableviews permission for the correct role.
-3. Select 'show row weights'.  By default, this is located at the top right of the table. See http://drupal.org/files/draggableviews-1978526-hode-row-weights.png" for a visual image.
+3. Select 'show row weights'.  By default, this is located at the top right of the table. See http://backdrop.org/files/draggableviews-1978526-hode-row-weights.png" for a visual image.
 4. 'Show row weights' is a global variable/setting.  If you turn it off for 1 table, then all tables, across all pages, across all users, will not see it.  To fix this in the UI, you have to 'hide row weights' on another page/table, such as admin/structure/block (D7) or admin/build/block (D6), or go into the variables table in the database.

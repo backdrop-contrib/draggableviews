@@ -84,7 +84,7 @@ function draggableviews_schema() {
  */
 function draggableviews_update_7101() {
   if (!db_field_exists('draggableviews_structure', 'dvid')) {
-    drupal_set_message(t("Draggableviews 1.x to 2.x upgrade script started."));
+    backdrop_set_message(t("Draggableviews 1.x to 2.x upgrade script started."));
 
     // New schema for draggableviews 2.x (schema version 7200).
     $schema['draggableviews_structure_new'] = array(
@@ -209,10 +209,10 @@ function draggableviews_update_7101() {
     // Save the new formatted information.
     $query_set_new->execute();
 
-    drupal_set_message(t("Draggableviews 1.x to 2.x upgrade script finished."));
+    backdrop_set_message(t("Draggableviews 1.x to 2.x upgrade script finished."));
   }
   else {
-    drupal_set_message(t("draggableviews_update_7101 skipped.  Database looks like its already been updated."));
+    backdrop_set_message(t("draggableviews_update_7101 skipped.  Database looks like its already been updated."));
   }
 }
 
@@ -304,7 +304,7 @@ function draggableviews_update_7205() {
   }
   catch (PDOException $e) {
     // Constraint was found, but something went wrong, see $e->getMessage() for more info.
-    throw new DrupalUpdateException($e->getMessage);
+    throw new BackdropUpdateException($e->getMessage);
   }
 }
 

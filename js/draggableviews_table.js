@@ -4,14 +4,14 @@
  */
 
 (function ($) {
-  Drupal.behaviors.draggableviewsAutosave = {
+  Backdrop.behaviors.draggableviewsAutosave = {
     attach: function(){
-      if (typeof Drupal.tableDrag == 'undefined') {
+      if (typeof Backdrop.tableDrag == 'undefined') {
         return;
       }
-      for (var prop in Drupal.tableDrag){
+      for (var prop in Backdrop.tableDrag){
         if (prop.substring(0, 14) == 'draggableviews'){
-          var table = Drupal.tableDrag[prop];
+          var table = Backdrop.tableDrag[prop];
           table.onDrop = function() {
             // Hide change messages that are not relevant when saving form
             // through AJAX.
@@ -27,7 +27,7 @@
             setTimeout(function() {
               $('.drag-previous').removeClass('drag-previous');
             }, 3000);
-            $('<div class="draggableviews-changed-notice messages warning">' + Drupal.t('Order of this view has been changed.') + '</div>')
+            $('<div class="draggableviews-changed-notice messages warning">' + Backdrop.t('Order of this view has been changed.') + '</div>')
               .insertBefore($table).hide().fadeIn('slow').delay(3000).fadeOut('slow');
           }
           // Hide Save button.

@@ -6,7 +6,7 @@
 function draggableviews_views_api() {
   return array(
     'api' => 3,
-    'path' => drupal_get_path('module', 'draggableviews') . '/views',
+    'path' => backdrop_get_path('module', 'draggableviews') . '/views',
     );
 }
 
@@ -35,7 +35,7 @@ function draggableviews_views_pre_view(&$view, &$display_id, &$args) {
   // To prevent confusion, display a warning message when they are previewing the
   // current display when it has a draggableviews field.
   if (isset($view->preview) && isset($view->display_handler->handlers['field']['draggableviews']) && !user_access('access draggableviews')) {
-    drupal_set_message(t("Current display has a draggableviews field, however you cannot see it in the preview because you do not have
+    backdrop_set_message(t("Current display has a draggableviews field, however you cannot see it in the preview because you do not have
       '@permission' permission.", array('@permission' => 'access draggableviews')), 'warning');
   }
 }
@@ -120,9 +120,9 @@ function draggableviews_form_alter(&$form, &$form_state, $form_id) {
     $get = $_GET;
     unset($get['q']);
     if (!isset($_GET['destination'])) {
-      $get['destination'] = current_path() . '?' . drupal_http_build_query($get);
+      $get['destination'] = current_path() . '?' . backdrop_http_build_query($get);
     }
-    $form['#action'] .= '?' . drupal_http_build_query($get);
+    $form['#action'] .= '?' . backdrop_http_build_query($get);
   }
 }
 
@@ -188,18 +188,18 @@ function draggableviews_preprocess_views_view_table(&$vars) {
     $row_classes[] = 'draggable';
   }
 
-  $vars['attributes_array']['id'] = drupal_html_id('draggableviews-table-' . $vars['view']->name . '-' . $vars['view']->current_display);
+  $vars['attributes_array']['id'] = backdrop_html_id('draggableviews-table-' . $vars['view']->name . '-' . $vars['view']->current_display);
   // Add JavaScript.
-  drupal_add_tabledrag($vars['attributes_array']['id'], 'order', 'sibling', 'draggableviews-weight');
+  backdrop_add_tabledrag($vars['attributes_array']['id'], 'order', 'sibling', 'draggableviews-weight');
 
   // Add JavaScript for auto-save functionality.
   if ($vars['view']->field['draggableviews']->options['draggableviews']['ajax']) {
-    drupal_add_js(drupal_get_path('module', 'draggableviews') . '/js/draggableviews_table.js');
+    backdrop_add_js(backdrop_get_path('module', 'draggableviews') . '/js/draggableviews_table.js');
   }
   // Parent JavaScripts.
   if (!empty($vars['view']->field['draggableviews']->options['draggableviews']['hierarchy_handler'])) {
-    drupal_add_tabledrag($vars['attributes_array']['id'], 'match', 'parent', 'draggableviews-parent', 'draggableviews-parent', 'draggableviews-id', FALSE);
-    drupal_add_tabledrag($vars['attributes_array']['id'], 'depth', 'group', 'draggableviews-depth', NULL, NULL, FALSE);
+    backdrop_add_tabledrag($vars['attributes_array']['id'], 'match', 'parent', 'draggableviews-parent', 'draggableviews-parent', 'draggableviews-id', FALSE);
+    backdrop_add_tabledrag($vars['attributes_array']['id'], 'depth', 'group', 'draggableviews-depth', NULL, NULL, FALSE);
   }
 }
 
@@ -221,15 +221,15 @@ function draggableviews_preprocess_views_view_list(&$vars) {
   $class = 'draggableviews-grid-' . $vars['view']->name . '-' . $vars['view']->current_display;
   $vars['list_type_prefix'] = str_replace('>', ' class="' . $class . '">', $vars['list_type_prefix']);
   // Add JavaScript.
-  drupal_add_library('system', 'ui.sortable');
+  backdrop_add_library('system', 'ui.sortable');
   // Add setting of the row class.
   $js_setting['draggableviews_row_class'][] = $class;
   // Add setting whether ajax enabled or not.
   $js_setting['draggableviews_ajax'] = $vars['view']->field['draggableviews']->options['draggableviews']['ajax'];
-  drupal_add_js($js_setting, 'setting');
+  backdrop_add_js($js_setting, 'setting');
   // Add custom js and css.
-  drupal_add_js(drupal_get_path('module', 'draggableviews') . '/js/draggableviews_list.js');
-  drupal_add_css(drupal_get_path('module', 'draggableviews') . '/css/draggableviews_list.css');
+  backdrop_add_js(backdrop_get_path('module', 'draggableviews') . '/js/draggableviews_list.js');
+  backdrop_add_css(backdrop_get_path('module', 'draggableviews') . '/css/draggableviews_list.css');
 }
 
 /**
@@ -289,7 +289,7 @@ function draggableviews_contextual_links_view_alter(&$element, $items) {
   }
   // In case of block #views_contextual_links_info element is inside of
   // 'content' and not '#element' directly.
-  // @see http://drupal.org/node/1413596#comment-5912688
+  // @see http://backdrop.org/node/1413596#comment-5912688
   if (empty($views_ui_element) && isset($element['#element']['content']['#views_contextual_links_info']['views_ui'])) {
     $views_ui_element = $element['#element']['content']['#views_contextual_links_info']['views_ui'];
   }
@@ -322,7 +322,7 @@ function draggableviews_contextual_links_view_alter(&$element, $items) {
  *   Handler's class object.
  */
 function draggableviews_get_handler_class($handler_name, $handler_type = 'handler') {
-  $objects = &drupal_static(__FUNCTION__);
+  $objects = &backdrop_static(__FUNCTION__);
   if (!isset($objects[$handler_name])) {
     ctools_include('plugins');
     if ($class = ctools_plugin_load_class('draggableviews', $handler_type, $handler_name, 'handler')) {
@@ -455,7 +455,7 @@ function _draggableviews_load_order_view($view, $include_self = TRUE) {
           // Error gets thrown if the order_view_display has not been saved yet.
           if (!isset($order_view)) {
             // TODO: Error message can get repeated 3-4 times.  Should only happen once.
-            drupal_set_message(t('The order view is unavailable. Try saving or re-saving the view'), 'error');
+            backdrop_set_message(t('The order view is unavailable. Try saving or re-saving the view'), 'error');
             return;
           }
           $order_view->set_display($order_view_display);

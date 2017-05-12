@@ -42,7 +42,7 @@ class draggableviews_handler_fieldapi extends draggableviews_handler {
       }
 
       // Remove "_value" from field name and try to load the field.
-      $field_name = drupal_substr($field_name, 0, drupal_strlen($field_name) - 6);
+      $field_name = backdrop_substr($field_name, 0, backdrop_strlen($field_name) - 6);
       if ($field_info = field_info_field($field_name)) {
         if ($field_info['type'] == 'number_integer' || $field_info['type'] == 'list_integer') {
           $views_field_data = field_views_field_default_views_data($field_info);
@@ -105,13 +105,13 @@ class draggableviews_handler_fieldapi extends draggableviews_handler {
     $options_field = $view->field['draggableviews']->options['draggableviews']['draggableviews_handler_fieldapi']['field'];
     list($field_tabe, $field_column) = explode(':', $options_field);
     // Remove '_value' from column name to get field name.
-    $field_name = drupal_substr($field_column, 0, drupal_strlen($field_column) - 6);
+    $field_name = backdrop_substr($field_column, 0, backdrop_strlen($field_column) - 6);
 
     // Give other modules a chance to alter saved arguments.
-    drupal_alter('draggableviews_handler_fieldapi_arguments', $fv['draggableviews'], $view);
+    backdrop_alter('draggableviews_handler_fieldapi_arguments', $fv['draggableviews'], $view);
 
     // Reorder the items by weight.
-    uasort($fv['draggableviews'], 'drupal_sort_weight');
+    uasort($fv['draggableviews'], 'backdrop_sort_weight');
 
     // Save the values of the field.
     foreach ($fv['draggableviews'] as $item) {
