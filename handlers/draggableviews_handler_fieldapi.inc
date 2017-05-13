@@ -5,13 +5,6 @@
  * Field API handler plugin.
  */
 
-$plugin = array(
-  'label' => 'FieldAPI',
-  'handler' => array(
-    'class' => 'draggableviews_handler_fieldapi',
-  ),
-);
-
 class draggableviews_handler_fieldapi extends draggableviews_handler {
   /**
   * Set default value of field option.

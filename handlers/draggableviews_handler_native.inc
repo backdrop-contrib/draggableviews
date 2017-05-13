@@ -5,13 +5,6 @@
  * Native handler plugin.
  */
 
-$plugin = array(
-  'label' => 'Native',
-  'handler' => array(
-    'class' => 'draggableviews_handler_native',
-  ),
-);
-
 class draggableviews_handler_native extends draggableviews_handler {
   public function get($field, $index) {
     $row = $field->view->result[$index];
