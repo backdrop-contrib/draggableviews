@@ -1,0 +1,117 @@
+{
+    "_config_name": "views.view.book",
+    "name": "book",
+    "description": "",
+    "tag": "default",
+    "disabled": false,
+    "base_table": "node",
+    "human_name": "Book",
+    "core": 7,
+    "display": {
+        "default": {
+            "display_title": "Master",
+            "display_plugin": "default",
+            "display_options": {
+                "query": {
+                    "type": "views_query",
+                    "options": []
+                },
+                "title": "Reorder Book",
+                "use_more_always": false,
+                "access": {
+                    "type": "perm"
+                },
+                "cache": {
+                    "type": "none"
+                },
+                "exposed_form": {
+                    "type": "basic"
+                },
+                "pager": {
+                    "type": "none",
+                    "options": {
+                        "offset": "0"
+                    }
+                },
+                "style_plugin": "table",
+                "fields": {
+                    "title": {
+                        "id": "title",
+                        "table": "node",
+                        "field": "title",
+                        "alter": {
+                            "word_boundary": false,
+                            "ellipsis": false
+                        }
+                    },
+                    "draggableviews": {
+                        "id": "draggableviews",
+                        "table": "node",
+                        "field": "draggableviews",
+                        "element_default_classes": false,
+                        "hide_alter_empty": false,
+                        "draggableviews": {
+                            "handler": "draggableviews_handler_book",
+                            "hierarchy_handler": "draggableviews_hierarchy_handler_book",
+                            "ajax": 0
+                        }
+                    }
+                },
+                "sorts": {
+                    "weight": {
+                        "id": "weight",
+                        "table": "draggableviews_structure",
+                        "field": "weight",
+                        "draggableviews_setting_view": "book:page",
+                        "draggableviews_setting_new_items_bottom_list": 1
+                    }
+                },
+                "arguments": {
+                    "book": {
+                        "id": "book",
+                        "table": "draggableviews_book_structure",
+                        "field": "book",
+                        "default_action": "empty",
+                        "default_argument_type": "fixed",
+                        "summary": {
+                            "number_of_records": "0",
+                            "format": "default_summary"
+                        },
+                        "summary_options": {
+                            "items_per_page": "25"
+                        }
+                    }
+                },
+                "filters": {
+                    "status": {
+                        "id": "status",
+                        "table": "node",
+                        "field": "status",
+                        "value": 1,
+                        "group": 1,
+                        "expose": {
+                            "operator": false
+                        }
+                    }
+                }
+            }
+        },
+        "page": {
+            "display_title": "Page",
+            "display_plugin": "page",
+            "display_options": {
+                "query": {
+                    "type": "views_query",
+                    "options": []
+                },
+                "path": "node/%/book",
+                "menu": {
+                    "type": "tab",
+                    "title": "Order Outline",
+                    "weight": "5",
+                    "context": 0
+                }
+            }
+        }
+    }
+}

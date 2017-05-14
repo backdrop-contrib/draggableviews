@@ -11,15 +11,6 @@ function draggableviews_book_views_api() {
 }
 
 /**
- * Implements hook_ctools_plugin_directory().
- */
-function draggableviews_book_ctools_plugin_directory($module, $plugin) {
-  if (($module == 'draggableviews') && ($plugin == 'handler' || $plugin == 'hierarchy_handler')) {
-    return 'handlers';
-  }
-}
-
-/**
  * Implements hook_menu_alter().
  *
  * Set custom access callback to "Order Outline" view.
@@ -27,6 +18,25 @@ function draggableviews_book_ctools_plugin_directory($module, $plugin) {
 function draggableviews_book_menu_alter(&$items) {
   $items['node/%/book']['access callback'] = '_draggableviews_book_access';
   $items['node/%/book']['access arguments'] = array(1);
+}
+
+/**
+ * Implements hook_draggableviews_plugins().
+ */
+function draggableviews_book_draggableviews_plugins($type) {
+  $types = array();
+  $types['handler'] = array(
+    'draggableviews_hierarchy_handler_book' => array(
+      'label' => 'Book',
+      'class' => 'draggableviews_hierarchy_handler_book',
+    ),
+    'draggableviews_handler_book' => array(
+      'label' => 'Book',
+      'class' => 'draggableviews_handler_book',
+    ),
+  );
+
+  return $types['handler'];
 }
 
 /**
@@ -117,4 +127,15 @@ function _draggableviews_book_uasort($item1, $item2) {
       }
     }
   }
+}
+
+/**
+ * Implements hook_autoload_info().
+ */
+function draggableviews_book_autoload_info() {
+  return array(
+    'views_handler_argument_draggableviews_book' => 'draggableviews_book_views_handler_argument.inc',
+    'draggableviews_hierarchy_handler_book' => 'handlers/draggableviews_hierarchy_handler_book.inc',
+    'draggableviews_handler_book' => 'handlers/draggableviews_handler_book.inc',
+  );
 }
