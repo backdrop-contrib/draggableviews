@@ -2,6 +2,7 @@ name = Draggableviews
 description = Makes Views draggable
 package = Views
 backdrop = 1.x
+type = module
 
 dependencies[] = entity
 dependencies[] = views

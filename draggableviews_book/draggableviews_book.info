@@ -1,9 +1,8 @@
 name = Draggableviews Book
 description = Reorder books
 package = Views
-core = 7.x
-
-files[] = draggableviews_book_views_handler_argument.inc
+backdrop = 1.x
+type = module
 
 dependencies[] = draggableviews
 dependencies[] = book
