@@ -372,15 +372,15 @@ function draggableviews_get_plugins($plugin = NULL) {
 function draggableviews_draggableviews_handler_info() {
   $plugins = array(
     'draggableviews_handler_fieldapi' => array(
-      'label' => 'FieldAPI',
+      'label' => t('FieldAPI'),
       'class' => 'draggableviews_handler_fieldapi',
     ),
     'draggableviews_handler_native' => array(
-      'label' => 'Native',
+      'label' => t('Native'),
       'class' => 'draggableviews_handler_native',
     ),
     'draggableviews_hierarchy_handler_native' => array(
-      'label' => 'Native',
+      'label' => t('Native'),
       'class' => 'draggableviews_hierarchy_handler_native',
     ),
   );
