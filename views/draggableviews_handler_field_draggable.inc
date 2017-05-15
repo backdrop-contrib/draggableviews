@@ -53,8 +53,7 @@ class draggableviews_handler_field_draggable extends views_handler_field {
     $handler_options = array();
     $handler_forms = array();
     foreach (draggableviews_get_handlers() as $handler_id => $handler_object) {
-      $handlers = draggableviews_get_plugins('hierarchy_handler');
-      $handler = $handlers[$handler_id];
+      $handler = draggableviews_get_plugins($handler_id);
       $handler_options[$handler_id] = filter_xss($handler['label']);
       $handler_forms[$handler_id] = $handler_object->options_form($this);
     }
@@ -91,8 +90,7 @@ class draggableviews_handler_field_draggable extends views_handler_field {
     $hierarchy_handler_options = array('' => t('- None -'));
     $hierarchy_handler_forms = array();
     foreach (draggableviews_get_hierarchy_handlers() as $handler_id => $handler_object) {
-      $handlers = draggableviews_get_plugins('hierarchy_handler');
-      $handler = $handlers[$handler_id];
+      $handler = draggableviews_get_plugins($handler_id);
       $hierarchy_handler_options[$handler_id] = filter_xss($handler['label']);
       $hierarchy_handler_forms[$handler_id] = $handler_object->options_form($this);
     }

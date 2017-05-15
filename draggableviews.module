@@ -299,14 +299,12 @@ function draggableviews_contextual_links_view_alter(&$element, $items) {
  *   Handler's class object.
  */
 function draggableviews_get_handler_class($handler_id, $handler_type = 'handler') {
-  //$objects = &backdrop_static(__FUNCTION__);
-  //if (!isset($objects[$handler['class']])) {
-    $handlers = draggableviews_get_plugins('handler');
-    $handler = $handlers[$handler_id];
+  $objects = &backdrop_static(__FUNCTION__);
+  if (!isset($objects[$handler['class']])) {
+    $handler = draggableviews_get_plugins($handler_id);
     $class = $handler['class'];
-    // $objects[$handler['class']] = new stdClass();
     $objects[$handler['class']] = new $handler['class']();
-  //}
+  }
 
   return $objects[$handler['class']];
 }
@@ -320,12 +318,12 @@ function draggableviews_get_handler_class($handler_id, $handler_type = 'handler'
  *   Array of proper draggableviews handlers.
  */
 function draggableviews_get_handlers() {
-  $handlers = draggableviews_get_plugins('handler');
+  $handlers = draggableviews_get_plugins();
   $return = array();
-  foreach ($handlers as $handler_id => $handler) {
-    $handler_object = draggableviews_get_handler_class($handler_id);
+  foreach ($handlers as $handler) {
+    $handler_object = draggableviews_get_handler_class($handler['class']);
     if (in_array('draggableviews_handler', class_parents(get_class($handler_object)))) {
-      $return[$handler_id] = $handler_object;
+      $return[$handler['class']] = $handler_object;
     }
   }
   return $return;
@@ -340,12 +338,12 @@ function draggableviews_get_handlers() {
  *   Array of proper draggableviews handlers.
  */
 function draggableviews_get_hierarchy_handlers() {
-  $handlers = draggableviews_get_plugins('hierarchy_handler');
+  $handlers = draggableviews_get_plugins();
   $return = array();
-  foreach ($handlers as $handler_id => $handler) {
-    $handler_object = draggableviews_get_handler_class($handler_id);
+  foreach ($handlers as $handler) {
+    $handler_object = draggableviews_get_handler_class($handler['class']);
     if (in_array('draggableviews_hierarchy_handler', class_parents(get_class($handler_object)))) {
-      $return[$handler_id] = $handler_object;
+      $return[$handler['class']] = $handler_object;
     }
   }
   return $return;
@@ -354,8 +352,15 @@ function draggableviews_get_hierarchy_handlers() {
 /**
  * Implements hook_draggableviews_plugins().
  */
-function draggableviews_get_plugins($type) {
-  $plugins = module_invoke_all('draggableviews_plugins', $type);
+function draggableviews_get_plugins($plugin = NULL) {
+  $plugins = &backdrop_static(__FUNCTION__);
+  if (empty($plugins)) {
+    $plugins = module_invoke_all('draggableviews_plugins');
+  }
+
+  if ($plugin) {
+    return isset($plugins[$plugin]) ? $plugins[$plugin] : NULL;
+  }
   return $plugins;
 }
 
@@ -364,9 +369,8 @@ function draggableviews_get_plugins($type) {
 /**
  * Implements hook_draggableviews_plugins().
  */
-function draggableviews_draggableviews_plugins($type) {
-  $types = array();
-  $types['handler'] = array(
+function draggableviews_draggableviews_plugins() {
+  $plugins = array(
     'draggableviews_handler_fieldapi' => array(
       'label' => 'FieldAPI',
       'class' => 'draggableviews_handler_fieldapi',
@@ -380,14 +384,8 @@ function draggableviews_draggableviews_plugins($type) {
       'class' => 'draggableviews_hierarchy_handler_native',
     ),
   );
-  $types['hierarchy_handler'] = array(
-    'draggableviews_hierarchy_handler_native' => array(
-      'label' => 'Native',
-      'class' => 'draggableviews_hierarchy_handler_native',
-    ),
-  );
 
-  return $types['handler'];
+  return $plugins;
 }
 
   
