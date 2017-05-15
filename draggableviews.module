@@ -300,8 +300,8 @@ function draggableviews_contextual_links_view_alter(&$element, $items) {
  */
 function draggableviews_get_handler_class($handler_id, $handler_type = 'handler') {
   $objects = &backdrop_static(__FUNCTION__);
+  $handler = draggableviews_get_plugins($handler_id);
   if (!isset($objects[$handler['class']])) {
-    $handler = draggableviews_get_plugins($handler_id);
     $class = $handler['class'];
     $objects[$handler['class']] = new $handler['class']();
   }

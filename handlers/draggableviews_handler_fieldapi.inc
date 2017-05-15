@@ -104,14 +104,14 @@ class draggableviews_handler_fieldapi extends draggableviews_handler {
     backdrop_alter('draggableviews_handler_fieldapi_arguments', $fv['draggableviews'], $view);
 
     // Reorder the items by weight.
-    uasort($fv['draggableviews'], 'backdrop_sort_weight');
+    backdrop_sort($fv['draggableviews'], array('weight' => SORT_NUMERIC));
 
     // Save the values of the field.
     foreach ($fv['draggableviews'] as $item) {
       if (isset($item['id']) && isset($item['weight'])) {
-        $entity_wrapper = entity_metadata_wrapper($entity_type, $item['id']);
-        $entity_wrapper->{$field_name} = $item['weight'];
-        $entity_wrapper->save();
+        $entity = entity_load($entity_type, $item['id']);
+        $entity->{$field_name} = $item['weight'];
+        $entity->save();
       }
     }
   }

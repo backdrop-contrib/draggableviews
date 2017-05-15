@@ -37,7 +37,7 @@ class draggableviews_handler_native extends draggableviews_handler {
     $weight = 0;
 
     // Reorder the items by weight.
-    uasort($fv['draggableviews'], 'backdrop_sort_weight');
+    backdrop_sort($fv['draggableviews'], array('weight' => SORT_NUMERIC));
 
     foreach ($fv['draggableviews'] as $item) {
       // Make sure id is available.
