@@ -355,7 +355,7 @@ function draggableviews_get_hierarchy_handlers() {
 function draggableviews_get_plugins($plugin = NULL) {
   $plugins = &backdrop_static(__FUNCTION__);
   if (empty($plugins)) {
-    $plugins = module_invoke_all('draggableviews_plugins');
+    $plugins = module_invoke_all('draggableviews_handler_info');
   }
 
   if ($plugin) {
@@ -367,9 +367,9 @@ function draggableviews_get_plugins($plugin = NULL) {
 
 
 /**
- * Implements hook_draggableviews_plugins().
+ * Implements hook_draggableviews_handler_info().
  */
-function draggableviews_draggableviews_plugins() {
+function draggableviews_draggableviews_handler_info() {
   $plugins = array(
     'draggableviews_handler_fieldapi' => array(
       'label' => 'FieldAPI',
