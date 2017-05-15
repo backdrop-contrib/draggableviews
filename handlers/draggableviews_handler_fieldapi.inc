@@ -110,7 +110,8 @@ class draggableviews_handler_fieldapi extends draggableviews_handler {
     foreach ($fv['draggableviews'] as $item) {
       if (isset($item['id']) && isset($item['weight'])) {
         $entity = entity_load($entity_type, $item['id']);
-        $entity->{$field_name} = $item['weight'];
+        $langcode = isset($entity->langcode) ? $entity->langcode : LANGUAGE_NONE;
+        $entity->{$field_name}[$langcode][0]['value'] = $item['weight'];
         $entity->save();
       }
     }
