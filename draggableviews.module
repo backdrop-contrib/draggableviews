@@ -631,6 +631,7 @@ function draggableviews_autoload_info() {
   return array(
     'draggableviews_join_handler' => 'views/draggableviews_join_handler.inc',
     'draggableviews_handler_sort' => 'views/draggableviews_handler_sort.inc',
+    'draggableviews_handler_field_weight' => 'views/draggableviews_handler_field_weight.inc',
     'draggableviews_handler_field_draggable' => 'views/draggableviews_handler_field_draggable.inc',
     'draggableviews_hierarchy_handler_native' => 'handlers/draggableviews_hierarchy_handler_native.inc',
     'draggableviews_hierarchy_handler' => 'handlers/draggableviews_hierarchy_handler.inc',

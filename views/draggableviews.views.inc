@@ -15,7 +15,7 @@ function draggableviews_views_data_alter(&$data) {
     'group' => t('Draggableviews'),
     'field' => array(
       'help' => t('Display the weight value.'),
-      'handler' => 'views_handler_field_numeric',
+      'handler' => 'draggableviews_handler_field_weight',
       'click sortable' => TRUE,
     ),
     'sort' => array(
