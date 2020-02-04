@@ -271,9 +271,9 @@ function draggableviews_contextual_links_view_alter(&$element, $items) {
     $views_ui_element = $element['#element']['content']['#views_contextual_links_info']['views_ui'];
   }
 
-  if ( !empty($views_ui_element['view_display_id']) && isset($views_ui_element['view'])) {
+  if ( !empty($views_ui_element['view_display_id']) && isset($views_ui_element['view_name'])) {
     $display_id = $views_ui_element['view_display_id'];
-    $view = $views_ui_element['view'];
+    $view = views_get_view($views_ui_element['view_name']);
     $view->build($display_id);
 
     // Get the order view's path. Don't include itself.
