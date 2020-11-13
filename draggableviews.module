@@ -418,7 +418,7 @@ function draggableviews_view_draggabletable_form_ajax($form, $form_state) {
  */
 function _draggableviews_get_draggable_sort($view) {
   foreach ($view->sort as $id => $sort) {
-    if ($sort->definition['handler'] == 'draggableviews_handler_sort') {
+    if (isset($sort->definition['handler']) && $sort->definition['handler'] == 'draggableviews_handler_sort') {
       return $id;
     }
   }
