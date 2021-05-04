@@ -301,6 +301,7 @@ function draggableviews_contextual_links_view_alter(&$element, $items) {
 function draggableviews_get_handler_class($handler_id, $handler_type = 'handler') {
   $objects = &backdrop_static(__FUNCTION__);
   $handler = draggableviews_get_plugins($handler_id);
+  debug($handler_id);
   if (!isset($objects[$handler['class']])) {
     $class = $handler['class'];
     $objects[$handler['class']] = new $handler['class']();
@@ -388,8 +389,8 @@ function draggableviews_draggableviews_handler_info() {
   return $plugins;
 }
 
-  
-  
+
+
 /**
  * Ajax draggabletable submit handler.
  */
@@ -418,7 +419,7 @@ function draggableviews_view_draggabletable_form_ajax($form, $form_state) {
  */
 function _draggableviews_get_draggable_sort($view) {
   foreach ($view->sort as $id => $sort) {
-    if (isset($sort->definition['handler']) && $sort->definition['handler'] == 'draggableviews_handler_sort') {
+    if ($sort->definition['handler'] == 'draggableviews_handler_sort') {
       return $id;
     }
   }

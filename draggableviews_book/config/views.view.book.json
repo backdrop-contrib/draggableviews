@@ -4,9 +4,10 @@
     "description": "",
     "tag": "default",
     "disabled": false,
+    "module": "draggableviews_book",
     "base_table": "node",
     "human_name": "Book",
-    "core": 7,
+    "core": 1,
     "display": {
         "default": {
             "display_title": "Master",

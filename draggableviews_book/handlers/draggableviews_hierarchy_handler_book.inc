@@ -5,13 +5,6 @@
  * Draggableviews book views hierarchy handler.
  */
 
-$plugin = array(
-  'label' => 'Book',
-  'handler' => array(
-    'class' => 'draggableviews_hierarchy_handler_book',
-  ),
-);
-
 class draggableviews_hierarchy_handler_book extends draggableviews_hierarchy_handler {
   public function get($field, $index) {
     $row = $field->view->result[$index];

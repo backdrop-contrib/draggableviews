@@ -1,12 +1,14 @@
 <?php
 
+module_load_include('inc', 'draggableviews_book', 'views/draggableviews_book.views');
+
 /**
  * Implements hook_views_api().
  */
 function draggableviews_book_views_api() {
   return array(
     'api' => 3,
-    'path' => backdrop_get_path('module', 'draggableviews_book'),
+    'path' => backdrop_get_path('module', 'draggableviews_book') . '/views',
   );
 }
 
@@ -21,11 +23,10 @@ function draggableviews_book_menu_alter(&$items) {
 }
 
 /**
- * Implements hook_draggableviews_plugins().
+ * Implements hook_draggableviews_handler_info().
  */
-function draggableviews_book_draggableviews_plugins($type) {
-  $types = array();
-  $types['handler'] = array(
+function draggableviews_book_draggableviews_handler_info() {
+  $plugins = array(
     'draggableviews_hierarchy_handler_book' => array(
       'label' => 'Book',
       'class' => 'draggableviews_hierarchy_handler_book',
@@ -36,7 +37,7 @@ function draggableviews_book_draggableviews_plugins($type) {
     ),
   );
 
-  return $types['handler'];
+  return $plugins;
 }
 
 /**
@@ -134,7 +135,7 @@ function _draggableviews_book_uasort($item1, $item2) {
  */
 function draggableviews_book_autoload_info() {
   return array(
-    'views_handler_argument_draggableviews_book' => 'draggableviews_book_views_handler_argument.inc',
+    'views_handler_argument_draggableviews_book' => 'views/draggableviews_book_views_handler_argument.inc',
     'draggableviews_hierarchy_handler_book' => 'handlers/draggableviews_hierarchy_handler_book.inc',
     'draggableviews_handler_book' => 'handlers/draggableviews_handler_book.inc',
   );
