@@ -277,7 +277,8 @@ function draggableviews_contextual_links_view_alter(&$element, $items) {
     $view->build($display_id);
 
     // Get the order view's path. Don't include itself.
-    if ($path = _draggableviews_get_order_path($view, FALSE)) {
+    $path = _draggableviews_get_order_path($view, FALSE);
+    if (!empty($path)) {
       // Only add if current user has access to the order view.
       if ($router_item = menu_get_item($path)) {
         if ($router_item['access']) {
