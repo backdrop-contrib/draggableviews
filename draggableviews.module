@@ -388,8 +388,8 @@ function draggableviews_draggableviews_handler_info() {
   return $plugins;
 }
 
-  
-  
+
+
 /**
  * Ajax draggabletable submit handler.
  */

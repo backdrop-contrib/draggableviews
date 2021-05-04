@@ -5,13 +5,6 @@
  * Draggableviews views book handler.
  */
 
-$plugin = array(
-  'label' => 'Book',
-  'handler' => array(
-    'class' => 'draggableviews_handler_book',
-  ),
-);
-
 class draggableviews_handler_book extends draggableviews_handler {
 
   /**

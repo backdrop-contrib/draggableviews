@@ -9,4 +9,3 @@ name = Field API handler test
 description = Test Field API handlers.
 group = Draggable Views
 file = draggableviews.test
-
