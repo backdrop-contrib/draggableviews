@@ -19,7 +19,8 @@
                 "title": "Reorder Book",
                 "use_more_always": false,
                 "access": {
-                    "type": "perm"
+                    "type": "perm",
+                    "perm": "access draggableviews"
                 },
                 "cache": {
                     "type": "none"
